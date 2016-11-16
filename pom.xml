@@ -19,6 +19,7 @@
 	</prerequisites>
 
 	<properties>
+		<junit.version>4.12</junit.version>
 		<lucene.version>3.6.2</lucene.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -56,6 +57,12 @@
 			<artifactId>stax2-api</artifactId>
 			<version>3.1.1</version>
 		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -87,6 +94,49 @@
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
 				</configuration>
+			</plugin>
+			<!--
+			To use the code quality plugins in Eclipse or STS, install the
+			m2e-code-quality plugin from software site
+			http://m2e-code-quality.github.com/m2e-code-quality/site/latest/
+			 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.17</version>
+				<executions>
+					<execution>
+						<id>validate</id>
+						<!-- phase>validate</phase -->
+						<phase>verify</phase>
+						<configuration>
+							<configLocation>checkstyle.xml</configLocation>
+							<violationSeverity>warning</violationSeverity>
+						</configuration>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.4</version>
+				<configuration>
+					<effort>Max</effort>
+					<threshold>Low</threshold>
+				</configuration>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<!-- phase>compile</phase -->
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
