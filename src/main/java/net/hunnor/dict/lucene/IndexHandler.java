@@ -2,9 +2,7 @@ package net.hunnor.dict.lucene;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -17,12 +15,6 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.spell.Dictionary;
 import org.apache.lucene.search.spell.LuceneDictionary;
 import org.apache.lucene.search.spell.SpellChecker;
@@ -73,49 +65,9 @@ public class IndexHandler {
 		spellChecker = new SpellChecker(directory);
 	}
 
-	public void deleteAll() throws IOException {
-		indexWriter.deleteAll();
-	}
-
-	public int numDocs() {
-		return indexReader.numDocs();
-	}
-
 	public IndexObject read(int id) throws IOException {
 		Document document = indexReader.document(id);
 		return new IndexObject(document);
-	}
-
-	public List<IndexObject> search(String queryString) {
-		List<IndexObject> results = new ArrayList<IndexObject>();
-		IndexSearcher indexSearcher = null;
-		try {
-			Analyzer analyzer = getAnalyzer();
-			indexSearcher = new IndexSearcher(indexReader);
-			QueryParser queryParser = new QueryParser(luceneVersion, "id", analyzer);
-			Query query = queryParser.parse(queryString);
-			TopDocs topDocs = indexSearcher.search(query, indexReader.maxDoc());
-			ScoreDoc[] scoreDoc = topDocs.scoreDocs;
-			int totalHits = topDocs.totalHits;
-			for (int i = 0; i < totalHits; i++) {
-				Document document = indexSearcher.doc(scoreDoc[i].doc);
-				IndexObject indexObject = new IndexObject(document);
-				results.add(indexObject);
-			}
-		} catch (ParseException e) {
-			System.out.println("ERROR: ParseException for '" + queryString + "'");
-		} catch (IOException e) {
-			System.out.println("ERROR: IOException during search");
-		} finally {
-			if (indexSearcher != null) {
-				try {
-					indexSearcher.close();
-				} catch (IOException e) {
-					System.out.println("ERROR: IOException during index close");
-				}
-			}
-		}
-		return results;
 	}
 
 	public void write(IndexObject indexObject) throws IOException {
@@ -135,10 +87,6 @@ public class IndexHandler {
 				new IndexWriterConfig(luceneVersion, analyzer);
 		spellChecker.indexDictionary(hungarianDictionary, indexWriterConfig1, false);
 		spellChecker.indexDictionary(norwegianDictionary, indexWriterConfig2, false);
-	}
-
-	public String[] suggest(String term) throws IOException {
-		return spellChecker.suggestSimilar(term, 5);
 	}
 
 	public String getIndexDir() {

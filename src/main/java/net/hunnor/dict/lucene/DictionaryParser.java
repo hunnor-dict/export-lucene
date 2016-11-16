@@ -3,7 +3,6 @@ package net.hunnor.dict.lucene;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
@@ -61,28 +60,12 @@ public class DictionaryParser {
 		}
 	}
 
-	public void deleteAll() throws IOException {
-		indexHandler.deleteAll();
-	}
-
-	public int numDocs() {
-		return indexHandler.numDocs();
-	}
-
 	public IndexObject read(int id) throws IOException {
 		 return indexHandler.read(id);
 	}
 
-	public List<IndexObject> search(String query) {
-		return indexHandler.search(query);
-	}
-
 	public void createSuggestions() throws IOException {
 		indexHandler.createSuggestions();
-	}
-
-	public String[] suggest(String term) throws IOException {
-		return indexHandler.suggest(term);
 	}
 
 	public void parseFile(String file, String lang) throws XMLStreamException, IOException {
