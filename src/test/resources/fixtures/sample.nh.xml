@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hnDict updated="2001-01-01" xmlns="http://dict.hunnor.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://dict.hunnor.net hunnor.net.Schema.xsd">
+	<entryGrp head="B">
+		<entry id="1">
+			<formGrp>
+				<form primary="yes">
+					<orth n="0">bil</orth>
+					<pos>subst</pos>
+					<inflCode type="bob">m1</inflCode>
+					<inflCode type="suff">-en</inflCode>
+					<inflPar>
+						<inflSeq form="0-0">bilen</inflSeq>
+						<inflSeq form="0-1">biler</inflSeq>
+						<inflSeq form="0-2">bilene</inflSeq>
+					</inflPar>
+				</form>
+			</formGrp>
+			<senseGrp>
+				<sense>
+					<trans>autó</trans>
+					<lbl lang="no" type="use">formal</lbl>
+					<trans>személygépkocsi</trans>
+					<eg>
+						<q>kjøre bil</q>
+						<trans>autót vezet</trans>
+					</eg>
+				</sense>
+			</senseGrp>
+		</entry>
+		<entry id="2">
+			<formGrp>
+				<form primary="yes">
+					<orth n="0">bonde</orth>
+					<pos>subst</pos>
+					<inflPar>
+						<inflSeq form="0-0">bonden</inflSeq>
+						<inflSeq form="0-1">bønder</inflSeq>
+						<inflSeq form="0-2">bøndene</inflSeq>
+					</inflPar>
+				</form>
+			</formGrp>
+			<senseGrp>
+				<sense>
+					<trans>paraszt</trans>
+				</sense>
+				<sense>
+					<lbl lang="no" type="use">sjakkbrikke</lbl>
+					<trans>gyalog</trans>
+				</sense>
+			</senseGrp>
+		</entry>
+		<entry id="3">
+			<formGrp>
+				<form primary="yes">
+					<orth n="0">blad</orth>
+					<pos>subst</pos>
+					<inflCode type="bob">n3</inflCode>
+					<inflCode type="suff">-et, -/-er, -ene/-a</inflCode>
+					<inflPar>
+						<inflSeq form="0-0">bladet</inflSeq>
+						<inflSeq form="0-1">blad</inflSeq>
+						<inflSeq form="0-2">blada</inflSeq>
+					</inflPar>
+					<inflPar>
+						<inflSeq form="1-0">bladet</inflSeq>
+						<inflSeq form="1-1">blader</inflSeq>
+						<inflSeq form="1-2">blada</inflSeq>
+					</inflPar>
+					<inflPar>
+						<inflSeq form="2-0">bladet</inflSeq>
+						<inflSeq form="2-1">blad</inflSeq>
+						<inflSeq form="2-2">bladene</inflSeq>
+					</inflPar>
+					<inflPar>
+						<inflSeq form="3-0">bladet</inflSeq>
+						<inflSeq form="3-1">blader</inflSeq>
+						<inflSeq form="3-2">bladene</inflSeq>
+					</inflPar>
+				</form>
+			</formGrp>
+			<senseGrp>
+				<sense>
+					<trans>levél</trans>
+				</sense>
+				<sense>
+					<trans>penge</trans>
+				</sense>
+			</senseGrp>
+			<senseGrp>
+				<sense>
+					<trans>lap</trans>
+				</sense>
+			</senseGrp>
+		</entry>
+	</entryGrp>
+</hnDict>
