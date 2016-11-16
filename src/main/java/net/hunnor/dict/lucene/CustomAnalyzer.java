@@ -10,16 +10,29 @@ import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.util.Version;
 
+/**
+ * Custom Lucene analyzer. Used for written forms in both languages.
+ *
+ */
 public class CustomAnalyzer extends Analyzer {
 
+	/**
+	 * The Lucene version.
+	 */
 	private final Version version;
 
-	public CustomAnalyzer(Version version) {
-		this.version = version;
+	/**
+	 * Constructor with the version field.
+	 * @param v the Lucene version
+	 */
+	public CustomAnalyzer(final Version v) {
+		this.version = v;
 	}
 
 	@Override
-	public TokenStream tokenStream(String field, Reader reader) {
+	public final TokenStream tokenStream(
+			final String field,
+			final Reader reader) {
 		TokenStream result = new StandardTokenizer(version, reader);
 		result = new StandardFilter(version, result);
 		result = new LowerCaseFilter(version, result);
