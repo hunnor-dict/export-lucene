@@ -8,15 +8,15 @@ import org.apache.lucene.document.Field;
 
 public class IndexObject {
 
-	public final String FIELD_LANG = "lang";
-	public final String FIELD_ID = "id";
-	public final String FIELD_ROOTS = "roots";
-	public final String FIELD_FORMS = "forms";
-	public final String FIELD_TRANS = "trans";
-	public final String FIELD_QUOTE = "quote";
-	public final String FIELD_QUOTETRANS = "quoteTrans";
+	public static final String FIELD_LANG = "lang";
+	public static final String FIELD_ID = "id";
+	public static final String FIELD_ROOTS = "roots";
+	public static final String FIELD_FORMS = "forms";
+	public static final String FIELD_TRANS = "trans";
+	public static final String FIELD_QUOTE = "quote";
+	public static final String FIELD_QUOTETRANS = "quoteTrans";
 
-	public final String FIELD_TEXT = "text";
+	public static final String FIELD_TEXT = "text";
 
 	public static final String LUCENE_FIELD_HU_ROOTS = "hu_roots";
 	public static final String LUCENE_FIELD_NO_ROOTS = "no_roots";
@@ -48,7 +48,7 @@ public class IndexObject {
 
 		String[] roots = document.getValues(FIELD_ROOTS);
 		if (roots.length > 0) {
-			List<String> rootList = new ArrayList<String>();
+			List<String> rootList = new ArrayList<>();
 			for (String root: roots) {
 				rootList.add(root);
 			}
@@ -57,7 +57,7 @@ public class IndexObject {
 
 		String[] forms = document.getValues(FIELD_FORMS);
 		if (forms.length > 0) {
-			List<String> formList = new ArrayList<String>();
+			List<String> formList = new ArrayList<>();
 			for (String form: forms) {
 				formList.add(form);
 			}
@@ -66,7 +66,7 @@ public class IndexObject {
 
 		String[] trans = document.getValues(FIELD_TRANS);
 		if (trans.length > 0) {
-			List<String> transList = new ArrayList<String>();
+			List<String> transList = new ArrayList<>();
 			for (String tr: trans) {
 				transList.add(tr);
 			}
@@ -75,7 +75,7 @@ public class IndexObject {
 
 		String[] quote = document.getValues(FIELD_QUOTE);
 		if (quote.length > 0) {
-			List<String> quoteList = new ArrayList<String>();
+			List<String> quoteList = new ArrayList<>();
 			for (String q: quote) {
 				quoteList.add(q);
 			}
@@ -84,7 +84,7 @@ public class IndexObject {
 
 		String[] quoteTrans = document.getValues(FIELD_QUOTETRANS);
 		if (quoteTrans.length > 0) {
-			List<String> quoteTransList = new ArrayList<String>();
+			List<String> quoteTransList = new ArrayList<>();
 			for (String qTr: quoteTrans) {
 				quoteTransList.add(qTr);
 			}

@@ -68,9 +68,13 @@ public class DictionaryParser {
 		indexHandler.createSuggestions();
 	}
 
-	public void parseFile(String file, String lang) throws XMLStreamException, IOException {
-		XMLInputFactory2 xmlInputFactory2 = (XMLInputFactory2) XMLInputFactory2.newInstance();
-		XMLStreamReader2 xmlStreamReader2 = (XMLStreamReader2)xmlInputFactory2.createXMLStreamReader(file, new FileInputStream(file));
+	public void parseFile(final String file, final String lang)
+			throws XMLStreamException, IOException {
+		XMLInputFactory2 xmlInputFactory2 =
+				(XMLInputFactory2) XMLInputFactory2.newInstance();
+		XMLStreamReader2 xmlStreamReader2 =
+				(XMLStreamReader2) xmlInputFactory2.createXMLStreamReader(
+						file, new FileInputStream(file));
 
 		int eventType = 0;
 		String element = "";
@@ -90,7 +94,7 @@ public class DictionaryParser {
 		String senseBuffer = "";
 		String egBuffer = "";
 
-		while(xmlStreamReader2.hasNext()) {
+		while (xmlStreamReader2.hasNext()) {
 			eventType = xmlStreamReader2.next();
 			switch (eventType) {
 			case XMLEvent.START_ELEMENT:
@@ -98,7 +102,8 @@ public class DictionaryParser {
 				if (("{" + XML_NS + "}entry").equals(element)) {
 					indexObject = new IndexObject();
 					indexObject.setLang(lang);
-					indexObject.setId(xmlStreamReader2.getAttributeValue(null, "id"));
+					indexObject.setId(xmlStreamReader2
+							.getAttributeValue(null, "id"));
 					text = "";
 					senseGrpBuffer = "";
 				} else if (("{" + XML_NS + "}formGrp").equals(element)) {
@@ -106,7 +111,8 @@ public class DictionaryParser {
 				} else if (("{" + XML_NS + "}form").equals(element)) {
 					regularInflection = false;
 					inflParBuffer = "";
-					if ("yes".equals(xmlStreamReader2.getAttributeValue(null, "primary"))) {
+					if ("yes".equals(xmlStreamReader2
+							.getAttributeValue(null, "primary"))) {
 						primaryForm = true;
 					} else {
 						primaryForm = false;
@@ -116,7 +122,8 @@ public class DictionaryParser {
 				} else if (("{" + XML_NS + "}pos").equals(element)) {
 					getText = true;
 				} else if (("{" + XML_NS + "}inflCode").equals(element)) {
-					if ("suff".equals(xmlStreamReader2.getAttributeValue(null, "type"))) {
+					if ("suff".equals(xmlStreamReader2
+							.getAttributeValue(null, "type"))) {
 						getText = true;
 						regularInflection = true;
 					}
@@ -133,14 +140,18 @@ public class DictionaryParser {
 						if (senseGrpCount == 1) {
 							senseGrpBuffer = "<b>I</b> " + senseGrpBuffer;
 						}
-						senseGrpBuffer = senseGrpBuffer + " <b>" + RomanNumerals.roman(senseGrpCount + 1) + "</b> ";
+						senseGrpBuffer = senseGrpBuffer
+								+ " <b>"
+								+ RomanNumerals.roman(senseGrpCount + 1)
+								+ "</b> ";
 					}
 				} else if (("{" + XML_NS + "}sense").equals(element)) {
 					if (senseCount > 0) {
 						if (senseCount == 1) {
 							senseBuffer = "<b>1</b> " + senseBuffer;
 						}
-						senseBuffer = senseBuffer + " <b>" + (senseCount + 1) + "</b> ";
+						senseBuffer = senseBuffer
+								+ " <b>" + (senseCount + 1) + "</b> ";
 					}
 				} else if (("{" + XML_NS + "}trans").equals(element)) {
 					getText = true;
@@ -170,7 +181,8 @@ public class DictionaryParser {
 				} else if (("{" + XML_NS + "}form").equals(element)) {
 					if (!regularInflection) {
 						if (inflParBuffer.length() > 0) {
-							formBuffer = formBuffer + " (" + inflParBuffer + ")";
+							formBuffer = formBuffer
+									+ " (" + inflParBuffer + ")";
 						}
 					}
 				} else if (("{" + XML_NS + "}orth").equals(element)) {
@@ -181,7 +193,8 @@ public class DictionaryParser {
 					if (formBuffer.length() > 0) {
 						formBuffer = formBuffer + " ";
 					}
-					formBuffer = formBuffer + "<b>" + characters.toString() + "</b>";
+					formBuffer = formBuffer
+							+ "<b>" + characters.toString() + "</b>";
 					getText = false;
 				// <pos>
 				} else if (("{" + XML_NS + "}pos").equals(element)) {
@@ -207,7 +220,8 @@ public class DictionaryParser {
 					if (indexObject.getForms() == null) {
 						indexObject.setForms(new ArrayList<String>());
 					}
-					if (!indexObject.getForms().contains(characters.toString())) {
+					if (!indexObject.getForms().contains(
+							characters.toString())) {
 						indexObject.getForms().add(characters.toString());
 					}
 					if (inflSeqBuffer.length() > 0) {
@@ -266,7 +280,8 @@ public class DictionaryParser {
 							senseBuffer = senseBuffer + "; ";
 						}
 					}
-					senseBuffer = senseBuffer + "<i>" + characters.toString() + "</i>";
+					senseBuffer = senseBuffer
+							+ "<i>" + characters.toString() + "</i>";
 					previous = "lbl";
 					getText = false;
 				// <eg>
@@ -293,10 +308,13 @@ public class DictionaryParser {
 					if (egBuffer.length() > 0) {
 						egBuffer = egBuffer + ", ";
 					}
-					egBuffer = egBuffer + "<b>" + characters.toString() + "</b>";
+					egBuffer = egBuffer
+							+ "<b>" + characters.toString() + "</b>";
 					previous = "q";
 				}
 				characters = new StringBuilder();
+			break;
+			default:
 			break;
 			}
 		}

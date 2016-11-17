@@ -22,9 +22,12 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.util.Version;
 
+/**
+ * Handles low level operations on the Lucene index.
+ */
 public class IndexHandler {
 
-	private final Version luceneVersion = Version.LUCENE_36;
+	private static final Version LUCENE_VERSION = Version.LUCENE_36;
 
 	private IndexReader indexReader;
 	private IndexWriter indexWriter;
@@ -55,7 +58,7 @@ public class IndexHandler {
 		File file = new File(indexDir);
 		Directory directory = new NIOFSDirectory(file);
 		Analyzer analyzer = getAnalyzer();
-		IndexWriterConfig indexWriterConfig = new IndexWriterConfig(luceneVersion, analyzer );
+		IndexWriterConfig indexWriterConfig = new IndexWriterConfig(LUCENE_VERSION, analyzer );
 		indexWriter = new IndexWriter(directory, indexWriterConfig);
 	}
 
@@ -82,9 +85,9 @@ public class IndexHandler {
 				indexReader, IndexObject.LUCENE_FIELD_NO_ROOTS);
 		Analyzer analyzer = getAnalyzer();
 		IndexWriterConfig indexWriterConfig1 =
-				new IndexWriterConfig(luceneVersion, analyzer);
+				new IndexWriterConfig(LUCENE_VERSION, analyzer);
 		IndexWriterConfig indexWriterConfig2 =
-				new IndexWriterConfig(luceneVersion, analyzer);
+				new IndexWriterConfig(LUCENE_VERSION, analyzer);
 		spellChecker.indexDictionary(hungarianDictionary, indexWriterConfig1, false);
 		spellChecker.indexDictionary(norwegianDictionary, indexWriterConfig2, false);
 	}
@@ -108,11 +111,11 @@ public class IndexHandler {
 	private Analyzer getAnalyzer() {
 		// Declare Analyzers
 		KeywordAnalyzer keywordAnalyzer = new KeywordAnalyzer();
-		CustomAnalyzer customAnalyzer = new CustomAnalyzer(luceneVersion);
+		CustomAnalyzer customAnalyzer = new CustomAnalyzer(LUCENE_VERSION);
 		HungarianAnalyzer hungarianAnalyzer = new HungarianAnalyzer(
-				luceneVersion, CharArraySet.EMPTY_SET);
+				LUCENE_VERSION, CharArraySet.EMPTY_SET);
 		NorwegianAnalyzer norwegianAnalyzer = new NorwegianAnalyzer(
-				luceneVersion, CharArraySet.EMPTY_SET);
+				LUCENE_VERSION, CharArraySet.EMPTY_SET);
 		// Create mapping
 		Map<String, Analyzer> mapping = new HashMap<String, Analyzer>();
 		mapping.put(IndexObject.LUCENE_FIELD_HU_ROOTS, customAnalyzer);
@@ -121,10 +124,10 @@ public class IndexHandler {
 		mapping.put(IndexObject.LUCENE_FIELD_NO_FORMS, customAnalyzer);
 		mapping.put(IndexObject.LUCENE_FIELD_HU_TRANS, norwegianAnalyzer);
 		mapping.put(IndexObject.LUCENE_FIELD_NO_TRANS, hungarianAnalyzer);
-		mapping.put(IndexObject.LUCENE_FIELD_HU_QUOTE, hungarianAnalyzer );
-		mapping.put(IndexObject.LUCENE_FIELD_NO_QUOTE, norwegianAnalyzer );
-		mapping.put(IndexObject.LUCENE_FIELD_HU_QUOTETRANS, norwegianAnalyzer );
-		mapping.put(IndexObject.LUCENE_FIELD_NO_QUOTETRANS, hungarianAnalyzer );
+		mapping.put(IndexObject.LUCENE_FIELD_HU_QUOTE, hungarianAnalyzer);
+		mapping.put(IndexObject.LUCENE_FIELD_NO_QUOTE, norwegianAnalyzer);
+		mapping.put(IndexObject.LUCENE_FIELD_HU_QUOTETRANS, norwegianAnalyzer);
+		mapping.put(IndexObject.LUCENE_FIELD_NO_QUOTETRANS, hungarianAnalyzer);
 		// Create and return Analyzer
 		Analyzer analyzer = new PerFieldAnalyzerWrapper(keywordAnalyzer, mapping);
 		return analyzer;
