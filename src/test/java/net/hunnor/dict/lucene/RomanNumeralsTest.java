@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.hunnor.dict.lucene.RomanNumerals;
-
 /**
  * Test cases for conversion to Roman numerals.
  */
