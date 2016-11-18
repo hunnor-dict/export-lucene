@@ -82,9 +82,9 @@ public class IndexHandler {
 
 	public void createSuggestions() throws IOException {
 		Dictionary hungarianDictionary = new LuceneDictionary(
-				indexReader, Entry.LUCENE_FIELD_HU_ROOTS);
+				indexReader, IndexFields.HU_ROOTS);
 		Dictionary norwegianDictionary = new LuceneDictionary(
-				indexReader, Entry.LUCENE_FIELD_NO_ROOTS);
+				indexReader, IndexFields.NO_ROOTS);
 		Analyzer analyzer = getAnalyzer();
 		IndexWriterConfig indexWriterConfig1 =
 				new IndexWriterConfig(LUCENE_VERSION, analyzer);
@@ -120,16 +120,16 @@ public class IndexHandler {
 				LUCENE_VERSION, CharArraySet.EMPTY_SET);
 		// Create mapping
 		Map<String, Analyzer> mapping = new HashMap<String, Analyzer>();
-		mapping.put(Entry.LUCENE_FIELD_HU_ROOTS, customAnalyzer);
-		mapping.put(Entry.LUCENE_FIELD_NO_ROOTS, customAnalyzer);
-		mapping.put(Entry.LUCENE_FIELD_HU_FORMS, customAnalyzer);
-		mapping.put(Entry.LUCENE_FIELD_NO_FORMS, customAnalyzer);
-		mapping.put(Entry.LUCENE_FIELD_HU_TRANS, norwegianAnalyzer);
-		mapping.put(Entry.LUCENE_FIELD_NO_TRANS, hungarianAnalyzer);
-		mapping.put(Entry.LUCENE_FIELD_HU_QUOTE, hungarianAnalyzer);
-		mapping.put(Entry.LUCENE_FIELD_NO_QUOTE, norwegianAnalyzer);
-		mapping.put(Entry.LUCENE_FIELD_HU_QUOTETRANS, norwegianAnalyzer);
-		mapping.put(Entry.LUCENE_FIELD_NO_QUOTETRANS, hungarianAnalyzer);
+		mapping.put(IndexFields.HU_ROOTS, customAnalyzer);
+		mapping.put(IndexFields.NO_ROOTS, customAnalyzer);
+		mapping.put(IndexFields.HU_FORMS, customAnalyzer);
+		mapping.put(IndexFields.NO_FORMS, customAnalyzer);
+		mapping.put(IndexFields.HU_TRANS, norwegianAnalyzer);
+		mapping.put(IndexFields.NO_TRANS, hungarianAnalyzer);
+		mapping.put(IndexFields.HU_QUOTE, hungarianAnalyzer);
+		mapping.put(IndexFields.NO_QUOTE, norwegianAnalyzer);
+		mapping.put(IndexFields.HU_QUOTETRANS, norwegianAnalyzer);
+		mapping.put(IndexFields.NO_QUOTETRANS, hungarianAnalyzer);
 		// Create and return Analyzer
 		Analyzer analyzer = new PerFieldAnalyzerWrapper(keywordAnalyzer, mapping);
 		return analyzer;

@@ -6,31 +6,12 @@ import java.util.List;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
+import net.hunnor.dict.lucene.IndexFields;
+
 /**
  * Model object for a dictionary entry.
  */
 public class Entry {
-
-	public static final String FIELD_LANG = "lang";
-	public static final String FIELD_ID = "id";
-	public static final String FIELD_ROOTS = "roots";
-	public static final String FIELD_FORMS = "forms";
-	public static final String FIELD_TRANS = "trans";
-	public static final String FIELD_QUOTE = "quote";
-	public static final String FIELD_QUOTETRANS = "quoteTrans";
-
-	public static final String FIELD_TEXT = "text";
-
-	public static final String LUCENE_FIELD_HU_ROOTS = "hu_roots";
-	public static final String LUCENE_FIELD_NO_ROOTS = "no_roots";
-	public static final String LUCENE_FIELD_HU_FORMS = "hu_forms";
-	public static final String LUCENE_FIELD_NO_FORMS = "no_forms";
-	public static final String LUCENE_FIELD_HU_TRANS = "hu_trans";
-	public static final String LUCENE_FIELD_NO_TRANS = "no_trans";
-	public static final String LUCENE_FIELD_HU_QUOTE = "hu_quote";
-	public static final String LUCENE_FIELD_NO_QUOTE = "no_quote";
-	public static final String LUCENE_FIELD_HU_QUOTETRANS = "hu_quoteTrans";
-	public static final String LUCENE_FIELD_NO_QUOTETRANS = "no_quoteTrans";
 
 	private String lang;
 	private String id;
@@ -46,10 +27,10 @@ public class Entry {
 	}
 
 	public Entry(Document document) {
-		this.lang = document.get(FIELD_LANG);
-		this.id = document.get(FIELD_ID);
+		this.lang = document.get(IndexFields.LANG);
+		this.id = document.get(IndexFields.ID);
 
-		String[] roots = document.getValues(FIELD_ROOTS);
+		String[] roots = document.getValues(IndexFields.ROOTS);
 		if (roots.length > 0) {
 			List<String> rootList = new ArrayList<>();
 			for (String root: roots) {
@@ -58,7 +39,7 @@ public class Entry {
 			this.setRoots(rootList);
 		}
 
-		String[] forms = document.getValues(FIELD_FORMS);
+		String[] forms = document.getValues(IndexFields.FORMS);
 		if (forms.length > 0) {
 			List<String> formList = new ArrayList<>();
 			for (String form: forms) {
@@ -67,7 +48,7 @@ public class Entry {
 			this.setForms(formList);
 		}
 
-		String[] trans = document.getValues(FIELD_TRANS);
+		String[] trans = document.getValues(IndexFields.TRANS);
 		if (trans.length > 0) {
 			List<String> transList = new ArrayList<>();
 			for (String tr: trans) {
@@ -76,7 +57,7 @@ public class Entry {
 			this.setTrans(transList);
 		}
 
-		String[] quote = document.getValues(FIELD_QUOTE);
+		String[] quote = document.getValues(IndexFields.QUOTE);
 		if (quote.length > 0) {
 			List<String> quoteList = new ArrayList<>();
 			for (String q: quote) {
@@ -85,7 +66,7 @@ public class Entry {
 			this.setQuote(quoteList);
 		}
 
-		String[] quoteTrans = document.getValues(FIELD_QUOTETRANS);
+		String[] quoteTrans = document.getValues(IndexFields.QUOTETRANS);
 		if (quoteTrans.length > 0) {
 			List<String> quoteTransList = new ArrayList<>();
 			for (String qTr: quoteTrans) {
@@ -94,29 +75,29 @@ public class Entry {
 			this.setQuoteTrans(quoteTransList);
 		}
 
-		this.text = document.get(FIELD_TEXT);
+		this.text = document.get(IndexFields.TEXT);
 	}
 
 	public Document toLuceneDocument() {
-		String rootsField = LUCENE_FIELD_HU_ROOTS;
-		String formsField = LUCENE_FIELD_HU_FORMS;
-		String transField = LUCENE_FIELD_HU_TRANS;
-		String quoteField = LUCENE_FIELD_HU_QUOTE;
-		String quoteTransField = LUCENE_FIELD_HU_QUOTETRANS;
+		String rootsField = IndexFields.HU_ROOTS;
+		String formsField = IndexFields.HU_FORMS;
+		String transField = IndexFields.HU_TRANS;
+		String quoteField = IndexFields.HU_QUOTE;
+		String quoteTransField = IndexFields.HU_QUOTETRANS;
 		if ("no".equals(lang)) {
-			rootsField = LUCENE_FIELD_NO_ROOTS;
-			formsField = LUCENE_FIELD_NO_FORMS;
-			transField = LUCENE_FIELD_NO_TRANS;
-			quoteField = LUCENE_FIELD_NO_QUOTE;
-			quoteTransField = LUCENE_FIELD_NO_QUOTETRANS;
+			rootsField = IndexFields.NO_ROOTS;
+			formsField = IndexFields.NO_FORMS;
+			transField = IndexFields.NO_TRANS;
+			quoteField = IndexFields.NO_QUOTE;
+			quoteTransField = IndexFields.NO_QUOTETRANS;
 		}
 
 		Document document = new Document();
 		if (lang != null) {
-			document.add(new Field(FIELD_LANG, lang, Field.Store.YES, Field.Index.ANALYZED));
+			document.add(new Field(IndexFields.LANG, lang, Field.Store.YES, Field.Index.ANALYZED));
 		}
 		if (id != null) {
-			document.add(new Field(FIELD_ID, id, Field.Store.YES, Field.Index.ANALYZED));
+			document.add(new Field(IndexFields.ID, id, Field.Store.YES, Field.Index.ANALYZED));
 		}
 		if (roots != null) {
 			for (String root: roots) {
@@ -145,7 +126,7 @@ public class Entry {
 		}
 
 		if (text != null) {
-			document.add(new Field(FIELD_TEXT, text, Field.Store.YES, Field.Index.NOT_ANALYZED));
+			document.add(new Field(IndexFields.TEXT, text, Field.Store.YES, Field.Index.NOT_ANALYZED));
 		}
 
 		return document;
