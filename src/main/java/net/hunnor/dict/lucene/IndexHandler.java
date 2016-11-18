@@ -22,6 +22,8 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.util.Version;
 
+import net.hunnor.dict.lucene.model.Entry;
+
 /**
  * Handles low level operations on the Lucene index.
  */
@@ -68,21 +70,21 @@ public class IndexHandler {
 		spellChecker = new SpellChecker(directory);
 	}
 
-	public IndexObject read(int id) throws IOException {
+	public Entry read(int id) throws IOException {
 		Document document = indexReader.document(id);
-		return new IndexObject(document);
+		return new Entry(document);
 	}
 
-	public void write(IndexObject indexObject) throws IOException {
+	public void write(Entry indexObject) throws IOException {
 		Document luceneDocument = indexObject.toLuceneDocument();
 		indexWriter.addDocument(luceneDocument);
 	}
 
 	public void createSuggestions() throws IOException {
 		Dictionary hungarianDictionary = new LuceneDictionary(
-				indexReader, IndexObject.LUCENE_FIELD_HU_ROOTS);
+				indexReader, Entry.LUCENE_FIELD_HU_ROOTS);
 		Dictionary norwegianDictionary = new LuceneDictionary(
-				indexReader, IndexObject.LUCENE_FIELD_NO_ROOTS);
+				indexReader, Entry.LUCENE_FIELD_NO_ROOTS);
 		Analyzer analyzer = getAnalyzer();
 		IndexWriterConfig indexWriterConfig1 =
 				new IndexWriterConfig(LUCENE_VERSION, analyzer);
@@ -118,16 +120,16 @@ public class IndexHandler {
 				LUCENE_VERSION, CharArraySet.EMPTY_SET);
 		// Create mapping
 		Map<String, Analyzer> mapping = new HashMap<String, Analyzer>();
-		mapping.put(IndexObject.LUCENE_FIELD_HU_ROOTS, customAnalyzer);
-		mapping.put(IndexObject.LUCENE_FIELD_NO_ROOTS, customAnalyzer);
-		mapping.put(IndexObject.LUCENE_FIELD_HU_FORMS, customAnalyzer);
-		mapping.put(IndexObject.LUCENE_FIELD_NO_FORMS, customAnalyzer);
-		mapping.put(IndexObject.LUCENE_FIELD_HU_TRANS, norwegianAnalyzer);
-		mapping.put(IndexObject.LUCENE_FIELD_NO_TRANS, hungarianAnalyzer);
-		mapping.put(IndexObject.LUCENE_FIELD_HU_QUOTE, hungarianAnalyzer);
-		mapping.put(IndexObject.LUCENE_FIELD_NO_QUOTE, norwegianAnalyzer);
-		mapping.put(IndexObject.LUCENE_FIELD_HU_QUOTETRANS, norwegianAnalyzer);
-		mapping.put(IndexObject.LUCENE_FIELD_NO_QUOTETRANS, hungarianAnalyzer);
+		mapping.put(Entry.LUCENE_FIELD_HU_ROOTS, customAnalyzer);
+		mapping.put(Entry.LUCENE_FIELD_NO_ROOTS, customAnalyzer);
+		mapping.put(Entry.LUCENE_FIELD_HU_FORMS, customAnalyzer);
+		mapping.put(Entry.LUCENE_FIELD_NO_FORMS, customAnalyzer);
+		mapping.put(Entry.LUCENE_FIELD_HU_TRANS, norwegianAnalyzer);
+		mapping.put(Entry.LUCENE_FIELD_NO_TRANS, hungarianAnalyzer);
+		mapping.put(Entry.LUCENE_FIELD_HU_QUOTE, hungarianAnalyzer);
+		mapping.put(Entry.LUCENE_FIELD_NO_QUOTE, norwegianAnalyzer);
+		mapping.put(Entry.LUCENE_FIELD_HU_QUOTETRANS, norwegianAnalyzer);
+		mapping.put(Entry.LUCENE_FIELD_NO_QUOTETRANS, hungarianAnalyzer);
 		// Create and return Analyzer
 		Analyzer analyzer = new PerFieldAnalyzerWrapper(keywordAnalyzer, mapping);
 		return analyzer;

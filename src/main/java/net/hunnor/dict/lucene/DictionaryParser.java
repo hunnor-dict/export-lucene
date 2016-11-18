@@ -10,13 +10,15 @@ import javax.xml.stream.events.XMLEvent;
 import org.codehaus.stax2.XMLInputFactory2;
 import org.codehaus.stax2.XMLStreamReader2;
 
+import net.hunnor.dict.lucene.model.Entry;
+
 public class DictionaryParser {
 
 	private final String XML_NS = "http://dict.hunnor.net";
 
 	private IndexHandler indexHandler;
 
-	private IndexObject indexObject;
+	private Entry indexObject;
 
 	public void openIndexReader(String indexDir) throws IOException {
 		if (indexHandler == null) {
@@ -60,7 +62,7 @@ public class DictionaryParser {
 		}
 	}
 
-	public IndexObject read(int id) throws IOException {
+	public Entry read(int id) throws IOException {
 		 return indexHandler.read(id);
 	}
 
@@ -100,7 +102,7 @@ public class DictionaryParser {
 			case XMLEvent.START_ELEMENT:
 				element = xmlStreamReader2.getName().toString();
 				if (("{" + XML_NS + "}entry").equals(element)) {
-					indexObject = new IndexObject();
+					indexObject = new Entry();
 					indexObject.setLang(lang);
 					indexObject.setId(xmlStreamReader2
 							.getAttributeValue(null, "id"));

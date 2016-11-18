@@ -1,4 +1,4 @@
-package net.hunnor.dict.lucene;
+package net.hunnor.dict.lucene.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,10 @@ import java.util.List;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
-public class IndexObject {
+/**
+ * Model object for a dictionary entry.
+ */
+public class Entry {
 
 	public static final String FIELD_LANG = "lang";
 	public static final String FIELD_ID = "id";
@@ -39,10 +42,10 @@ public class IndexObject {
 
 	private String text;
 
-	public IndexObject() {
+	public Entry() {
 	}
 
-	public IndexObject(Document document) {
+	public Entry(Document document) {
 		this.lang = document.get(FIELD_LANG);
 		this.id = document.get(FIELD_ID);
 
