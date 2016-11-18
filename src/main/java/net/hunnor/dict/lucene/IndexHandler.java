@@ -125,39 +125,47 @@ public class IndexHandler {
 
 		Document document = new Document();
 		if (entry.getLang() != null) {
-			document.add(new Field(IndexFields.LANG, entry.getLang(), Field.Store.YES, Field.Index.ANALYZED));
+			document.add(new Field(IndexFields.LANG, entry.getLang(),
+					Field.Store.YES, Field.Index.ANALYZED));
 		}
 		if (entry.getId() != null) {
-			document.add(new Field(IndexFields.ID, entry.getId(), Field.Store.YES, Field.Index.ANALYZED));
+			document.add(new Field(IndexFields.ID, entry.getId(),
+					Field.Store.YES, Field.Index.ANALYZED));
 		}
 		if (entry.getRoots() != null) {
 			for (String root: entry.getRoots()) {
-				document.add(new Field(rootsField, root, Field.Store.YES, Field.Index.ANALYZED));
+				document.add(new Field(rootsField, root,
+						Field.Store.YES, Field.Index.ANALYZED));
 			}
 		}
 		if (entry.getForms() != null) {
 			for (String form: entry.getForms()) {
-				document.add(new Field(formsField, form, Field.Store.NO, Field.Index.ANALYZED));
+				document.add(new Field(formsField, form,
+						Field.Store.NO, Field.Index.ANALYZED));
 			}
 		}
 		if (entry.getTrans() != null) {
 			for (String tr: entry.getTrans()) {
-				document.add(new Field(transField, tr, Field.Store.NO, Field.Index.ANALYZED));
+				document.add(new Field(transField, tr,
+						Field.Store.NO, Field.Index.ANALYZED));
 			}
 		}
 		if (entry.getQuote() != null) {
 			for (String q: entry.getQuote()) {
-				document.add(new Field(quoteField, q, Field.Store.NO, Field.Index.ANALYZED));
+				document.add(new Field(quoteField, q,
+						Field.Store.NO, Field.Index.ANALYZED));
 			}
 		}
 		if (entry.getQuoteTrans() != null) {
 			for (String qTr: entry.getQuoteTrans()) {
-				document.add(new Field(quoteTransField, qTr, Field.Store.NO, Field.Index.ANALYZED));
+				document.add(new Field(quoteTransField, qTr,
+						Field.Store.NO, Field.Index.ANALYZED));
 			}
 		}
 
 		if (entry.getText() != null) {
-			document.add(new Field(IndexFields.TEXT, entry.getText(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+			document.add(new Field(IndexFields.TEXT, entry.getText(),
+					Field.Store.YES, Field.Index.NOT_ANALYZED));
 		}
 
 		return document;
@@ -215,35 +223,37 @@ public class IndexHandler {
 				new IndexWriterConfig(LUCENE_VERSION, analyzer);
 		IndexWriterConfig indexWriterConfig2 =
 				new IndexWriterConfig(LUCENE_VERSION, analyzer);
-		spellChecker.indexDictionary(hungarianDictionary, indexWriterConfig1, false);
-		spellChecker.indexDictionary(norwegianDictionary, indexWriterConfig2, false);
+		spellChecker.indexDictionary(
+				hungarianDictionary, indexWriterConfig1, false);
+		spellChecker.indexDictionary(
+				norwegianDictionary, indexWriterConfig2, false);
 	}
 
 	public String getIndexDir() {
 		return indexDir;
 	}
 
-	public void setIndexDir(String indexDir) {
-		this.indexDir = indexDir;
+	public void setIndexDir(final String id) {
+		this.indexDir = id;
 	}
 
 	public String getSpellingDir() {
 		return spellingDir;
 	}
 
-	public void setSpellingDir(String spellingDir) {
-		this.spellingDir = spellingDir;
+	public void setSpellingDir(final String sd) {
+		this.spellingDir = sd;
 	}
 
 	private Analyzer getAnalyzer() {
-		// Declare Analyzers
+
 		KeywordAnalyzer keywordAnalyzer = new KeywordAnalyzer();
 		CustomAnalyzer customAnalyzer = new CustomAnalyzer(LUCENE_VERSION);
 		HungarianAnalyzer hungarianAnalyzer = new HungarianAnalyzer(
 				LUCENE_VERSION, CharArraySet.EMPTY_SET);
 		NorwegianAnalyzer norwegianAnalyzer = new NorwegianAnalyzer(
 				LUCENE_VERSION, CharArraySet.EMPTY_SET);
-		// Create mapping
+
 		Map<String, Analyzer> mapping = new HashMap<String, Analyzer>();
 		mapping.put(IndexFields.HU_ROOTS, customAnalyzer);
 		mapping.put(IndexFields.NO_ROOTS, customAnalyzer);
@@ -255,9 +265,12 @@ public class IndexHandler {
 		mapping.put(IndexFields.NO_QUOTE, norwegianAnalyzer);
 		mapping.put(IndexFields.HU_QUOTETRANS, norwegianAnalyzer);
 		mapping.put(IndexFields.NO_QUOTETRANS, hungarianAnalyzer);
-		// Create and return Analyzer
-		Analyzer analyzer = new PerFieldAnalyzerWrapper(keywordAnalyzer, mapping);
+
+		Analyzer analyzer = new PerFieldAnalyzerWrapper(
+				keywordAnalyzer, mapping);
+
 		return analyzer;
+
 	}
 
 }
