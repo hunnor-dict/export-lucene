@@ -78,12 +78,12 @@ public final class Launcher {
 				&& commandLine.hasOption(OPTS_INDEX_DIR)
 				&& commandLine.hasOption(OPTS_SPELLCHECK_INDEX_DIR)) {
 
-			Indexer indexer = new Indexer();
-			indexer.indexFile(
+			Service service = new Service();
+			service.indexFile(
 					commandLine.getOptionValue(OPTS_XML),
 					commandLine.getOptionValue(OPTS_LANG),
 					commandLine.getOptionValue(OPTS_INDEX_DIR));
-			indexer.indexSuggestions(
+			service.indexSuggestions(
 					commandLine.getOptionValue(OPTS_INDEX_DIR),
 					commandLine.getOptionValue(OPTS_SPELLCHECK_INDEX_DIR));
 

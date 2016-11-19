@@ -1,4 +1,4 @@
-package net.hunnor.dict.lucene.index;
+package net.hunnor.dict.lucene.indexer.analyzer;
 
 import java.io.Reader;
 
@@ -14,7 +14,7 @@ import org.apache.lucene.util.Version;
  * Custom Lucene analyzer. Used for written forms in both languages.
  *
  */
-public class CustomAnalyzer extends Analyzer {
+public class FoldingAnalyzer extends Analyzer {
 
 	/**
 	 * The Lucene version.
@@ -25,7 +25,7 @@ public class CustomAnalyzer extends Analyzer {
 	 * Constructor with the version field.
 	 * @param v the Lucene version
 	 */
-	public CustomAnalyzer(final Version v) {
+	public FoldingAnalyzer(final Version v) {
 		this.version = v;
 	}
 

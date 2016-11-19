@@ -1,4 +1,4 @@
-package net.hunnor.dict.lucene;
+package net.hunnor.dict.lucene.parser;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,7 +16,7 @@ import net.hunnor.dict.lucene.util.RomanNumerals;
 /**
  * Parses an XML file and returns model objects.
  */
-public class Parser {
+public class StaxParser {
 
 	/**
 	 * The default namespace of the XML export.

@@ -1,14 +1,14 @@
-package net.hunnor.dict.lucene.index;
+package net.hunnor.dict.lucene.indexer;
 
 /**
  * Constants for Lucene field names.
  */
-public final class IndexFields {
+public final class FieldNames {
 
 	/**
 	 * Hide default constructor.
 	 */
-	private IndexFields() {
+	private FieldNames() {
 	}
 
 	/**

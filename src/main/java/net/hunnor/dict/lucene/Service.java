@@ -7,19 +7,20 @@ import javax.xml.stream.XMLStreamException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.hunnor.dict.lucene.index.IndexHandler;
+import net.hunnor.dict.lucene.indexer.LuceneIndexer;
 import net.hunnor.dict.lucene.model.Entry;
+import net.hunnor.dict.lucene.parser.StaxParser;
 
 /**
  * The indexer service.
  */
-public class Indexer {
+public class Service {
 
 	/**
 	 * Default logger.
 	 */
 	private static final Logger LOGGER =
-			LoggerFactory.getLogger(Indexer.class);
+			LoggerFactory.getLogger(Service.class);
 
 	/**
 	 * Create the main index.
@@ -34,21 +35,21 @@ public class Indexer {
 
 		try {
 
-			IndexHandler indexHandler = new IndexHandler();
-			indexHandler.setIndexDir(indexDir);
-			indexHandler.openIndexWriter();
+			LuceneIndexer luceneIndexer = new LuceneIndexer();
+			luceneIndexer.setIndexDir(indexDir);
+			luceneIndexer.openIndexWriter();
 
-			Parser parser = new Parser();
-			parser.openFile(file, lang);
-			while (parser.hasNext()) {
-				Entry entry = parser.next();
+			StaxParser staxParser = new StaxParser();
+			staxParser.openFile(file, lang);
+			while (staxParser.hasNext()) {
+				Entry entry = staxParser.next();
 				if (entry != null) {
 					entry.setLang(lang);
-					indexHandler.write(entry);
+					luceneIndexer.write(entry);
 				}
 			}
 
-			indexHandler.closeIndexWriter();
+			luceneIndexer.closeIndexWriter();
 
 		} catch (IOException | XMLStreamException e) {
 			LOGGER.error(e.getMessage(), e);
@@ -67,22 +68,22 @@ public class Indexer {
 
 		try {
 
-			IndexHandler indexHandler = new IndexHandler();
+			LuceneIndexer luceneIndexer = new LuceneIndexer();
 
-			indexHandler.setIndexDir(indexDir);
-			indexHandler.openIndexReader();
-			indexHandler.setSpellingDir(spellcheckDir);
-			indexHandler.openSpellChecker();
+			luceneIndexer.setIndexDir(indexDir);
+			luceneIndexer.openIndexReader();
+			luceneIndexer.setSpellingDir(spellcheckDir);
+			luceneIndexer.openSpellChecker();
 
-			indexHandler.createSuggestions();
+			luceneIndexer.createSuggestions();
 
-			indexHandler.closeSpellChecker();
-			indexHandler.closeIndexReader();
+			luceneIndexer.closeSpellChecker();
+			luceneIndexer.closeIndexReader();
 
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage(), e);
 		}		
 
 	}
-	
+
 }
