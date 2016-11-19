@@ -6,12 +6,6 @@ package net.hunnor.dict.lucene.indexer;
 public final class FieldNames {
 
 	/**
-	 * Hide default constructor.
-	 */
-	private FieldNames() {
-	}
-
-	/**
 	 * The language the entry belongs to.
 	 */
 	public static final String LANG = "lang";
@@ -100,5 +94,11 @@ public final class FieldNames {
 	 * Translations of usage examples (Norwegian).
 	 */
 	public static final String NO_QUOTETRANS = "no_quoteTrans";
+
+	/**
+	 * Hide default constructor.
+	 */
+	private FieldNames() {
+	}
 
 }

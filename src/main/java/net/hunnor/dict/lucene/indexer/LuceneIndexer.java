@@ -194,6 +194,7 @@ public final class LuceneIndexer {
 		}
 
 		Document document = new Document();
+
 		if (entry.getLang() != null) {
 			document.add(new Field(FieldNames.LANG, entry.getLang(),
 					Field.Store.YES, Field.Index.ANALYZED));
@@ -202,35 +203,25 @@ public final class LuceneIndexer {
 			document.add(new Field(FieldNames.ID, entry.getId(),
 					Field.Store.YES, Field.Index.ANALYZED));
 		}
-		if (entry.getRoots() != null) {
-			for (String root: entry.getRoots()) {
-				document.add(new Field(rootsField, root,
-						Field.Store.YES, Field.Index.ANALYZED));
-			}
+		for (String root: entry.getRoots()) {
+			document.add(new Field(rootsField, root,
+					Field.Store.YES, Field.Index.ANALYZED));
 		}
-		if (entry.getForms() != null) {
-			for (String form: entry.getForms()) {
-				document.add(new Field(formsField, form,
-						Field.Store.NO, Field.Index.ANALYZED));
-			}
+		for (String form: entry.getForms()) {
+			document.add(new Field(formsField, form,
+					Field.Store.NO, Field.Index.ANALYZED));
 		}
-		if (entry.getTrans() != null) {
-			for (String tr: entry.getTrans()) {
-				document.add(new Field(transField, tr,
-						Field.Store.NO, Field.Index.ANALYZED));
-			}
+		for (String tr: entry.getTrans()) {
+			document.add(new Field(transField, tr,
+					Field.Store.NO, Field.Index.ANALYZED));
 		}
-		if (entry.getQuote() != null) {
-			for (String q: entry.getQuote()) {
-				document.add(new Field(quoteField, q,
-						Field.Store.NO, Field.Index.ANALYZED));
-			}
+		for (String q: entry.getQuote()) {
+			document.add(new Field(quoteField, q,
+					Field.Store.NO, Field.Index.ANALYZED));
 		}
-		if (entry.getQuoteTrans() != null) {
-			for (String qTr: entry.getQuoteTrans()) {
-				document.add(new Field(quoteTransField, qTr,
-						Field.Store.NO, Field.Index.ANALYZED));
-			}
+		for (String qTr: entry.getQuoteTrans()) {
+			document.add(new Field(quoteTransField, qTr,
+					Field.Store.NO, Field.Index.ANALYZED));
 		}
 
 		if (entry.getText() != null) {

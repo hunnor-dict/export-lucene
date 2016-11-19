@@ -1,11 +1,12 @@
 package net.hunnor.dict.lucene.model;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Model object for a dictionary entry.
  */
-public class Entry {
+public final class Entry {
 
 	/**
 	 * The language of the entry.
@@ -20,38 +21,32 @@ public class Entry {
 	/**
 	 * Root forms of the entry.
 	 */
-	private List<String> roots;
+	private Set<String> roots = new HashSet<>();
 
 	/**
 	 * Inflected forms of the entry.
 	 */
-	private List<String> forms;
+	private Set<String> forms = new HashSet<>();
 
 	/**
 	 * Translations of the entry.
 	 */
-	private List<String> trans;
+	private Set<String> trans = new HashSet<>();
 
 	/**
 	 * Usage examples for the entry.
 	 */
-	private List<String> quote;
+	private Set<String> quote = new HashSet<>();
 
 	/**
 	 * Translations of usage examples.
 	 */
-	private List<String> quoteTrans;
+	private Set<String> quoteTrans = new HashSet<>();
 
 	/**
 	 * The HTML content of the entry.
 	 */
 	private String text;
-
-	/**
-	 * Hide default constructor.
-	 */
-	public Entry() {
-	}
 
 	/**
 	 * Return the language of the entry.
@@ -89,7 +84,7 @@ public class Entry {
 	 * Return the root forms of the entry.
 	 * @return root forms of the entry
 	 */
-	public List<String> getRoots() {
+	public Set<String> getRoots() {
 		return roots;
 	}
 
@@ -97,7 +92,7 @@ public class Entry {
 	 * Set the root forms of the entry.
 	 * @param r the root forms to set
 	 */
-	public void setRoots(final List<String> r) {
+	public void setRoots(final Set<String> r) {
 		this.roots = r;
 	}
 
@@ -105,7 +100,7 @@ public class Entry {
 	 * Return the inflected forms of the entry.
 	 * @return inflected forms of the entry
 	 */
-	public List<String> getForms() {
+	public Set<String> getForms() {
 		return forms;
 	}
 
@@ -113,7 +108,7 @@ public class Entry {
 	 * Set the inflected form of the entry.
 	 * @param f the inflected forms to set
 	 */
-	public void setForms(final List<String> f) {
+	public void setForms(final Set<String> f) {
 		this.forms = f;
 	}
 
@@ -121,7 +116,7 @@ public class Entry {
 	 * Return translations of the entry.
 	 * @return translations of the entry
 	 */
-	public List<String> getTrans() {
+	public Set<String> getTrans() {
 		return trans;
 	}
 
@@ -129,7 +124,7 @@ public class Entry {
 	 * Set translations of the entry.
 	 * @param t the translations to set
 	 */
-	public void setTrans(final List<String> t) {
+	public void setTrans(final Set<String> t) {
 		this.trans = t;
 	}
 
@@ -137,7 +132,7 @@ public class Entry {
 	 * Return usage examples for the entry.
 	 * @return usage examples for the entry
 	 */
-	public List<String> getQuote() {
+	public Set<String> getQuote() {
 		return quote;
 	}
 
@@ -145,7 +140,7 @@ public class Entry {
 	 * Set usage examples of the entry.
 	 * @param q the usage examples to set
 	 */
-	public void setQuote(final List<String> q) {
+	public void setQuote(final Set<String> q) {
 		this.quote = q;
 	}
 
@@ -153,7 +148,7 @@ public class Entry {
 	 * Return translations of usage examples.
 	 * @return translations of usage examples
 	 */
-	public List<String> getQuoteTrans() {
+	public Set<String> getQuoteTrans() {
 		return quoteTrans;
 	}
 
@@ -161,7 +156,7 @@ public class Entry {
 	 * Set translations of usage examples.
 	 * @param qt the translations of usage examples to set
 	 */
-	public void setQuoteTrans(final List<String> qt) {
+	public void setQuoteTrans(final Set<String> qt) {
 		this.quoteTrans = qt;
 	}
 

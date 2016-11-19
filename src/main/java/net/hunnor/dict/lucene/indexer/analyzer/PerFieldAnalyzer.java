@@ -38,7 +38,7 @@ public final class PerFieldAnalyzer {
 		NorwegianAnalyzer norwegianAnalyzer = new NorwegianAnalyzer(
 				version, CharArraySet.EMPTY_SET);
 
-		Map<String, Analyzer> mapping = new HashMap<String, Analyzer>();
+		Map<String, Analyzer> mapping = new HashMap<>();
 		mapping.put(FieldNames.HU_ROOTS, customAnalyzer);
 		mapping.put(FieldNames.NO_ROOTS, customAnalyzer);
 		mapping.put(FieldNames.HU_FORMS, customAnalyzer);
@@ -50,10 +50,8 @@ public final class PerFieldAnalyzer {
 		mapping.put(FieldNames.HU_QUOTETRANS, norwegianAnalyzer);
 		mapping.put(FieldNames.NO_QUOTETRANS, hungarianAnalyzer);
 
-		Analyzer analyzer = new PerFieldAnalyzerWrapper(
+		return new PerFieldAnalyzerWrapper(
 				keywordAnalyzer, mapping);
-
-		return analyzer;
 
 	}
 
