@@ -1,4 +1,4 @@
-package net.hunnor.dict.lucene;
+package net.hunnor.dict.lucene.index;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,16 +30,135 @@ import net.hunnor.dict.lucene.model.Entry;
 /**
  * Handles low level operations on the Lucene index.
  */
-public class IndexHandler {
+public final class IndexHandler {
 
+	/**
+	 * The directory of the main index.
+	 */
+	private String indexDir;
+
+	/**
+	 * The directory of the spell checking index.
+	 */
+	private String spellingDir;
+
+	/**
+	 * Constant for the Lucene version.
+	 */
 	private static final Version LUCENE_VERSION = Version.LUCENE_36;
 
+	/**
+	 * Lucene index reader.
+	 */
 	private IndexReader indexReader;
+
+	/**
+	 * Lucene index writer.
+	 */
 	private IndexWriter indexWriter;
+
+	/**
+	 * Lucene spell checker.
+	 */
 	private SpellChecker spellChecker;
 
-	private String indexDir;
-	private String spellingDir;
+	/**
+	 * Return the directory for the main index.
+	 * @return the directory for the main index
+	 */
+	public String getIndexDir() {
+		return indexDir;
+	}
+
+	/**
+	 * Set the directory for the main index.
+	 * @param dir the directory for the main index
+	 */
+	public void setIndexDir(final String dir) {
+		this.indexDir = dir;
+	}
+
+	/**
+	 * Return the directory for the spell checking index.
+	 * @return the directory for the spell checking index
+	 */
+	public String getSpellingDir() {
+		return spellingDir;
+	}
+
+	/**
+	 * Set the directory for the spell checking index.
+	 * @param dir the directory for the spell checking index
+	 */
+	public void setSpellingDir(final String dir) {
+		this.spellingDir = dir;
+	}
+
+	/**
+	 * Opens the Lucene index reader.
+	 * @throws IOException when thrown by Lucene
+	 */
+	public void openIndexReader() throws IOException {
+		File file = new File(indexDir);
+		Directory directory = new NIOFSDirectory(file);
+		indexReader = IndexReader.open(directory);
+	}
+
+	/**
+	 * Closes the Lucene index reader.
+	 * @throws IOException when thrown by Lucene
+	 */
+	public void closeIndexReader() throws IOException {
+		indexReader.close();
+	}
+
+	/**
+	 * Opens the Lucene index writer.
+	 * @throws IOException when thrown by Lucene
+	 */
+	public void openIndexWriter() throws IOException {
+		File file = new File(indexDir);
+		Directory directory = new NIOFSDirectory(file);
+		Analyzer analyzer = getAnalyzer();
+		IndexWriterConfig indexWriterConfig =
+				new IndexWriterConfig(LUCENE_VERSION, analyzer);
+		indexWriter = new IndexWriter(directory, indexWriterConfig);
+	}
+
+	/**
+	 * Closes the Lucene index writer.
+	 * @throws IOException when thrown by Lucene
+	 */
+	public void closeIndexWriter() throws IOException {
+		indexWriter.close();
+	}
+
+	/**
+	 * Opens the Lucene spell checker.
+	 * @throws IOException when thrown by Lucene
+	 */
+	public void openSpellChecker() throws IOException {
+		File file = new File(spellingDir);
+		Directory directory = new NIOFSDirectory(file);
+		spellChecker = new SpellChecker(directory);
+	}
+
+	/**
+	 * Closes the Lucene spell checker.
+	 * @throws IOException when thrown by Lucene
+	 */
+	public void closeSpellChecker() throws IOException {
+		spellChecker.close();
+	}
+
+
+
+
+
+
+
+
+
 
 	/**
 	 * Convert a Lucene document to a model object.
@@ -171,48 +290,20 @@ public class IndexHandler {
 		return document;
 	}
 
-	public void closeIndexReader() throws IOException {
-		indexReader.close();
-	}
-
-	public void closeIndexWriter() throws IOException {
-		indexWriter.close();
-	}
-
-	public void closeSpellChecker() throws IOException {
-		spellChecker.close();
-	}
-
-	public void openIndexReader() throws IOException {
-		File file = new File(indexDir);
-		Directory directory = new NIOFSDirectory(file);
-		indexReader = IndexReader.open(directory);
-	}
-
-	public void openIndexWriter() throws IOException {
-		File file = new File(indexDir);
-		Directory directory = new NIOFSDirectory(file);
-		Analyzer analyzer = getAnalyzer();
-		IndexWriterConfig indexWriterConfig = new IndexWriterConfig(LUCENE_VERSION, analyzer );
-		indexWriter = new IndexWriter(directory, indexWriterConfig);
-	}
-
-	public void openSpellChecker() throws IOException {
-		File file = new File(spellingDir);
-		Directory directory = new NIOFSDirectory(file);
-		spellChecker = new SpellChecker(directory);
-	}
-
-	public Entry read(int id) throws IOException {
-		Document document = indexReader.document(id);
-		return getEntryFromDocument(document);
-	}
-
-	public void write(Entry indexObject) throws IOException {
+	/**
+	 * Writes a single model object to the index.
+	 * @param indexObject the model object to index
+	 * @throws IOException when thrown by Lucene
+	 */
+	public void write(final Entry indexObject) throws IOException {
 		Document luceneDocument = toLuceneDocument(indexObject);
 		indexWriter.addDocument(luceneDocument);
 	}
 
+	/**
+	 * Create suggestions from the main index.
+	 * @throws IOException when thrown by Lucene
+	 */
 	public void createSuggestions() throws IOException {
 		Dictionary hungarianDictionary = new LuceneDictionary(
 				indexReader, IndexFields.HU_ROOTS);
@@ -229,22 +320,10 @@ public class IndexHandler {
 				norwegianDictionary, indexWriterConfig2, false);
 	}
 
-	public String getIndexDir() {
-		return indexDir;
-	}
-
-	public void setIndexDir(final String id) {
-		this.indexDir = id;
-	}
-
-	public String getSpellingDir() {
-		return spellingDir;
-	}
-
-	public void setSpellingDir(final String sd) {
-		this.spellingDir = sd;
-	}
-
+	/**
+	 * Construct an analyzer which maps a custom analyzer for each field.
+	 * @return the custom analyzer
+	 */
 	private Analyzer getAnalyzer() {
 
 		KeywordAnalyzer keywordAnalyzer = new KeywordAnalyzer();

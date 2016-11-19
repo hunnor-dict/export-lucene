@@ -1,7 +1,7 @@
 package net.hunnor.dict.lucene;
 
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import javax.xml.stream.XMLStreamException;
@@ -11,73 +11,57 @@ import org.codehaus.stax2.XMLInputFactory2;
 import org.codehaus.stax2.XMLStreamReader2;
 
 import net.hunnor.dict.lucene.model.Entry;
+import net.hunnor.dict.lucene.util.RomanNumerals;
 
-public class DictionaryParser {
+/**
+ * Parses an XML file and returns model objects.
+ */
+public class Parser {
 
-	private final String XML_NS = "http://dict.hunnor.net";
+	/**
+	 * The default namespace of the XML export.
+	 */
+	private static final String XML_NS = "http://dict.hunnor.net";
 
-	private IndexHandler indexHandler;
+	/**
+	 * Reader for the XML stream.
+	 */
+	private XMLStreamReader2 reader;
 
-	private Entry indexObject;
-
-	public void openIndexReader(String indexDir) throws IOException {
-		if (indexHandler == null) {
-			indexHandler = new IndexHandler();
-		}
-		indexHandler.setIndexDir(indexDir);
-		indexHandler.openIndexReader();
-	}
-
-	public void openIndexWriter(String indexDir) throws IOException {
-		if (indexHandler == null) {
-			indexHandler = new IndexHandler();
-		}
-		indexHandler.setIndexDir(indexDir);
-		indexHandler.openIndexWriter();
-	}
-
-	public void openSpellChecker(String spellingDir) throws IOException {
-		if (indexHandler == null) {
-			indexHandler = new IndexHandler();
-		}
-		indexHandler.setSpellingDir(spellingDir);
-		indexHandler.openSpellChecker();
-	}
-
-	public void closeIndexReader() throws IOException {
-		if (indexHandler != null) {
-			indexHandler.closeIndexReader();
-		}
-	}
-
-	public void closeIndexWriter() throws IOException {
-		if (indexHandler != null) {
-			indexHandler.closeIndexWriter();
-		}
-	}
-
-	public void closeSpellChecker() throws IOException {
-		if (indexHandler != null) {
-			indexHandler.closeSpellChecker();
-		}
-	}
-
-	public Entry read(int id) throws IOException {
-		 return indexHandler.read(id);
-	}
-
-	public void createSuggestions() throws IOException {
-		indexHandler.createSuggestions();
-	}
-
-	public void parseFile(final String file, final String lang)
-			throws XMLStreamException, IOException {
+	/**
+	 * Open a stream from an XML file.
+	 * @param file the file to open
+	 * @param lang the language to index the file as
+	 * @throws XMLStreamException 
+	 * @throws FileNotFoundException 
+	 */
+	public void openFile(final String file, final String lang)
+			throws FileNotFoundException, XMLStreamException {
 		XMLInputFactory2 xmlInputFactory2 =
 				(XMLInputFactory2) XMLInputFactory2.newInstance();
-		XMLStreamReader2 xmlStreamReader2 =
-				(XMLStreamReader2) xmlInputFactory2.createXMLStreamReader(
-						file, new FileInputStream(file));
+		reader = (XMLStreamReader2) xmlInputFactory2
+				.createXMLStreamReader(file, new FileInputStream(file));
+	}
 
+	/**
+	 * Check if the parser has reached the end of the stream.
+	 * The method returns true if there are events left in the
+	 * stream. The events left might not contain any entries.
+	 * @return true if the XML stream has events left, false otherwise
+	 * @throws XMLStreamException 
+	 */
+	public boolean hasNext() throws XMLStreamException {
+		return reader != null && reader.hasNext();
+	}
+
+	/**
+	 * Returns the next entry from the stream, or null if the stream
+	 * end before an entry can be constructed.
+	 * @return an Entry with data from the stream, or null
+	 * @throws XMLStreamException 
+	 */
+	public Entry next() throws XMLStreamException {
+		Entry indexObject = new Entry();
 		int eventType = 0;
 		String element = "";
 		StringBuilder characters = new StringBuilder();
@@ -96,15 +80,14 @@ public class DictionaryParser {
 		String senseBuffer = "";
 		String egBuffer = "";
 
-		while (xmlStreamReader2.hasNext()) {
-			eventType = xmlStreamReader2.next();
+		while (reader.hasNext()) {
+			eventType = reader.next();
 			switch (eventType) {
 			case XMLEvent.START_ELEMENT:
-				element = xmlStreamReader2.getName().toString();
+				element = reader.getName().toString();
 				if (("{" + XML_NS + "}entry").equals(element)) {
 					indexObject = new Entry();
-					indexObject.setLang(lang);
-					indexObject.setId(xmlStreamReader2
+					indexObject.setId(reader
 							.getAttributeValue(null, "id"));
 					text = "";
 					senseGrpBuffer = "";
@@ -113,7 +96,7 @@ public class DictionaryParser {
 				} else if (("{" + XML_NS + "}form").equals(element)) {
 					regularInflection = false;
 					inflParBuffer = "";
-					if ("yes".equals(xmlStreamReader2
+					if ("yes".equals(reader
 							.getAttributeValue(null, "primary"))) {
 						primaryForm = true;
 					} else {
@@ -124,7 +107,7 @@ public class DictionaryParser {
 				} else if (("{" + XML_NS + "}pos").equals(element)) {
 					getText = true;
 				} else if (("{" + XML_NS + "}inflCode").equals(element)) {
-					if ("suff".equals(xmlStreamReader2
+					if ("suff".equals(reader
 							.getAttributeValue(null, "type"))) {
 						getText = true;
 						regularInflection = true;
@@ -168,17 +151,16 @@ public class DictionaryParser {
 			break;
 			case XMLEvent.CHARACTERS:
 				if (getText) {
-					characters.append(xmlStreamReader2.getText());
+					characters.append(reader.getText());
 				}
 			break;
 			case XMLEvent.END_ELEMENT:
-				element = xmlStreamReader2.getName().toString();
+				element = reader.getName().toString();
 				// <entry>
 				if (("{" + XML_NS + "}entry").equals(element)) {
 					text = text + formBuffer + " " + senseGrpBuffer;
 					indexObject.setText(text);
-					indexHandler.write(indexObject);
-					senseGrpCount = 0;
+					return indexObject;
 				// <orth>
 				} else if (("{" + XML_NS + "}form").equals(element)) {
 					if (!regularInflection) {
@@ -320,6 +302,7 @@ public class DictionaryParser {
 			break;
 			}
 		}
+		return null;
 	}
 
 }

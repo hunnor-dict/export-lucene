@@ -1,4 +1,4 @@
-package net.hunnor.dict.lucene;
+package net.hunnor.dict.lucene.index;
 
 /**
  * Constants for Lucene field names.

@@ -1,8 +1,10 @@
-package net.hunnor.dict.lucene;
+package net.hunnor.dict.lucene.util;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import net.hunnor.dict.lucene.util.RomanNumerals;
 
 /**
  * Test cases for conversion to Roman numerals.

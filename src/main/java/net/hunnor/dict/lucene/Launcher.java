@@ -1,9 +1,5 @@
 package net.hunnor.dict.lucene;
 
-import java.io.IOException;
-
-import javax.xml.stream.XMLStreamException;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -81,13 +77,16 @@ public final class Launcher {
 				&& commandLine.hasOption(OPTS_LANG)
 				&& commandLine.hasOption(OPTS_INDEX_DIR)
 				&& commandLine.hasOption(OPTS_SPELLCHECK_INDEX_DIR)) {
-			indexFile(
+
+			Indexer indexer = new Indexer();
+			indexer.indexFile(
 					commandLine.getOptionValue(OPTS_XML),
 					commandLine.getOptionValue(OPTS_LANG),
 					commandLine.getOptionValue(OPTS_INDEX_DIR));
-			indexSuggestions(
+			indexer.indexSuggestions(
 					commandLine.getOptionValue(OPTS_INDEX_DIR),
 					commandLine.getOptionValue(OPTS_SPELLCHECK_INDEX_DIR));
+
 		} else {
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("java -jar export-lucene.jar", options);
@@ -95,46 +94,6 @@ public final class Launcher {
 
 		System.exit(0);
 
-	}
-
-	/**
-	 * Create the main index.
-	 * @param file the file to index
-	 * @param lang the language to index the file as
-	 * @param indexDir the directory to create the index in
-	 */
-	private static void indexFile(
-			final String file,
-			final String lang,
-			final String indexDir) {
-		try {
-			DictionaryParser dictionaryParser = new DictionaryParser();
-			dictionaryParser.openIndexWriter(indexDir);
-			dictionaryParser.parseFile(file, lang);
-			dictionaryParser.closeIndexWriter();
-		} catch (XMLStreamException | IOException e) {
-			LOGGER.error(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * Create the spell checking index from the main index.
-	 * @param indexDir the directory with the main index
-	 * @param spellcheckDir the directory to create the spell checking index in
-	 */
-	private static void indexSuggestions(
-			final String indexDir,
-			final String spellcheckDir) {
-		try {
-			DictionaryParser dictionaryParser = new DictionaryParser();
-			dictionaryParser.openIndexReader(indexDir);
-			dictionaryParser.openSpellChecker(spellcheckDir);
-			dictionaryParser.createSuggestions();
-			dictionaryParser.closeSpellChecker();
-			dictionaryParser.closeIndexReader();
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
-		}		
 	}
 
 }

@@ -1,4 +1,4 @@
-package net.hunnor.dict.lucene;
+package net.hunnor.dict.lucene.util;
 
 /**
  * Utility class for converting integers to Roman numerals.
