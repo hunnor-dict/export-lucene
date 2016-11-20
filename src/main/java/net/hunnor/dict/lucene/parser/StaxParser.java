@@ -61,8 +61,8 @@ public class StaxParser {
 	 */
 	public Entry next() throws XMLStreamException {
 		Entry entry = new Entry();
-		int eventType = 0;
-		String element = "";
+		int eventType;
+		String element;
 		StringBuilder characters = new StringBuilder();
 		boolean getText = false;
 		boolean isEg = false;
