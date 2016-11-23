@@ -30,16 +30,15 @@ public class StaxParser {
 	/**
 	 * Open a stream from an XML file.
 	 * @param file the file to open
-	 * @param lang the language to index the file as
 	 * @throws XMLStreamException 
 	 * @throws FileNotFoundException 
 	 */
-	public void openFile(final String file, final String lang)
+	public void openFile(final String file)
 			throws FileNotFoundException, XMLStreamException {
 		XMLInputFactory2 xmlInputFactory2 =
 				(XMLInputFactory2) XMLInputFactory2.newInstance();
 		reader = (XMLStreamReader2) xmlInputFactory2
-				.createXMLStreamReader(file, new FileInputStream(file));
+				.createXMLStreamReader(new FileInputStream(file));
 	}
 
 	/**
@@ -69,15 +68,15 @@ public class StaxParser {
 		boolean regularInflection = false;
 		boolean primaryForm = false;
 		String previous = "";
-		String text = "";
-		String formBuffer = "";
-		String inflParBuffer = "";
-		String inflSeqBuffer = "";
+		StringBuilder text = new StringBuilder();
+		StringBuilder formBuffer = new StringBuilder();
+		StringBuilder inflParBuffer = new StringBuilder();
+		StringBuilder inflSeqBuffer = new StringBuilder();
 		int senseGrpCount = 0;
-		String senseGrpBuffer = "";
+		StringBuilder senseGrpBuffer = new StringBuilder();
 		int senseCount = 0;
-		String senseBuffer = "";
-		String egBuffer = "";
+		StringBuilder senseBuffer = new StringBuilder();
+		StringBuilder egBuffer = new StringBuilder();
 
 		while (reader.hasNext()) {
 			eventType = reader.next();
@@ -88,23 +87,19 @@ public class StaxParser {
 					entry = new Entry();
 					entry.setId(reader
 							.getAttributeValue(null, "id"));
-					text = "";
-					senseGrpBuffer = "";
+					text = new StringBuilder();
+					senseGrpBuffer = new StringBuilder();
 				} else if (("{" + XML_NS + "}formGrp").equals(element)) {
-					formBuffer = "";
+					formBuffer = new StringBuilder();
 				} else if (("{" + XML_NS + "}form").equals(element)) {
 					regularInflection = false;
-					inflParBuffer = "";
+					inflParBuffer = new StringBuilder();
 					if ("yes".equals(reader
 							.getAttributeValue(null, "primary"))) {
 						primaryForm = true;
 					} else {
 						primaryForm = false;
 					}
-				} else if (("{" + XML_NS + "}orth").equals(element)) {
-					getText = true;
-				} else if (("{" + XML_NS + "}pos").equals(element)) {
-					getText = true;
 				} else if (("{" + XML_NS + "}inflCode").equals(element)) {
 					if ("suff".equals(reader
 							.getAttributeValue(null, "type"))) {
@@ -113,39 +108,38 @@ public class StaxParser {
 					}
 				} else if (("{" + XML_NS + "}inflPar").equals(element)) {
 					if (inflParBuffer.length() > 0) {
-						inflParBuffer = inflParBuffer + "; ";
+						inflParBuffer.append("; ");
 					}
-					inflSeqBuffer = "";
-				} else if (("{" + XML_NS + "}inflSeq").equals(element)) {
-					getText = true;
+					inflSeqBuffer = new StringBuilder();
 				} else if (("{" + XML_NS + "}senseGrp").equals(element)) {
-					senseBuffer = "";
+					senseBuffer = new StringBuilder();
 					if (senseGrpCount > 0) {
 						if (senseGrpCount == 1) {
-							senseGrpBuffer = "<b>I</b> " + senseGrpBuffer;
+							senseGrpBuffer.insert(0, "<b>I</b> ");
 						}
-						senseGrpBuffer = senseGrpBuffer
-								+ " <b>"
+						senseGrpBuffer.append(
+								" <b>"
 								+ RomanNumerals.roman(senseGrpCount + 1)
-								+ "</b> ";
+								+ "</b> ");
 					}
 				} else if (("{" + XML_NS + "}sense").equals(element)) {
 					if (senseCount > 0) {
 						if (senseCount == 1) {
-							senseBuffer = "<b>1</b> " + senseBuffer;
+							senseBuffer.insert(0, "<b>1</b> ");
 						}
-						senseBuffer = senseBuffer
-								+ " <b>" + (senseCount + 1) + "</b> ";
+						senseBuffer.append(
+								" <b>" + (senseCount + 1) + "</b> ");
 					}
-				} else if (("{" + XML_NS + "}trans").equals(element)) {
-					getText = true;
-				} else if (("{" + XML_NS + "}lbl").equals(element)) {
+				} else if (("{" + XML_NS + "}orth").equals(element)
+						|| ("{" + XML_NS + "}pos").equals(element)
+						|| ("{" + XML_NS + "}inflSeq").equals(element)
+						|| ("{" + XML_NS + "}trans").equals(element)
+						|| ("{" + XML_NS + "}lbl").equals(element)
+						|| ("{" + XML_NS + "}q").equals(element)) {
 					getText = true;
 				} else if (("{" + XML_NS + "}eg").equals(element)) {
-					egBuffer = "";
+					egBuffer = new StringBuilder();
 					isEg = true;
-				} else if (("{" + XML_NS + "}q").equals(element)) {
-					getText = true;
 				}
 			break;
 			case XMLEvent.CHARACTERS:
@@ -156,49 +150,45 @@ public class StaxParser {
 			case XMLEvent.END_ELEMENT:
 				element = reader.getName().toString();
 				if (("{" + XML_NS + "}entry").equals(element)) {
-					text = text + formBuffer + " " + senseGrpBuffer;
-					entry.setText(text);
+					text.append(formBuffer).append(" ").append(senseGrpBuffer);
+					entry.setText(text.toString());
 					return entry;
 				} else if (("{" + XML_NS + "}form").equals(element)) {
-					if (!regularInflection) {
-						if (inflParBuffer.length() > 0) {
-							formBuffer = formBuffer
-									+ " (" + inflParBuffer + ")";
-						}
+					if (!regularInflection && inflParBuffer.length() > 0) {
+						formBuffer.append(" (" + inflParBuffer + ")");
 					}
 				} else if (("{" + XML_NS + "}orth").equals(element)) {
 					entry.getRoots().add(characters.toString());
 					if (formBuffer.length() > 0) {
-						formBuffer = formBuffer + " ";
+						formBuffer.append(" ");
 					}
-					formBuffer = formBuffer
-							+ "<b>" + characters.toString() + "</b>";
+					formBuffer.append("<b>" + characters.toString() + "</b>");
 					getText = false;
 				} else if (("{" + XML_NS + "}pos").equals(element)) {
 					if (primaryForm) {
-						formBuffer = formBuffer + " " + characters.toString();
+						formBuffer.append(" " + characters.toString());
 					}
 					getText = false;
 				} else if (("{" + XML_NS + "}inflCode").equals(element)) {
 					if (characters.length() > 0) {
-						formBuffer = formBuffer + " " + characters.toString();
+						formBuffer.append(" " + characters.toString());
 					}
 					getText = false;
 				} else if (("{" + XML_NS + "}inflPar").equals(element)) {
 					if (inflParBuffer.length() > 0) {
-						inflParBuffer = inflParBuffer + "; ";
+						inflParBuffer.append("; ");
 					}
-					inflParBuffer = inflParBuffer + inflSeqBuffer;
+					inflParBuffer.append(inflSeqBuffer);
 					getText = false;
 				} else if (("{" + XML_NS + "}inflSeq").equals(element)) {
 						entry.getForms().add(characters.toString());
 					if (inflSeqBuffer.length() > 0) {
-						inflSeqBuffer = inflSeqBuffer + ", ";
+						inflSeqBuffer.append(", ");
 					}
-					inflSeqBuffer = inflSeqBuffer + characters.toString();
+					inflSeqBuffer.append(characters.toString());
 					getText = false;
 				} else if (("{" + XML_NS + "}senseGrp").equals(element)) {
-					senseGrpBuffer = senseGrpBuffer + senseBuffer;
+					senseGrpBuffer.append(senseBuffer);
 					senseGrpCount++;
 					senseCount = 0;
 				} else if (("{" + XML_NS + "}sense").equals(element)) {
@@ -207,62 +197,60 @@ public class StaxParser {
 				} else if (("{" + XML_NS + "}trans").equals(element)) {
 					if (isEg) {
 						entry.getQuoteTrans().add(characters.toString());
-						if ("trans".equals(previous)) {
-							egBuffer = egBuffer + ", ";
-						} else if ("lbl".equals(previous)) {
-							egBuffer = egBuffer + " ";
-						} else if ("q".equals(previous)) {
-							egBuffer = egBuffer + " ";
+						if (TagNames.TRANS.equals(previous)) {
+							egBuffer.append(", ");
+						} else if ("lbl".equals(previous)
+								|| "q".equals(previous)) {
+							egBuffer.append(" ");
 						}
-						egBuffer = egBuffer + characters.toString();
+						egBuffer.append(characters.toString());
 					} else {
 						entry.getTrans().add(characters.toString());
-						if ("trans".equals(previous)) {
-							senseBuffer = senseBuffer + ", ";
+						if (TagNames.TRANS.equals(previous)) {
+							senseBuffer.append(", ");
 						} else if ("lbl".equals(previous)) {
-							senseBuffer = senseBuffer + " ";
+							senseBuffer.append(" ");
 						} else if ("eg".equals(previous)) {
-							senseBuffer = senseBuffer + "; ";
+							senseBuffer.append("; ");
 						}
-						senseBuffer = senseBuffer + characters.toString();
+						senseBuffer.append(characters.toString());
 					}
-					previous = "trans";
+					previous = TagNames.TRANS;
 					getText = false;
 				} else if (("{" + XML_NS + "}lbl").equals(element)) {
 					if (senseBuffer.length() > 0) {
-						if ("trans".equals(previous)) {
-							senseBuffer = senseBuffer + ", ";
+						if (TagNames.TRANS.equals(previous)) {
+							senseBuffer.append(", ");
 						} else if ("lbl".equals(previous)) {
-							senseBuffer = senseBuffer + " ";
+							senseBuffer.append(" ");
 						} else if ("eg".equals(previous)) {
-							senseBuffer = senseBuffer + "; ";
+							senseBuffer.append("; ");
 						}
 					}
-					senseBuffer = senseBuffer
-							+ "<i>" + characters.toString() + "</i>";
+					senseBuffer.append(
+							"<i>" + characters.toString() + "</i>");
 					previous = "lbl";
 					getText = false;
 				} else if (("{" + XML_NS + "}eg").equals(element)) {
 					isEg = false;
 					previous = "eg";
 					if (senseBuffer.length() > 0) {
-						if ("trans".equals(previous)) {
-							senseBuffer = senseBuffer + "; ";
+						if (TagNames.TRANS.equals(previous)
+								|| "eg".equals(previous)) {
+							senseBuffer.append("; ");
 						} else if ("lbl".equals(previous)) {
-							senseBuffer = senseBuffer + " ";
-						} else if ("eg".equals(previous)) {
-							senseBuffer = senseBuffer + "; ";
+							senseBuffer.append(" ");
 						}
 					}
-					senseBuffer = senseBuffer + egBuffer;
+					senseBuffer.append(egBuffer);
 				} else if (("{" + XML_NS + "}q").equals(element)) {
 					entry.getQuote().add(characters.toString());
 					getText = false;
 					if (egBuffer.length() > 0) {
-						egBuffer = egBuffer + ", ";
+						egBuffer.append(", ");
 					}
-					egBuffer = egBuffer
-							+ "<b>" + characters.toString() + "</b>";
+					egBuffer.append(
+							"<b>" + characters.toString() + "</b>");
 					previous = "q";
 				}
 				characters = new StringBuilder();

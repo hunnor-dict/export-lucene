@@ -40,7 +40,7 @@ public class Service {
 			luceneIndexer.openIndexWriter();
 
 			StaxParser staxParser = new StaxParser();
-			staxParser.openFile(file, lang);
+			staxParser.openFile(file);
 			while (staxParser.hasNext()) {
 				Entry entry = staxParser.next();
 				if (entry != null) {
