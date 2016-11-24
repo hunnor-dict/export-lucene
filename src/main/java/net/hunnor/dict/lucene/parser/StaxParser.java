@@ -1,13 +1,15 @@
 package net.hunnor.dict.lucene.parser;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 
 import org.codehaus.stax2.XMLInputFactory2;
 import org.codehaus.stax2.XMLStreamReader2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.hunnor.dict.lucene.model.Entry;
 import net.hunnor.dict.lucene.util.RomanNumerals;
@@ -18,6 +20,11 @@ import net.hunnor.dict.lucene.util.RomanNumerals;
 public class StaxParser {
 
 	/**
+	 * Default logger.
+	 */
+	private static final Logger LOGGER =
+			LoggerFactory.getLogger(StaxParser.class);
+	/**
 	 * Reader for the XML stream.
 	 */
 	private XMLStreamReader2 reader;
@@ -25,17 +32,18 @@ public class StaxParser {
 	/**
 	 * Open a stream from an XML file.
 	 * @param file the file to open
-	 * @throws XMLStreamException 
-	 * @throws FileNotFoundException 
 	 */
-	public void openFile(final String file)
-			throws FileNotFoundException, XMLStreamException {
-		XMLInputFactory2 xmlInputFactory2 =
-				(XMLInputFactory2) XMLInputFactory2.newInstance();
-		xmlInputFactory2.setProperty(
-				XMLInputFactory2.IS_NAMESPACE_AWARE, false);
-		reader = (XMLStreamReader2) xmlInputFactory2
-				.createXMLStreamReader(new FileInputStream(file));
+	public void openFile(final String file) {
+		try (FileInputStream stream = new FileInputStream(file)) {
+			XMLInputFactory2 xmlInputFactory2 =
+					(XMLInputFactory2) XMLInputFactory2.newInstance();
+			xmlInputFactory2.setProperty(
+					XMLInputFactory2.IS_NAMESPACE_AWARE, false);
+			reader = (XMLStreamReader2) xmlInputFactory2
+					.createXMLStreamReader(stream);
+		} catch (IOException | XMLStreamException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
 	}
 
 	/**
@@ -188,7 +196,6 @@ public class StaxParser {
 					senseGrpCount++;
 					senseCount = 0;
 				} else if (("sense").equals(element)) {
-					previous = "";
 					senseCount++;
 				} else if (("trans").equals(element)) {
 					if (isEg) {
@@ -211,7 +218,6 @@ public class StaxParser {
 						}
 						senseBuffer.append(characters.toString());
 					}
-					previous = TagNames.TRANS;
 					getText = false;
 				} else if (("lbl").equals(element)) {
 					if (senseBuffer.length() > 0) {
@@ -225,11 +231,9 @@ public class StaxParser {
 					}
 					senseBuffer.append(
 							"<i>" + characters.toString() + "</i>");
-					previous = "lbl";
 					getText = false;
 				} else if (("eg").equals(element)) {
 					isEg = false;
-					previous = "eg";
 					if (senseBuffer.length() > 0) {
 						if (TagNames.TRANS.equals(previous)
 								|| "eg".equals(previous)) {
@@ -247,13 +251,14 @@ public class StaxParser {
 					}
 					egBuffer.append(
 							"<b>" + characters.toString() + "</b>");
-					previous = "q";
 				}
+				previous = element;
 				characters = new StringBuilder();
 			break;
 			default:
 			break;
 			}
+
 		}
 		return null;
 	}
