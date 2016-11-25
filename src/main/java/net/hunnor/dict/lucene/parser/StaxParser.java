@@ -2,6 +2,10 @@ package net.hunnor.dict.lucene.parser;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
@@ -28,6 +32,38 @@ public class StaxParser {
 	 * Reader for the XML stream.
 	 */
 	private XMLStreamReader2 reader;
+
+	/**
+	 * Glue strings between elements.
+	 */
+	private static Map<String, String> glues;
+
+	/**
+	 * Names of elements with usable text.
+	 */
+	private static Set<String> textNodes;
+
+	static {
+
+		glues = new HashMap<>();
+
+		glues.put(TagNames.TRANS + "2" + TagNames.LBL, ", ");
+		glues.put(TagNames.LBL + "2" + TagNames.LBL, " ");
+		glues.put(TagNames.EG + "2" + TagNames.LBL, "; ");
+
+		glues.put(TagNames.TRANS + "2" + TagNames.EG, "; ");
+		glues.put(TagNames.EG + "2" + TagNames.EG, "; ");
+		glues.put(TagNames.LBL + "2" + TagNames.EG, " ");
+
+		textNodes = new HashSet<>();
+		textNodes.add(TagNames.ORTH);
+		textNodes.add(TagNames.POS);
+		textNodes.add(TagNames.INFL_SEQ);
+		textNodes.add(TagNames.TRANS);
+		textNodes.add(TagNames.LBL);
+		textNodes.add(TagNames.Q);
+
+	}
 
 	/**
 	 * Open a stream from an XML file.
@@ -65,7 +101,6 @@ public class StaxParser {
 	 */
 	public Entry next() throws XMLStreamException {
 		Entry entry = new Entry();
-		int eventType;
 		String element;
 		StringBuilder characters = new StringBuilder();
 		boolean getText = false;
@@ -84,11 +119,11 @@ public class StaxParser {
 		StringBuilder egBuffer = new StringBuilder();
 
 		while (reader.hasNext()) {
-			eventType = reader.next();
+			int eventType = reader.next();
 			switch (eventType) {
 			case XMLEvent.START_ELEMENT:
 				element = reader.getName().toString();
-				if (("entry").equals(element)) {
+				if ((TagNames.ENTRY).equals(element)) {
 					entry = new Entry();
 					entry.setId(reader
 							.getAttributeValue(null, "id"));
@@ -96,26 +131,22 @@ public class StaxParser {
 					senseGrpBuffer = new StringBuilder();
 				} else if (("formGrp").equals(element)) {
 					formBuffer = new StringBuilder();
-				} else if (("form").equals(element)) {
+				} else if ((TagNames.FORM).equals(element)) {
 					regularInflection = false;
 					inflParBuffer = new StringBuilder();
-					if ("yes".equals(reader
-							.getAttributeValue(null, "primary"))) {
-						primaryForm = true;
-					} else {
-						primaryForm = false;
-					}
-				} else if (("inflCode").equals(element)
+					primaryForm = "yes".equals(reader
+							.getAttributeValue(null, "primary"));
+				} else if ((TagNames.INFL_CODE).equals(element)
 						&& "suff".equals(reader
 								.getAttributeValue(null, "type"))) {
 					getText = true;
 					regularInflection = true;
-				} else if (("inflPar").equals(element)) {
+				} else if ((TagNames.INFL_PAR).equals(element)) {
 					if (inflParBuffer.length() > 0) {
 						inflParBuffer.append("; ");
 					}
 					inflSeqBuffer = new StringBuilder();
-				} else if (("senseGrp").equals(element)) {
+				} else if ((TagNames.SENSE_GRP).equals(element)) {
 					senseBuffer = new StringBuilder();
 					if (senseGrpCount > 0) {
 						if (senseGrpCount == 1) {
@@ -126,7 +157,7 @@ public class StaxParser {
 								+ RomanNumerals.roman(senseGrpCount + 1)
 								+ "</b> ");
 					}
-				} else if (("sense").equals(element)) {
+				} else if ((TagNames.SENSE).equals(element)) {
 					if (senseCount > 0) {
 						if (senseCount == 1) {
 							senseBuffer.insert(0, "<b>1</b> ");
@@ -134,14 +165,9 @@ public class StaxParser {
 						senseBuffer.append(
 								" <b>" + (senseCount + 1) + "</b> ");
 					}
-				} else if (("orth").equals(element)
-						|| ("pos").equals(element)
-						|| ("inflSeq").equals(element)
-						|| ("trans").equals(element)
-						|| ("lbl").equals(element)
-						|| ("q").equals(element)) {
+				} else if (isTextNode(element)) {
 					getText = true;
-				} else if (("eg").equals(element)) {
+				} else if ((TagNames.EG).equals(element)) {
 					egBuffer = new StringBuilder();
 					isEg = true;
 				}
@@ -153,57 +179,57 @@ public class StaxParser {
 			break;
 			case XMLEvent.END_ELEMENT:
 				element = reader.getName().toString();
-				if (("entry").equals(element)) {
+				if ((TagNames.ENTRY).equals(element)) {
 					text.append(formBuffer).append(" ").append(senseGrpBuffer);
 					entry.setText(text.toString());
 					return entry;
-				} else if (("form").equals(element)) {
+				} else if ((TagNames.FORM).equals(element)) {
 					if (!regularInflection && inflParBuffer.length() > 0) {
 						formBuffer.append(" (" + inflParBuffer + ")");
 					}
-				} else if (("orth").equals(element)) {
+				} else if ((TagNames.ORTH).equals(element)) {
 					entry.getRoots().add(characters.toString());
 					if (formBuffer.length() > 0) {
 						formBuffer.append(" ");
 					}
 					formBuffer.append("<b>" + characters.toString() + "</b>");
 					getText = false;
-				} else if (("pos").equals(element)) {
+				} else if ((TagNames.POS).equals(element)) {
 					if (primaryForm) {
 						formBuffer.append(" " + characters.toString());
 					}
 					getText = false;
-				} else if (("inflCode").equals(element)) {
+				} else if ((TagNames.INFL_CODE).equals(element)) {
 					if (characters.length() > 0) {
 						formBuffer.append(" " + characters.toString());
 					}
 					getText = false;
-				} else if (("inflPar").equals(element)) {
+				} else if ((TagNames.INFL_PAR).equals(element)) {
 					if (inflParBuffer.length() > 0) {
 						inflParBuffer.append("; ");
 					}
 					inflParBuffer.append(inflSeqBuffer);
 					getText = false;
-				} else if (("inflSeq").equals(element)) {
+				} else if ((TagNames.INFL_SEQ).equals(element)) {
 						entry.getForms().add(characters.toString());
 					if (inflSeqBuffer.length() > 0) {
 						inflSeqBuffer.append(", ");
 					}
 					inflSeqBuffer.append(characters.toString());
 					getText = false;
-				} else if (("senseGrp").equals(element)) {
+				} else if ((TagNames.SENSE_GRP).equals(element)) {
 					senseGrpBuffer.append(senseBuffer);
 					senseGrpCount++;
 					senseCount = 0;
-				} else if (("sense").equals(element)) {
+				} else if ((TagNames.SENSE).equals(element)) {
 					senseCount++;
-				} else if (("trans").equals(element)) {
+				} else if ((TagNames.TRANS).equals(element)) {
 					if (isEg) {
 						entry.getQuoteTrans().add(characters.toString());
 						if (TagNames.TRANS.equals(previous)) {
 							egBuffer.append(", ");
-						} else if ("lbl".equals(previous)
-								|| "q".equals(previous)) {
+						} else if (TagNames.LBL.equals(previous)
+								|| TagNames.Q.equals(previous)) {
 							egBuffer.append(" ");
 						}
 						egBuffer.append(characters.toString());
@@ -211,39 +237,28 @@ public class StaxParser {
 						entry.getTrans().add(characters.toString());
 						if (TagNames.TRANS.equals(previous)) {
 							senseBuffer.append(", ");
-						} else if ("lbl".equals(previous)) {
+						} else if (TagNames.LBL.equals(previous)) {
 							senseBuffer.append(" ");
-						} else if ("eg".equals(previous)) {
+						} else if (TagNames.EG.equals(previous)) {
 							senseBuffer.append("; ");
 						}
 						senseBuffer.append(characters.toString());
 					}
 					getText = false;
-				} else if (("lbl").equals(element)) {
+				} else if ((TagNames.LBL).equals(element)) {
 					if (senseBuffer.length() > 0) {
-						if (TagNames.TRANS.equals(previous)) {
-							senseBuffer.append(", ");
-						} else if ("lbl".equals(previous)) {
-							senseBuffer.append(" ");
-						} else if ("eg".equals(previous)) {
-							senseBuffer.append("; ");
-						}
+						senseBuffer.append(getGlue(element, previous));
 					}
 					senseBuffer.append(
 							"<i>" + characters.toString() + "</i>");
 					getText = false;
-				} else if (("eg").equals(element)) {
+				} else if ((TagNames.EG).equals(element)) {
 					isEg = false;
 					if (senseBuffer.length() > 0) {
-						if (TagNames.TRANS.equals(previous)
-								|| "eg".equals(previous)) {
-							senseBuffer.append("; ");
-						} else if ("lbl".equals(previous)) {
-							senseBuffer.append(" ");
-						}
+						senseBuffer.append(getGlue(element, previous));
 					}
 					senseBuffer.append(egBuffer);
-				} else if (("q").equals(element)) {
+				} else if ((TagNames.Q).equals(element)) {
 					entry.getQuote().add(characters.toString());
 					getText = false;
 					if (egBuffer.length() > 0) {
@@ -261,6 +276,31 @@ public class StaxParser {
 
 		}
 		return null;
+	}
+
+	/**
+	 * Return the glue string for the specified combination of elements.
+	 * @param element the name of the current element
+	 * @param previous the name of the previous element
+	 * @return the glue string for the specified combination
+	 */
+	private String getGlue(
+			final String element,
+			final String previous) {
+		String glue = glues.get(previous + "2" + element);
+		if (glue == null) {
+			glue = "";
+		}
+		return glue;
+	}
+
+	/**
+	 * Check if text should be collected for an element.
+	 * @param elementName the name of the element
+	 * @return if text should be collected from the element
+	 */
+	private boolean isTextNode(final String elementName) {
+		return textNodes.contains(elementName);
 	}
 
 }
