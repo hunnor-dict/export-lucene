@@ -14,7 +14,7 @@ import net.hunnor.dict.lucene.parser.StaxParser;
 /**
  * The indexer service.
  */
-public class Service {
+public final class Service {
 
 	/**
 	 * Default logger.

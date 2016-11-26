@@ -21,7 +21,7 @@ import net.hunnor.dict.lucene.util.RomanNumerals;
 /**
  * Parses an XML file and returns model objects.
  */
-public class StaxParser {
+public final class StaxParser {
 
 	/**
 	 * Default logger.
@@ -46,11 +46,9 @@ public class StaxParser {
 	static {
 
 		glues = new HashMap<>();
-
 		glues.put(TagNames.TRANS + "2" + TagNames.LBL, ", ");
 		glues.put(TagNames.LBL + "2" + TagNames.LBL, " ");
 		glues.put(TagNames.EG + "2" + TagNames.LBL, "; ");
-
 		glues.put(TagNames.TRANS + "2" + TagNames.EG, "; ");
 		glues.put(TagNames.EG + "2" + TagNames.EG, "; ");
 		glues.put(TagNames.LBL + "2" + TagNames.EG, " ");
@@ -100,182 +98,463 @@ public class StaxParser {
 	 * @throws XMLStreamException 
 	 */
 	public Entry next() throws XMLStreamException {
-		Entry entry = new Entry();
-		String element;
-		StringBuilder characters = new StringBuilder();
-		boolean getText = false;
-		boolean isEg = false;
-		boolean regularInflection = false;
-		boolean primaryForm = false;
-		String previous = "";
-		StringBuilder text = new StringBuilder();
-		StringBuilder formBuffer = new StringBuilder();
-		StringBuilder inflParBuffer = new StringBuilder();
-		StringBuilder inflSeqBuffer = new StringBuilder();
-		int senseGrpCount = 0;
-		StringBuilder senseGrpBuffer = new StringBuilder();
-		int senseCount = 0;
-		StringBuilder senseBuffer = new StringBuilder();
-		StringBuilder egBuffer = new StringBuilder();
-
-		while (reader.hasNext()) {
+		ParserState parserState = new ParserState();
+		while (reader.hasNext() && !parserState.isEntryComplete()) {
 			int eventType = reader.next();
 			switch (eventType) {
 			case XMLEvent.START_ELEMENT:
-				element = reader.getName().toString();
-				if ((TagNames.ENTRY).equals(element)) {
-					entry = new Entry();
-					entry.setId(reader
-							.getAttributeValue(null, "id"));
-					text = new StringBuilder();
-					senseGrpBuffer = new StringBuilder();
-				} else if (("formGrp").equals(element)) {
-					formBuffer = new StringBuilder();
-				} else if ((TagNames.FORM).equals(element)) {
-					regularInflection = false;
-					inflParBuffer = new StringBuilder();
-					primaryForm = "yes".equals(reader
-							.getAttributeValue(null, "primary"));
-				} else if ((TagNames.INFL_CODE).equals(element)
-						&& "suff".equals(reader
-								.getAttributeValue(null, "type"))) {
-					getText = true;
-					regularInflection = true;
-				} else if ((TagNames.INFL_PAR).equals(element)) {
-					if (inflParBuffer.length() > 0) {
-						inflParBuffer.append("; ");
-					}
-					inflSeqBuffer = new StringBuilder();
-				} else if ((TagNames.SENSE_GRP).equals(element)) {
-					senseBuffer = new StringBuilder();
-					if (senseGrpCount > 0) {
-						if (senseGrpCount == 1) {
-							senseGrpBuffer.insert(0, "<b>I</b> ");
-						}
-						senseGrpBuffer.append(
-								" <b>"
-								+ RomanNumerals.roman(senseGrpCount + 1)
-								+ "</b> ");
-					}
-				} else if ((TagNames.SENSE).equals(element)) {
-					if (senseCount > 0) {
-						if (senseCount == 1) {
-							senseBuffer.insert(0, "<b>1</b> ");
-						}
-						senseBuffer.append(
-								" <b>" + (senseCount + 1) + "</b> ");
-					}
-				} else if (isTextNode(element)) {
-					getText = true;
-				} else if ((TagNames.EG).equals(element)) {
-					egBuffer = new StringBuilder();
-					isEg = true;
-				}
-			break;
+				processStartElement(reader.getLocalName(), parserState);
+				break;
 			case XMLEvent.CHARACTERS:
-				if (getText) {
-					characters.append(reader.getText());
+				if (parserState.isCollectText()) {
+					parserState.getCharacters().append(reader.getText());
 				}
-			break;
+				break;
 			case XMLEvent.END_ELEMENT:
-				element = reader.getName().toString();
-				if ((TagNames.ENTRY).equals(element)) {
-					text.append(formBuffer).append(" ").append(senseGrpBuffer);
-					entry.setText(text.toString());
-					return entry;
-				} else if ((TagNames.FORM).equals(element)) {
-					if (!regularInflection && inflParBuffer.length() > 0) {
-						formBuffer.append(" (" + inflParBuffer + ")");
-					}
-				} else if ((TagNames.ORTH).equals(element)) {
-					entry.getRoots().add(characters.toString());
-					if (formBuffer.length() > 0) {
-						formBuffer.append(" ");
-					}
-					formBuffer.append("<b>" + characters.toString() + "</b>");
-					getText = false;
-				} else if ((TagNames.POS).equals(element)) {
-					if (primaryForm) {
-						formBuffer.append(" " + characters.toString());
-					}
-					getText = false;
-				} else if ((TagNames.INFL_CODE).equals(element)) {
-					if (characters.length() > 0) {
-						formBuffer.append(" " + characters.toString());
-					}
-					getText = false;
-				} else if ((TagNames.INFL_PAR).equals(element)) {
-					if (inflParBuffer.length() > 0) {
-						inflParBuffer.append("; ");
-					}
-					inflParBuffer.append(inflSeqBuffer);
-					getText = false;
-				} else if ((TagNames.INFL_SEQ).equals(element)) {
-						entry.getForms().add(characters.toString());
-					if (inflSeqBuffer.length() > 0) {
-						inflSeqBuffer.append(", ");
-					}
-					inflSeqBuffer.append(characters.toString());
-					getText = false;
-				} else if ((TagNames.SENSE_GRP).equals(element)) {
-					senseGrpBuffer.append(senseBuffer);
-					senseGrpCount++;
-					senseCount = 0;
-				} else if ((TagNames.SENSE).equals(element)) {
-					senseCount++;
-				} else if ((TagNames.TRANS).equals(element)) {
-					if (isEg) {
-						entry.getQuoteTrans().add(characters.toString());
-						if (TagNames.TRANS.equals(previous)) {
-							egBuffer.append(", ");
-						} else if (TagNames.LBL.equals(previous)
-								|| TagNames.Q.equals(previous)) {
-							egBuffer.append(" ");
-						}
-						egBuffer.append(characters.toString());
-					} else {
-						entry.getTrans().add(characters.toString());
-						if (TagNames.TRANS.equals(previous)) {
-							senseBuffer.append(", ");
-						} else if (TagNames.LBL.equals(previous)) {
-							senseBuffer.append(" ");
-						} else if (TagNames.EG.equals(previous)) {
-							senseBuffer.append("; ");
-						}
-						senseBuffer.append(characters.toString());
-					}
-					getText = false;
-				} else if ((TagNames.LBL).equals(element)) {
-					if (senseBuffer.length() > 0) {
-						senseBuffer.append(getGlue(element, previous));
-					}
-					senseBuffer.append(
-							"<i>" + characters.toString() + "</i>");
-					getText = false;
-				} else if ((TagNames.EG).equals(element)) {
-					isEg = false;
-					if (senseBuffer.length() > 0) {
-						senseBuffer.append(getGlue(element, previous));
-					}
-					senseBuffer.append(egBuffer);
-				} else if ((TagNames.Q).equals(element)) {
-					entry.getQuote().add(characters.toString());
-					getText = false;
-					if (egBuffer.length() > 0) {
-						egBuffer.append(", ");
-					}
-					egBuffer.append(
-							"<b>" + characters.toString() + "</b>");
-				}
-				previous = element;
-				characters = new StringBuilder();
-			break;
+				processEndElement(reader.getLocalName(), parserState);
+				break;
 			default:
-			break;
+				break;
 			}
-
 		}
-		return null;
+		return parserState.getEntry();
+	}
+
+	/**
+	 * Process start elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processStartElement(
+			final String element,
+			final ParserState parserState) {
+		processEntryStart(element, parserState);
+		processFormGrpStart(element, parserState);
+		processFormStart(element, parserState);
+		processInflCodeStart(element, parserState);
+		processInflParStart(element, parserState);
+		processSenseGrpStart(element, parserState);
+		processSenseStart(element, parserState);
+		processEgStart(element, parserState);
+		processStart(element, parserState);
+	}
+
+	/**
+	 * Process end elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processEndElement(
+			final String element,
+			final ParserState parserState) {
+		processEntryEnd(element, parserState);
+		processFormEnd(element, parserState);
+		processOrthEnd(element, parserState);
+		processPosEnd(element, parserState);
+		processInflCodeEnd(element, parserState);
+		processInflParEnd(element, parserState);
+		processInflSeqEnd(element, parserState);
+		processSenseGrpEnd(element, parserState);
+		processSenseEnd(element, parserState);
+		processTransEnd(element, parserState);
+		processLblEnd(element, parserState);
+		processEgEnd(element, parserState);
+		processQEnd(element, parserState);
+	}
+
+	/**
+	 * Process start 'entry' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processEntryStart(
+		final String element,
+		final ParserState parserState) {
+		if (TagNames.ENTRY.equals(element)) {
+			Entry entry = new Entry();
+			entry.setId(reader
+					.getAttributeValue(null, "id"));
+			parserState.setEntry(entry);
+			parserState.setText(new StringBuilder());
+			parserState.setSenseGrpBuilder(new StringBuilder());
+		}
+	}
+
+	/**
+	 * Process start 'formGrp' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processFormGrpStart(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.FORM_GRP.equals(element)) {
+			parserState.setFormBuffer(new StringBuilder());
+		}
+	}
+
+	/**
+	 * Process start 'form' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processFormStart(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.FORM.equals(element)) {
+			parserState.setRegularInflection(false);
+			parserState.setInflParBuffer(new StringBuilder());
+			parserState.setPrimaryForm(
+					"yes".equals(reader.getAttributeValue(null, "primary")));
+		}
+	}
+
+	/**
+	 * Process start 'inflCode' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processInflCodeStart(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.INFL_CODE.equals(element)
+				&& "suff".equals(reader.getAttributeValue(null, "type"))) {
+			parserState.setCollectText(true);
+			parserState.setRegularInflection(true);
+		}
+	}
+
+	/**
+	 * Process start 'inflPar' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processInflParStart(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.INFL_PAR.equals(element)
+				&& parserState.getInflParBuffer().length() > 0) {
+			parserState.getInflParBuffer().append("; ");
+			parserState.setInflSeqBuffer(new StringBuilder());
+		}
+	}
+
+	/**
+	 * Process start 'senseGrp' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processSenseGrpStart(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.SENSE_GRP.equals(element)) {
+			parserState.setSenseBuffer(new StringBuilder());
+			if (parserState.getSenseGrpCount() > 0) {
+				if (parserState.getSenseGrpCount() == 1) {
+					parserState.getSenseGrpBuffer().insert(0, "<b>I</b> ");
+				}
+				parserState.getSenseGrpBuffer().append(
+						" <b>" + RomanNumerals.roman(
+								parserState.getSenseGrpCount() + 1)
+						+ "</b> ");
+			}
+		}
+	}
+
+	/**
+	 * Process start 'sense' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processSenseStart(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.SENSE.equals(element)
+				&& parserState.getSenseCount() > 0) {
+			if (parserState.getSenseCount() == 1) {
+				parserState.getSenseBuffer().insert(0, "<b>1</b> ");
+			}
+			parserState.getSenseBuffer().append(
+					" <b>" + (parserState.getSenseCount() + 1) + "</b> ");
+		}
+	}
+
+	/**
+	 * Process start 'eg' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processEgStart(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.EG.equals(element)) {
+			parserState.setEgBuffer(new StringBuilder());
+			parserState.setEg(true);
+		}
+	}
+
+	/**
+	 * Process start elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processStart(
+			final String element,
+			final ParserState parserState) {
+		if (isTextNode(element)) {
+			parserState.setCollectText(true);
+		}
+	}
+
+	/**
+	 * Process end 'entry' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processEntryEnd(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.ENTRY.equals(element)) {
+			parserState.getText()
+					.append(parserState.getFormBuffer())
+					.append(" ")
+					.append(parserState.getSenseGrpBuffer());
+			parserState.getEntry().setText(parserState.getText().toString());
+			parserState.setEntryComplete(true);
+		}
+	}
+
+	/**
+	 * Process end 'form' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processFormEnd(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.FORM.equals(element)
+				&& !parserState.isRegularInflection()
+				&& parserState.getInflParBuffer().length() > 0) {
+			parserState.getFormBuffer().append(" ("
+					+ parserState.getInflParBuffer() + ")");
+		}
+	}
+
+	/**
+	 * Process end 'orth' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processOrthEnd(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.ORTH.equals(element)) {
+			parserState.getEntry().getRoots()
+			.add(parserState.getCharacters().toString());
+			if (parserState.getFormBuffer().length() > 0) {
+				parserState.getFormBuffer().append(" ");
+			}
+			parserState.getFormBuffer().append(
+					"<b>" + parserState.getCharacters().toString() + "</b>");
+			parserState.setCollectText(false);
+		}
+	}
+
+	/**
+	 * Process end 'pos' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processPosEnd(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.POS.equals(element)) {
+			if (parserState.isPrimaryForm()) {
+				parserState.getFormBuffer().append(
+						" " + parserState.getCharacters().toString());
+			}
+			parserState.setCollectText(false);
+		}
+	}
+
+	/**
+	 * Process end 'inflCode' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processInflCodeEnd(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.INFL_CODE.equals(element)) {
+			if (parserState.getCharacters().length() > 0) {
+				parserState.getFormBuffer().append(
+						" " + parserState.getCharacters().toString());
+			}
+			parserState.setCollectText(false);
+		}
+	}
+
+	/**
+	 * Process end 'inflPar' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processInflParEnd(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.INFL_PAR.equals(element)) {
+			if (parserState.getInflParBuffer().length() > 0) {
+				parserState.getInflParBuffer().append("; ");
+			}
+			parserState.getInflParBuffer()
+					.append(parserState.getInflSeqBuffer());
+			parserState.setCollectText(false);
+		}
+	}
+
+	/**
+	 * Process end 'inflSeq' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processInflSeqEnd(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.INFL_SEQ.equals(element)) {
+			parserState.getEntry().getForms().add(
+					parserState.getCharacters().toString());
+		if (parserState.getInflSeqBuffer().length() > 0) {
+			parserState.getInflSeqBuffer().append(", ");
+		}
+		parserState.getInflSeqBuffer().append(
+				parserState.getCharacters().toString());
+		parserState.setCollectText(false);
+		}
+	}
+
+	/**
+	 * Process end 'senseGrp' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processSenseGrpEnd(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.SENSE_GRP.equals(element)) {
+			parserState.getSenseGrpBuffer()
+					.append(parserState.getSenseBuffer());
+			parserState.setSenseGrpCount(parserState.getSenseGrpCount() + 1);
+			parserState.setSenseCount(0);
+		}
+	}
+
+	/**
+	 * Process end 'sense' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processSenseEnd(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.SENSE.equals(element)) {
+			parserState.setSenseCount(parserState.getSenseCount() + 1);
+		}
+	}
+
+	/**
+	 * Process end 'trans' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processTransEnd(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.TRANS.equals(element)) {
+			if (parserState.isEg()) {
+				parserState.getEntry().getQuoteTrans().add(
+						parserState.getCharacters().toString());
+				if (TagNames.TRANS.equals(parserState.getPrevious())) {
+					parserState.getEgBuffer().append(", ");
+				} else if (TagNames.LBL.equals(parserState.getPrevious())
+						|| TagNames.Q.equals(parserState.getPrevious())) {
+					parserState.getEgBuffer().append(" ");
+				}
+				parserState.getEgBuffer().append(
+						parserState.getCharacters().toString());
+			} else {
+				parserState.getEntry().getTrans().add(
+						parserState.getCharacters().toString());
+				if (TagNames.TRANS.equals(parserState.getPrevious())) {
+					parserState.getSenseBuffer().append(", ");
+				} else if (TagNames.LBL.equals(parserState.getPrevious())) {
+					parserState.getSenseBuffer().append(" ");
+				} else if (TagNames.EG.equals(parserState.getPrevious())) {
+					parserState.getSenseBuffer().append("; ");
+				}
+				parserState.getSenseBuffer().append(
+						parserState.getCharacters().toString());
+			}
+			parserState.setCollectText(false);
+		}
+	}
+
+	/**
+	 * Process end 'lbl' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processLblEnd(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.LBL.equals(element)) {
+			if (parserState.getSenseBuffer().length() > 0) {
+				parserState.getSenseBuffer().append(getGlue(
+						element, parserState.getPrevious()));
+			}
+			parserState.getSenseBuffer().append(
+					"<i>" + parserState.getCharacters().toString() + "</i>");
+			parserState.setCollectText(false);
+		}
+	}
+
+	/**
+	 * Process end 'eg' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processEgEnd(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.EG.equals(element)) {
+			parserState.setEg(false);
+			if (parserState.getSenseBuffer().length() > 0) {
+				parserState.getSenseBuffer().append(getGlue(
+						element, parserState.getPrevious()));
+			}
+			parserState.getSenseBuffer().append(parserState.getEgBuffer());
+		}
+	}
+
+	/**
+	 * Process end 'q' elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processQEnd(
+			final String element,
+			final ParserState parserState) {
+		if (TagNames.Q.equals(element)) {
+			parserState.getEntry().getQuote()
+					.add(parserState.getCharacters().toString());
+			parserState.setCollectText(false);
+			if (parserState.getEgBuffer().length() > 0) {
+				parserState.getEgBuffer().append(", ");
+			}
+			parserState.getEgBuffer().append(
+					"<b>" + parserState.getCharacters().toString() + "</b>");
+		}
+		parserState.setPrevious(element);
+		parserState.setCharacters(new StringBuilder());
 	}
 
 	/**

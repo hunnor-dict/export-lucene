@@ -101,7 +101,9 @@ public final class LuceneIndexer {
 	 * @throws IOException when thrown by Lucene
 	 */
 	public void closeIndexReader() throws IOException {
-		indexReader.close();
+		if (indexReader != null) {
+			indexReader.close();
+		}
 	}
 
 	/**
@@ -122,7 +124,9 @@ public final class LuceneIndexer {
 	 * @throws IOException when thrown by Lucene
 	 */
 	public void closeIndexWriter() throws IOException {
-		indexWriter.close();
+		if (indexWriter != null) {
+			indexWriter.close();
+		}
 	}
 
 	/**
@@ -140,7 +144,9 @@ public final class LuceneIndexer {
 	 * @throws IOException when thrown by Lucene
 	 */
 	public void closeSpellChecker() throws IOException {
-		spellChecker.close();
+		if (spellChecker != null) {
+			spellChecker.close();
+		}
 	}
 
 	/**
@@ -157,10 +163,12 @@ public final class LuceneIndexer {
 				new IndexWriterConfig(LUCENE_VERSION, analyzer);
 		IndexWriterConfig indexWriterConfig2 =
 				new IndexWriterConfig(LUCENE_VERSION, analyzer);
-		spellChecker.indexDictionary(
-				hungarianDictionary, indexWriterConfig1, false);
-		spellChecker.indexDictionary(
-				norwegianDictionary, indexWriterConfig2, false);
+		if (spellChecker != null) {
+			spellChecker.indexDictionary(
+					hungarianDictionary, indexWriterConfig1, false);
+			spellChecker.indexDictionary(
+					norwegianDictionary, indexWriterConfig2, false);
+		}
 	}
 
 	/**
@@ -170,7 +178,9 @@ public final class LuceneIndexer {
 	 */
 	public void write(final Entry indexObject) throws IOException {
 		Document luceneDocument = toLuceneDocument(indexObject);
-		indexWriter.addDocument(luceneDocument);
+		if (indexWriter != null) {
+			indexWriter.addDocument(luceneDocument);
+		}
 	}
 
 	/**

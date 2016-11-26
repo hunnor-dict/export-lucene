@@ -124,8 +124,7 @@
 				<executions>
 					<execution>
 						<id>validate</id>
-						<!-- phase>validate</phase -->
-						<phase>verify</phase>
+						<phase>validate</phase>
 						<configuration>
 							<configLocation>checkstyle.xml</configLocation>
 							<violationSeverity>warning</violationSeverity>
@@ -150,8 +149,7 @@
 				<executions>
 					<execution>
 						<id>compile</id>
-						<!-- phase>compile</phase -->
-						<phase>verify</phase>
+						<phase>compile</phase>
 						<goals>
 							<goal>check</goal>
 						</goals>
