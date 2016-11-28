@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hnDict updated="2001-01-01" xmlns="http://dict.hunnor.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://dict.hunnor.net hunnor.net.Schema.xsd">
+	<entryGrp head="B">
+		<entry id="1">
+			<formGrp>
+				<form primary="yes">
+					<orth n="0">bil</orth>
+					<pos>subst</pos>
+					<inflCode type="bob">m1</inflCode>
+					<inflCode type="suff">-en</inflCode>
+					<inflPar>
+						<inflSeq form="0-0">bilen</inflSeq>
+						<inflSeq form="0-1">biler</inflSeq>
+						<inflSeq form="0-2">bilene</inflSeq>
+					</inflPar>
+				</form>
+			</formGrp>
+			<senseGrp>
+				<sense>
+					<trans>autó</trans>
+				</sense>
+			</senseGrp>
+		</entry>
+		<entry id="2">
+			<formGrp>
+				<form primary="yes">
+					<orth n="0">lastebil</orth>
+					<pos>subst</pos>
+					<inflCode type="bob">m1</inflCode>
+					<inflCode type="suff">-en</inflCode>
+					<inflPar>
+						<inflSeq form="0-0">lastebilen</inflSeq>
+						<inflSeq form="0-1">lastebiler</inflSeq>
+						<inflSeq form="0-2">lastebilene</inflSeq>
+					</inflPar>
+				</form>
+			</formGrp>
+			<senseGrp>
+				<sense>
+					<trans>teherautó</trans>
+				</sense>
+			</senseGrp>
+		</entry>
+	</entryGrp>
+</hnDict>

@@ -1,4 +1,4 @@
-package net.hunnor.dict.lucene.test.parser;
+	package net.hunnor.dict.lucene.test.parser;
 
 import static org.junit.Assert.assertEquals;
 
@@ -47,9 +47,6 @@ public final class StaxParserTest {
 		Set<String> roots = new HashSet<>();
 		roots.add("bonde");
 		assertEquals(roots, entry.getRoots());
-		System.out.println("<b>bonde</b> subst (bonden, bønder, bøndene) "
-				+ "<b>1</b> paraszt <b>2</b> <i>sjakkbrikke</i> gyalog");
-		System.out.println(entry.getText());
 		assertEquals("<b>bonde</b> subst (bonden, bønder, bøndene) "
 				+ "<b>1</b> paraszt <b>2</b> <i>sjakkbrikke</i> gyalog",
 				entry.getText());
@@ -71,6 +68,28 @@ public final class StaxParserTest {
 		assertEquals("<b>blad</b> subst -et, -/-er, -ene/-a <b>I</b> "
 				+ "<b>1</b> levél <b>2</b> penge <b>II</b> lap",
 				entry.getText());
+	}
+
+	/**
+	 * Test parsing of sample data.
+	 * @throws XMLStreamException when thrown by the parser
+	 */
+	@Test
+	public void testBilLastebil() throws XMLStreamException {
+		StaxParser staxParser = new StaxParser();
+		staxParser.openFile("src/test/resources/xml/sample-bil-lastebil.xml");
+		Entry entry = staxParser.next();
+		assertEquals("1", entry.getId());
+		Set<String> roots = new HashSet<>();
+		roots.add("bil");
+		assertEquals(roots, entry.getRoots());
+		assertEquals("<b>bil</b> subst -en autó", entry.getText());
+		entry = staxParser.next();
+		assertEquals("2", entry.getId());
+		roots = new HashSet<>();
+		roots.add("lastebil");
+		assertEquals(roots, entry.getRoots());
+		assertEquals("<b>lastebil</b> subst -en teherautó", entry.getText());
 	}
 
 }
