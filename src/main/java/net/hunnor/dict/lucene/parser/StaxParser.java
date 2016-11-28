@@ -52,6 +52,9 @@ public final class StaxParser {
 		glues.put(TagNames.TRANS + "2" + TagNames.EG, "; ");
 		glues.put(TagNames.EG + "2" + TagNames.EG, "; ");
 		glues.put(TagNames.LBL + "2" + TagNames.EG, " ");
+		glues.put(TagNames.TRANS + "2" + TagNames.TRANS, ", ");
+		glues.put(TagNames.LBL + "2" + TagNames.TRANS, " ");
+		glues.put(TagNames.EG + "2" + TagNames.TRANS, "; ");
 
 		textNodes = new HashSet<>();
 		textNodes.add(TagNames.ORTH);
@@ -170,14 +173,15 @@ public final class StaxParser {
 	private void processEntryStart(
 		final String element,
 		final ParserState parserState) {
-		if (TagNames.ENTRY.equals(element)) {
-			Entry entry = new Entry();
-			entry.setId(reader
-					.getAttributeValue(null, "id"));
-			parserState.setEntry(entry);
-			parserState.setText(new StringBuilder());
-			parserState.setSenseGrpBuilder(new StringBuilder());
+		if (!TagNames.ENTRY.equals(element)) {
+			return;
 		}
+		Entry entry = new Entry();
+		entry.setId(reader
+				.getAttributeValue(null, "id"));
+		parserState.setEntry(entry);
+		parserState.setText(new StringBuilder());
+		parserState.setSenseGrpBuilder(new StringBuilder());
 	}
 
 	/**
@@ -188,9 +192,10 @@ public final class StaxParser {
 	private void processFormGrpStart(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.FORM_GRP.equals(element)) {
-			parserState.setFormBuffer(new StringBuilder());
+		if (!TagNames.FORM_GRP.equals(element)) {
+			return;
 		}
+		parserState.setFormBuffer(new StringBuilder());
 	}
 
 	/**
@@ -201,12 +206,13 @@ public final class StaxParser {
 	private void processFormStart(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.FORM.equals(element)) {
-			parserState.setRegularInflection(false);
-			parserState.setInflParBuffer(new StringBuilder());
-			parserState.setPrimaryForm(
-					"yes".equals(reader.getAttributeValue(null, "primary")));
+		if (!TagNames.FORM.equals(element)) {
+			return;
 		}
+		parserState.setRegularInflection(false);
+		parserState.setInflParBuffer(new StringBuilder());
+		parserState.setPrimaryForm(
+				"yes".equals(reader.getAttributeValue(null, "primary")));
 	}
 
 	/**
@@ -217,8 +223,10 @@ public final class StaxParser {
 	private void processInflCodeStart(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.INFL_CODE.equals(element)
-				&& "suff".equals(reader.getAttributeValue(null, "type"))) {
+		if (!TagNames.INFL_CODE.equals(element)) {
+			return;
+		}
+		if ("suff".equals(reader.getAttributeValue(null, "type"))) {
 			parserState.setCollectText(true);
 			parserState.setRegularInflection(true);
 		}
@@ -232,8 +240,10 @@ public final class StaxParser {
 	private void processInflParStart(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.INFL_PAR.equals(element)
-				&& parserState.getInflParBuffer().length() > 0) {
+		if (!TagNames.INFL_PAR.equals(element)) {
+			return;
+		}
+		if (parserState.getInflParBuffer().length() > 0) {
 			parserState.getInflParBuffer().append("; ");
 			parserState.setInflSeqBuffer(new StringBuilder());
 		}
@@ -247,17 +257,16 @@ public final class StaxParser {
 	private void processSenseGrpStart(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.SENSE_GRP.equals(element)) {
-			parserState.setSenseBuffer(new StringBuilder());
-			if (parserState.getSenseGrpCount() > 0) {
-				if (parserState.getSenseGrpCount() == 1) {
-					parserState.getSenseGrpBuffer().insert(0, "<b>I</b> ");
-				}
-				parserState.getSenseGrpBuffer().append(
-						" <b>" + RomanNumerals.roman(
-								parserState.getSenseGrpCount() + 1)
-						+ "</b> ");
+		if (!TagNames.SENSE_GRP.equals(element)) {
+			return;
+		}
+		parserState.setSenseBuffer(new StringBuilder());
+		if (parserState.getSenseGrpCount() > 0) {
+			if (parserState.getSenseGrpCount() == 1) {
+				parserState.getSenseGrpBuffer().insert(0, "<b>I</b> ");
 			}
+			parserState.getSenseGrpBuffer().append(" <b>" + RomanNumerals.roman(
+					parserState.getSenseGrpCount() + 1) + "</b> ");
 		}
 	}
 
@@ -269,8 +278,10 @@ public final class StaxParser {
 	private void processSenseStart(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.SENSE.equals(element)
-				&& parserState.getSenseCount() > 0) {
+		if (!TagNames.SENSE.equals(element)) {
+			return;
+		}
+		if (parserState.getSenseCount() > 0) {
 			if (parserState.getSenseCount() == 1) {
 				parserState.getSenseBuffer().insert(0, "<b>1</b> ");
 			}
@@ -287,10 +298,11 @@ public final class StaxParser {
 	private void processEgStart(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.EG.equals(element)) {
-			parserState.setEgBuffer(new StringBuilder());
-			parserState.setEg(true);
+		if (!TagNames.EG.equals(element)) {
+			return;
 		}
+		parserState.setEgBuffer(new StringBuilder());
+		parserState.setEg(true);
 	}
 
 	/**
@@ -314,14 +326,14 @@ public final class StaxParser {
 	private void processEntryEnd(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.ENTRY.equals(element)) {
-			parserState.getText()
-					.append(parserState.getFormBuffer())
-					.append(" ")
-					.append(parserState.getSenseGrpBuffer());
-			parserState.getEntry().setText(parserState.getText().toString());
-			parserState.setEntryComplete(true);
+		if (!TagNames.ENTRY.equals(element)) {
+			return;
 		}
+		parserState.getText()
+				.append(parserState.getFormBuffer()).append(" ")
+				.append(parserState.getSenseGrpBuffer());
+		parserState.getEntry().setText(parserState.getText().toString());
+		parserState.setEntryComplete(true);
 	}
 
 	/**
@@ -332,11 +344,13 @@ public final class StaxParser {
 	private void processFormEnd(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.FORM.equals(element)
-				&& !parserState.isRegularInflection()
+		if (!TagNames.FORM.equals(element)) {
+			return;
+		}
+		if (!parserState.isRegularInflection()
 				&& parserState.getInflParBuffer().length() > 0) {
-			parserState.getFormBuffer().append(" ("
-					+ parserState.getInflParBuffer() + ")");
+			parserState.getFormBuffer().append(
+					" (" + parserState.getInflParBuffer() + ")");
 		}
 	}
 
@@ -348,16 +362,17 @@ public final class StaxParser {
 	private void processOrthEnd(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.ORTH.equals(element)) {
-			parserState.getEntry().getRoots()
-			.add(parserState.getCharacters().toString());
-			if (parserState.getFormBuffer().length() > 0) {
-				parserState.getFormBuffer().append(" ");
-			}
-			parserState.getFormBuffer().append(
-					"<b>" + parserState.getCharacters().toString() + "</b>");
-			parserState.setCollectText(false);
+		if (!TagNames.ORTH.equals(element)) {
+			return;
 		}
+		parserState.getEntry().getRoots()
+				.add(parserState.getCharacters().toString());
+		if (parserState.getFormBuffer().length() > 0) {
+			parserState.getFormBuffer().append(" ");
+		}
+		parserState.getFormBuffer().append(
+				"<b>" + parserState.getCharacters().toString() + "</b>");
+		parserState.setCollectText(false);
 	}
 
 	/**
@@ -368,13 +383,14 @@ public final class StaxParser {
 	private void processPosEnd(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.POS.equals(element)) {
-			if (parserState.isPrimaryForm()) {
-				parserState.getFormBuffer().append(
-						" " + parserState.getCharacters().toString());
-			}
-			parserState.setCollectText(false);
+		if (!TagNames.POS.equals(element)) {
+			return;
 		}
+		if (parserState.isPrimaryForm()) {
+			parserState.getFormBuffer().append(
+					" " + parserState.getCharacters().toString());
+		}
+		parserState.setCollectText(false);
 	}
 
 	/**
@@ -385,13 +401,14 @@ public final class StaxParser {
 	private void processInflCodeEnd(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.INFL_CODE.equals(element)) {
-			if (parserState.getCharacters().length() > 0) {
-				parserState.getFormBuffer().append(
-						" " + parserState.getCharacters().toString());
-			}
-			parserState.setCollectText(false);
+		if (!TagNames.INFL_CODE.equals(element)) {
+			return;
 		}
+		if (parserState.getCharacters().length() > 0) {
+			parserState.getFormBuffer().append(
+					" " + parserState.getCharacters().toString());
+		}
+		parserState.setCollectText(false);
 	}
 
 	/**
@@ -402,14 +419,15 @@ public final class StaxParser {
 	private void processInflParEnd(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.INFL_PAR.equals(element)) {
-			if (parserState.getInflParBuffer().length() > 0) {
-				parserState.getInflParBuffer().append("; ");
-			}
-			parserState.getInflParBuffer()
-					.append(parserState.getInflSeqBuffer());
-			parserState.setCollectText(false);
+		if (!TagNames.INFL_PAR.equals(element)) {
+			return;
 		}
+		if (parserState.getInflParBuffer().length() > 0) {
+			parserState.getInflParBuffer().append("; ");
+		}
+		parserState.getInflParBuffer()
+				.append(parserState.getInflSeqBuffer());
+		parserState.setCollectText(false);
 	}
 
 	/**
@@ -420,16 +438,17 @@ public final class StaxParser {
 	private void processInflSeqEnd(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.INFL_SEQ.equals(element)) {
-			parserState.getEntry().getForms().add(
-					parserState.getCharacters().toString());
+		if (!TagNames.INFL_SEQ.equals(element)) {
+			return;
+		}
+		parserState.getEntry().getForms().add(
+				parserState.getCharacters().toString());
 		if (parserState.getInflSeqBuffer().length() > 0) {
 			parserState.getInflSeqBuffer().append(", ");
 		}
 		parserState.getInflSeqBuffer().append(
 				parserState.getCharacters().toString());
 		parserState.setCollectText(false);
-		}
 	}
 
 	/**
@@ -440,12 +459,13 @@ public final class StaxParser {
 	private void processSenseGrpEnd(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.SENSE_GRP.equals(element)) {
-			parserState.getSenseGrpBuffer()
-					.append(parserState.getSenseBuffer());
-			parserState.setSenseGrpCount(parserState.getSenseGrpCount() + 1);
-			parserState.setSenseCount(0);
+		if (!TagNames.SENSE_GRP.equals(element)) {
+			return;
 		}
+		parserState.getSenseGrpBuffer()
+				.append(parserState.getSenseBuffer());
+		parserState.setSenseGrpCount(parserState.getSenseGrpCount() + 1);
+		parserState.setSenseCount(0);
 	}
 
 	/**
@@ -456,9 +476,10 @@ public final class StaxParser {
 	private void processSenseEnd(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.SENSE.equals(element)) {
-			parserState.setSenseCount(parserState.getSenseCount() + 1);
+		if (!TagNames.SENSE.equals(element)) {
+			return;
 		}
+		parserState.setSenseCount(parserState.getSenseCount() + 1);
 	}
 
 	/**
@@ -484,13 +505,8 @@ public final class StaxParser {
 			} else {
 				parserState.getEntry().getTrans().add(
 						parserState.getCharacters().toString());
-				if (TagNames.TRANS.equals(parserState.getPrevious())) {
-					parserState.getSenseBuffer().append(", ");
-				} else if (TagNames.LBL.equals(parserState.getPrevious())) {
-					parserState.getSenseBuffer().append(" ");
-				} else if (TagNames.EG.equals(parserState.getPrevious())) {
-					parserState.getSenseBuffer().append("; ");
-				}
+				parserState.getSenseBuffer().append(
+						getGlue(element, parserState.getPrevious()));
 				parserState.getSenseBuffer().append(
 						parserState.getCharacters().toString());
 			}
