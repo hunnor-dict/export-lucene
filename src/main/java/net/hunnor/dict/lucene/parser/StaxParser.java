@@ -163,6 +163,7 @@ public final class StaxParser {
 		processLblEnd(element, parserState);
 		processEgEnd(element, parserState);
 		processQEnd(element, parserState);
+		processEnd(element, parserState);
 	}
 
 	/**
@@ -490,28 +491,29 @@ public final class StaxParser {
 	private void processTransEnd(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.TRANS.equals(element)) {
-			if (parserState.isEg()) {
-				parserState.getEntry().getQuoteTrans().add(
-						parserState.getCharacters().toString());
-				if (TagNames.TRANS.equals(parserState.getPrevious())) {
-					parserState.getEgBuffer().append(", ");
-				} else if (TagNames.LBL.equals(parserState.getPrevious())
-						|| TagNames.Q.equals(parserState.getPrevious())) {
-					parserState.getEgBuffer().append(" ");
-				}
-				parserState.getEgBuffer().append(
-						parserState.getCharacters().toString());
-			} else {
-				parserState.getEntry().getTrans().add(
-						parserState.getCharacters().toString());
-				parserState.getSenseBuffer().append(
-						getGlue(element, parserState.getPrevious()));
-				parserState.getSenseBuffer().append(
-						parserState.getCharacters().toString());
-			}
-			parserState.setCollectText(false);
+		if (!TagNames.TRANS.equals(element)) {
+			return;
 		}
+		if (parserState.isEg()) {
+			parserState.getEntry().getQuoteTrans().add(
+					parserState.getCharacters().toString());
+			if (TagNames.TRANS.equals(parserState.getPrevious())) {
+				parserState.getEgBuffer().append(", ");
+			} else if (TagNames.LBL.equals(parserState.getPrevious())
+					|| TagNames.Q.equals(parserState.getPrevious())) {
+				parserState.getEgBuffer().append(" ");
+			}
+			parserState.getEgBuffer().append(
+					parserState.getCharacters().toString());
+		} else {
+			parserState.getEntry().getTrans().add(
+					parserState.getCharacters().toString());
+			parserState.getSenseBuffer().append(
+					getGlue(element, parserState.getPrevious()));
+			parserState.getSenseBuffer().append(
+					parserState.getCharacters().toString());
+		}
+		parserState.setCollectText(false);
 	}
 
 	/**
@@ -522,15 +524,16 @@ public final class StaxParser {
 	private void processLblEnd(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.LBL.equals(element)) {
-			if (parserState.getSenseBuffer().length() > 0) {
-				parserState.getSenseBuffer().append(getGlue(
-						element, parserState.getPrevious()));
-			}
-			parserState.getSenseBuffer().append(
-					"<i>" + parserState.getCharacters().toString() + "</i>");
-			parserState.setCollectText(false);
+		if (!TagNames.LBL.equals(element)) {
+			return;
 		}
+		if (parserState.getSenseBuffer().length() > 0) {
+			parserState.getSenseBuffer().append(getGlue(
+					element, parserState.getPrevious()));
+		}
+		parserState.getSenseBuffer().append(
+				"<i>" + parserState.getCharacters().toString() + "</i>");
+		parserState.setCollectText(false);
 	}
 
 	/**
@@ -541,14 +544,15 @@ public final class StaxParser {
 	private void processEgEnd(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.EG.equals(element)) {
-			parserState.setEg(false);
-			if (parserState.getSenseBuffer().length() > 0) {
-				parserState.getSenseBuffer().append(getGlue(
-						element, parserState.getPrevious()));
-			}
-			parserState.getSenseBuffer().append(parserState.getEgBuffer());
+		if (!TagNames.EG.equals(element)) {
+			return;
 		}
+		parserState.setEg(false);
+		if (parserState.getSenseBuffer().length() > 0) {
+			parserState.getSenseBuffer().append(getGlue(
+					element, parserState.getPrevious()));
+		}
+		parserState.getSenseBuffer().append(parserState.getEgBuffer());
 	}
 
 	/**
@@ -559,16 +563,27 @@ public final class StaxParser {
 	private void processQEnd(
 			final String element,
 			final ParserState parserState) {
-		if (TagNames.Q.equals(element)) {
-			parserState.getEntry().getQuote()
-					.add(parserState.getCharacters().toString());
-			parserState.setCollectText(false);
-			if (parserState.getEgBuffer().length() > 0) {
-				parserState.getEgBuffer().append(", ");
-			}
-			parserState.getEgBuffer().append(
-					"<b>" + parserState.getCharacters().toString() + "</b>");
+		if (!TagNames.Q.equals(element)) {
+			return;
 		}
+		parserState.getEntry().getQuote()
+				.add(parserState.getCharacters().toString());
+		parserState.setCollectText(false);
+		if (parserState.getEgBuffer().length() > 0) {
+			parserState.getEgBuffer().append(", ");
+		}
+		parserState.getEgBuffer().append(
+				"<b>" + parserState.getCharacters().toString() + "</b>");
+	}
+
+	/**
+	 * Process end elements.
+	 * @param element the element name
+	 * @param parserState the parser state object
+	 */
+	private void processEnd(
+			final String element,
+			final ParserState parserState) {
 		parserState.setPrevious(element);
 		parserState.setCharacters(new StringBuilder());
 	}
