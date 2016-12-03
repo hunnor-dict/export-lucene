@@ -48,6 +48,7 @@ public final class Service {
 					luceneIndexer.write(entry);
 				}
 			}
+			staxParser.closeFile();
 
 			luceneIndexer.closeIndexWriter();
 

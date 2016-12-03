@@ -28,6 +28,12 @@ public final class StaxParser {
 	 */
 	private static final Logger LOGGER =
 			LoggerFactory.getLogger(StaxParser.class);
+
+	/**
+	 * Input stream for the XML file.
+	 */
+	private FileInputStream stream;
+
 	/**
 	 * Reader for the XML stream.
 	 */
@@ -71,13 +77,28 @@ public final class StaxParser {
 	 * @param file the file to open
 	 */
 	public void openFile(final String file) {
-		try (FileInputStream stream = new FileInputStream(file)) {
+		try {
+			stream = new FileInputStream(file);
 			XMLInputFactory2 xmlInputFactory2 =
 					(XMLInputFactory2) XMLInputFactory2.newInstance();
 			xmlInputFactory2.setProperty(
 					XMLInputFactory2.IS_NAMESPACE_AWARE, false);
 			reader = (XMLStreamReader2) xmlInputFactory2
 					.createXMLStreamReader(stream);
+		} catch (IOException | XMLStreamException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Close the stream of the XML file.
+	 * @throws XMLStreamException
+	 * @throws IOException
+	 */
+	public void closeFile() {
+		try {
+			reader.close();
+			stream.close();
 		} catch (IOException | XMLStreamException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
