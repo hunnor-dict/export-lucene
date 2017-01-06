@@ -11,7 +11,7 @@
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
-	<name>export-lucene</name>
+	<name>Export (Lucene)</name>
 	<description>Create a Lucene index from the XML exports</description>
 
 	<prerequisites>
