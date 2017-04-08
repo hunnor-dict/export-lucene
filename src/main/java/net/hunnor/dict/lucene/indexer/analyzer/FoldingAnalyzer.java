@@ -12,7 +12,6 @@ import org.apache.lucene.util.Version;
 
 /**
  * Custom Lucene analyzer. Used for written forms in both languages.
- *
  */
 public class FoldingAnalyzer extends Analyzer {
 
