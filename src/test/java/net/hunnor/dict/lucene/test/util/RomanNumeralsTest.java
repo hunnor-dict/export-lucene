@@ -22,6 +22,14 @@ public final class RomanNumeralsTest {
 	private static final int MDCCLXXVI = 1776;
 
 	/**
+	 * Test if zero or a negative number throws an exception.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidNumber() {
+		RomanNumerals.roman(0);
+	}
+
+	/**
 	 * Test conversion of 1 to I.
 	 */
 	@Test
