@@ -13,7 +13,7 @@ import org.apache.lucene.util.Version;
 /**
  * Custom Lucene analyzer. Used for written forms in both languages.
  */
-public class FoldingAnalyzer extends Analyzer {
+public final class FoldingAnalyzer extends Analyzer {
 
 	/**
 	 * The Lucene version.
@@ -29,7 +29,7 @@ public class FoldingAnalyzer extends Analyzer {
 	}
 
 	@Override
-	public final TokenStream tokenStream(
+	public TokenStream tokenStream(
 			final String field,
 			final Reader reader) {
 		TokenStream result = new StandardTokenizer(version, reader);
