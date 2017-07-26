@@ -65,8 +65,10 @@ public final class StaxParserTest {
 		Set<String> roots = new HashSet<>();
 		roots.add("blad");
 		assertEquals(roots, entry.getRoots());
-		assertEquals("<b>blad</b> subst -et, -/-er, -ene/-a <b>I</b> "
-				+ "<b>1</b> levél <b>2</b> penge <b>II</b> lap",
+		assertEquals("<b>blad</b> subst -et, -/-er, -ene/-a "
+				+ "<b>I</b> <b>1</b> levél <b>2</b> penge "
+				+ "<b>II</b> lap; "
+				+ "<b>spille fra bladet</b>, <b>synge fra bladet</b> felolvas",
 				entry.getText());
 	}
 
