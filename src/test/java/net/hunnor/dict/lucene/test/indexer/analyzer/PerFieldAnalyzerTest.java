@@ -13,7 +13,7 @@ import net.hunnor.dict.lucene.indexer.analyzer.PerFieldAnalyzer;
 /**
  * Tests for the custom Lucene analyzer.
  */
-public class PerFieldAnalyzerTest {
+public final class PerFieldAnalyzerTest {
 
 	/**
 	 * Test if the default constructor is private.
