@@ -8,11 +8,6 @@ import net.hunnor.dict.lucene.model.Entry;
 public final class ParserState {
 
 	/**
-	 * The name of the current element.
-	 */
-	private String element;
-
-	/**
 	 * The name of the previous element.
 	 */
 	private String previous;
@@ -96,22 +91,6 @@ public final class ParserState {
 	 * Buffer for the content of 'eg'.
 	 */
 	private StringBuilder egBuffer = new StringBuilder();
-
-	/**
-	 * Return the name of the current element.
-	 * @return the name of the current element
-	 */
-	public String getElement() {
-		return element;
-	}
-
-	/**
-	 * Set the name of the current element.
-	 * @param e the name to set
-	 */
-	public void setElement(final String e) {
-		this.element = e;
-	}
 
 	/**
 	 * Return the name of the previous element.
