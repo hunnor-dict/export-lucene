@@ -25,6 +25,9 @@
 						<inflSeq form="2-1">inflSeq6</inflSeq>
 					</inflPar>
 				</form>
+				<form primary="no">
+					<orth n="0">orth3</orth>
+				</form>
 			</formGrp>
 			<senseGrp/>
 		</entry>

@@ -44,10 +44,11 @@ public final class StaxParserTest {
 		Set<String> roots = new HashSet<>();
 		roots.add("orth1");
 		roots.add("orth2");
+		roots.add("orth3");
 		assertEquals(roots, entry.getRoots());
 		assertEquals("<b>orth1</b> pos1 suff1 <b>orth2</b>"
 				+ " (inflSeq1, inflSeq2, inflSeq3, inflSeq4; ;"
-				+ " inflSeq5, inflSeq6) ", entry.getText());
+				+ " inflSeq5, inflSeq6) <b>orth3</b> ", entry.getText());
 	}
 
 	/**
