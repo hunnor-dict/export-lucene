@@ -22,6 +22,39 @@ public final class StaxParserTest {
 	 * @throws XMLStreamException when thrown by the parser
 	 */
 	@Test
+	public void testEntryEntry() throws XMLStreamException {
+		StaxParser staxParser = new StaxParser();
+		staxParser.openFile("src/test/resources/xml/sample-entry-entry.xml");
+		Entry entry = staxParser.next();
+		assertEquals("1", entry.getId());
+		entry = staxParser.next();
+		assertEquals("2", entry.getId());
+	}
+
+	/**
+	 * Test parsing of sample data.
+	 * @throws XMLStreamException when thrown by the parser
+	 */
+	@Test
+	public void testFormForm() throws XMLStreamException {
+		StaxParser staxParser = new StaxParser();
+		staxParser.openFile("src/test/resources/xml/sample-form-form.xml");
+		Entry entry = staxParser.next();
+		assertEquals("1", entry.getId());
+		Set<String> roots = new HashSet<>();
+		roots.add("orth1");
+		roots.add("orth2");
+		assertEquals(roots, entry.getRoots());
+		assertEquals("<b>orth1</b> pos1 suff1 <b>orth2</b>"
+				+ " (inflSeq1, inflSeq2, inflSeq3, inflSeq4; ;"
+				+ " inflSeq5, inflSeq6) ", entry.getText());
+	}
+
+	/**
+	 * Test parsing of sample data.
+	 * @throws XMLStreamException when thrown by the parser
+	 */
+	@Test
 	public void testLblLbl() throws XMLStreamException {
 		StaxParser staxParser = new StaxParser();
 		staxParser.openFile("src/test/resources/xml/sample-lbl-lbl.xml");

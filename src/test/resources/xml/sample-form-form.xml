@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hnDict updated="2001-01-01" xmlns="http://dict.hunnor.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://dict.hunnor.net hunnor.net.Schema.xsd">
+	<entryGrp head="O">
+		<entry id="1">
+			<formGrp>
+				<form primary="yes">
+					<orth n="0">orth1</orth>
+					<pos>pos1</pos>
+					<inflCode type="bob">bob1</inflCode>
+					<inflCode type="suff">suff1</inflCode>
+					<inflPar>
+						<inflSeq form="0-0">inflSeq1</inflSeq>
+						<inflSeq form="0-1">inflSeq2</inflSeq>
+					</inflPar>
+				</form>
+				<form primary="no">
+					<orth n="0">orth2</orth>
+					<inflPar>
+						<inflSeq form="1-0">inflSeq3</inflSeq>
+						<inflSeq form="1-1">inflSeq4</inflSeq>
+					</inflPar>
+					<inflPar>
+						<inflSeq form="2-0">inflSeq5</inflSeq>
+						<inflSeq form="2-1">inflSeq6</inflSeq>
+					</inflPar>
+				</form>
+			</formGrp>
+			<senseGrp/>
+		</entry>
+	</entryGrp>
+</hnDict>
