@@ -152,4 +152,34 @@ public final class StaxParserTest {
 		assertEquals(" <b>q1</b>, <b>q2</b> trans1", entry.getText());
 	}
 
+	/**
+	 * Test parsing of sample data.
+	 * @throws XMLStreamException when thrown by the parser
+	 */
+	@Test
+	public void testQTransTrans() throws XMLStreamException {
+		StaxParser staxParser = new StaxParser();
+		staxParser.openFile("src/test/resources/xml/sample-q-trans-trans.xml");
+		Entry entry = staxParser.next();
+		assertEquals("1", entry.getId());
+		Set<String> roots = new HashSet<>();
+		assertEquals(roots, entry.getRoots());
+		assertEquals(" <b>q1</b> trans1, trans2", entry.getText());
+	}
+
+	/**
+	 * Test parsing of sample data.
+	 * @throws XMLStreamException when thrown by the parser
+	 */
+	@Test
+	public void testQLblTrans() throws XMLStreamException {
+		StaxParser staxParser = new StaxParser();
+		staxParser.openFile("src/test/resources/xml/sample-q-lbl-trans.xml");
+		Entry entry = staxParser.next();
+		assertEquals("1", entry.getId());
+		Set<String> roots = new HashSet<>();
+		assertEquals(roots, entry.getRoots());
+		assertEquals(" <i>lbl1</i>; <b>q1</b> trans1", entry.getText());
+	}
+
 }
