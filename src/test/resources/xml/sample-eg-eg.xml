@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hnDict updated="2001-01-01" xmlns="http://dict.hunnor.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://dict.hunnor.net hunnor.net.Schema.xsd">
+	<entryGrp head="O">
+		<entry id="1">
+			<formGrp/>
+			<senseGrp>
+				<sense>
+					<eg>
+						<q>q1</q>
+						<trans>trans1</trans>
+					</eg>
+					<eg>
+						<q>q2</q>
+						<trans>trans2</trans>
+					</eg>
+				</sense>
+			</senseGrp>
+		</entry>
+	</entryGrp>
+</hnDict>
