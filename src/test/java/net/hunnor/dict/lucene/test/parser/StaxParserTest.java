@@ -134,7 +134,7 @@ public final class StaxParserTest {
 		assertEquals("1", entry.getId());
 		Set<String> roots = new HashSet<>();
 		assertEquals(roots, entry.getRoots());
-		assertEquals(" <b>q1</b> trans1; <b>q2</b> trans2", entry.getText());
+		assertEquals(" <b>q1</b> trans1; trans2", entry.getText());
 	}
 
 	/**
