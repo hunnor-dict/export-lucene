@@ -22,6 +22,27 @@ public final class StaxParserTest {
 	 * @throws XMLStreamException when thrown by the parser
 	 */
 	@Test
+	public void testFileNotFoundException() throws XMLStreamException {
+		StaxParser staxParser = new StaxParser();
+		staxParser.openFile("src/test/resources/xml/no-such-file.xml");
+	}
+
+	/**
+	 * Test parsing of sample data.
+	 * @throws XMLStreamException when thrown by the parser
+	 */
+	@Test(expected = XMLStreamException.class)
+	public void testXMLStreamException() throws XMLStreamException {
+		StaxParser staxParser = new StaxParser();
+		staxParser.openFile("src/test/resources/xml/sample-text-file.txt");
+		staxParser.next();
+	}
+
+	/**
+	 * Test parsing of sample data.
+	 * @throws XMLStreamException when thrown by the parser
+	 */
+	@Test
 	public void testEntryEntry() throws XMLStreamException {
 		StaxParser staxParser = new StaxParser();
 		staxParser.openFile("src/test/resources/xml/sample-entry-entry.xml");
@@ -29,6 +50,7 @@ public final class StaxParserTest {
 		assertEquals("1", entry.getId());
 		entry = staxParser.next();
 		assertEquals("2", entry.getId());
+		staxParser.closeFile();
 	}
 
 	/**
