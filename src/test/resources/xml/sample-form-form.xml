@@ -15,6 +15,7 @@
 				</form>
 				<form primary="no">
 					<orth n="0">orth2</orth>
+					<pos>pos2</pos>
 					<inflPar>
 						<inflSeq form="1-0">inflSeq3</inflSeq>
 						<inflSeq form="1-1">inflSeq4</inflSeq>

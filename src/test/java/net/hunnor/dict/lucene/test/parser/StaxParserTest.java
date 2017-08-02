@@ -55,6 +55,22 @@ public final class StaxParserTest {
 	 * @throws XMLStreamException when thrown by the parser
 	 */
 	@Test
+	public void testSenseSense() throws XMLStreamException {
+		StaxParser staxParser = new StaxParser();
+		staxParser.openFile("src/test/resources/xml/sample-sense-sense.xml");
+		Entry entry = staxParser.next();
+		assertEquals("1", entry.getId());
+		Set<String> roots = new HashSet<>();
+		assertEquals(roots, entry.getRoots());
+		assertEquals(" <b>I</b> <b>1</b> trans1 <b>2</b> trans2 <b>II</b>"
+				+ " <b>1</b> trans3 <b>2</b> trans4", entry.getText());
+	}
+
+	/**
+	 * Test parsing of sample data.
+	 * @throws XMLStreamException when thrown by the parser
+	 */
+	@Test
 	public void testLblLbl() throws XMLStreamException {
 		StaxParser staxParser = new StaxParser();
 		staxParser.openFile("src/test/resources/xml/sample-lbl-lbl.xml");
