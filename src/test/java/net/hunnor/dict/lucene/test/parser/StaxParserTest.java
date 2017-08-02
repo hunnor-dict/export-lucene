@@ -182,19 +182,4 @@ public final class StaxParserTest {
 		assertEquals(" <i>lbl1</i>; <b>q1</b> trans1", entry.getText());
 	}
 
-	/**
-	 * Test parsing of sample data.
-	 * @throws XMLStreamException when thrown by the parser
-	 */
-	@Test
-	public void testEglTrans() throws XMLStreamException {
-		StaxParser staxParser = new StaxParser();
-		staxParser.openFile("src/test/resources/xml/sample-eg-trans.xml");
-		Entry entry = staxParser.next();
-		assertEquals("1", entry.getId());
-		Set<String> roots = new HashSet<>();
-		assertEquals(roots, entry.getRoots());
-		assertEquals(" trans1", entry.getText());
-	}
-
 }
