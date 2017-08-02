@@ -20,6 +20,7 @@
 					<trans>autó</trans>
 					<lbl lang="no" type="use">formal</lbl>
 					<trans>személygépkocsi</trans>
+					<!-- Comment -->
 					<eg>
 						<q>kjøre bil</q>
 						<trans>autót vezet</trans>

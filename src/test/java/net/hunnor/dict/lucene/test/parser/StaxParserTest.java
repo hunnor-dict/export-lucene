@@ -94,4 +94,21 @@ public final class StaxParserTest {
 		assertEquals("<b>lastebil</b> subst -en teherautó", entry.getText());
 	}
 
+	/**
+	 * Test parsing of sample data.
+	 * @throws XMLStreamException when thrown by the parser
+	 */
+	@Test
+	public void testFot() throws XMLStreamException {
+		StaxParser staxParser = new StaxParser();
+		staxParser.openFile("src/test/resources/xml/sample-fot.xml");
+		Entry entry = staxParser.next();
+		assertEquals("1", entry.getId());
+		Set<String> roots = new HashSet<>();
+		roots.add("fot");
+		assertEquals(roots, entry.getRoots());
+		assertEquals("<b>fot</b> subst <b>til fots</b> gyalog",
+				entry.getText());
+	}
+
 }
