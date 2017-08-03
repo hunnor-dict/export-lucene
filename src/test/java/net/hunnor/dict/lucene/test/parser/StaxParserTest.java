@@ -1,6 +1,7 @@
 	package net.hunnor.dict.lucene.test.parser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
@@ -46,12 +47,17 @@ public final class StaxParserTest {
 	@Test
 	public void testEntryEntry() throws XMLStreamException {
 		StaxParser staxParser = new StaxParser();
+		assertFalse(staxParser.hasNext());
 		staxParser.openFile("src/test/resources/xml/sample-entry-entry.xml");
+		assertTrue(staxParser.hasNext());
 		Entry entry = staxParser.next();
 		assertEquals("1", entry.getId());
 		assertTrue(staxParser.hasNext());
 		entry = staxParser.next();
 		assertEquals("2", entry.getId());
+		assertTrue(staxParser.hasNext());
+		entry = staxParser.next();
+		assertFalse(staxParser.hasNext());
 		staxParser.closeFile();
 	}
 
