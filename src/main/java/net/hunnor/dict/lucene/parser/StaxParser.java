@@ -283,12 +283,13 @@ public final class StaxParser {
 			return;
 		}
 		parserState.setSenseBuffer(new StringBuilder());
-		if (parserState.getSenseGrpCount() > 0) {
-			if (parserState.getSenseGrpCount() == 1) {
+		int senseGrpCount = parserState.getSenseGrpCount();
+		if (senseGrpCount > 0) {
+			if (senseGrpCount == 1) {
 				parserState.getSenseGrpBuffer().insert(0, "<b>I</b> ");
 			}
 			parserState.getSenseGrpBuffer().append(" <b>" + RomanNumerals.roman(
-					parserState.getSenseGrpCount() + 1) + "</b> ");
+					senseGrpCount + 1) + "</b> ");
 		}
 	}
 
