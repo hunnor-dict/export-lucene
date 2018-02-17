@@ -1,4 +1,4 @@
-package net.hunnor.dict.lucene.test.constants;
+package net.hunnor.dict.lucene.constants;
 
 import static org.junit.Assert.assertTrue;
 

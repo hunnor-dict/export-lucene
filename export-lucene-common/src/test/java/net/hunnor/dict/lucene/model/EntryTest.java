@@ -1,4 +1,4 @@
-package net.hunnor.dict.lucene.test.model;
+package net.hunnor.dict.lucene.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
