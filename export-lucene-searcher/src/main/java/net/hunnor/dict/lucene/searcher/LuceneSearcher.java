@@ -109,9 +109,6 @@ public class LuceneSearcher {
    * @return a set of matching terms
    */
   public List<String> suggestions(String userQuery) {
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Fetching suggestions for query " + userQuery);
-    }
     List<String> results = new ArrayList<>();
     try (IndexSearcher indexSearcher = new IndexSearcher(indexReader)) {
       Query query = createQueryFromFields(userQuery, new String[] {FieldNames.SUGGESTION}, true);
@@ -127,7 +124,7 @@ public class LuceneSearcher {
           .filter(Objects::nonNull)
           .map(document -> document.get(FieldNames.SUGGESTION))
           .distinct()
-          .forEach(suggestion -> results.add(suggestion));
+          .forEach(results::add);
 
     } catch (IOException e) {
       LOGGER.error(e.getMessage(), e);
