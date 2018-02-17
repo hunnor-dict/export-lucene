@@ -22,6 +22,7 @@ public class PerFieldAnalyzerTest {
     constructor.newInstance();
   }
 
+  @Test
   public void testGetInstance() {
     Analyzer analyzer = PerFieldAnalyzer.getInstance(Lucene.VERSION);
     assertNotNull(analyzer);
