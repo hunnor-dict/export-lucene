@@ -126,8 +126,8 @@ public class LuceneSearcher {
           .distinct()
           .forEach(results::add);
 
-    } catch (IOException e) {
-      LOGGER.error(e.getMessage(), e);
+    } catch (IOException ex) {
+      LOGGER.error(ex.getMessage(), ex);
     }
     return results;
   }
@@ -143,8 +143,8 @@ public class LuceneSearcher {
     try {
       String[] suggestions = spellChecker.suggestSimilar(userQuery, MAX_SPELLING_SUGGESTIONS);
       results.addAll(Arrays.asList(suggestions));
-    } catch (IOException e) {
-      LOGGER.error(e.getMessage(), e);
+    } catch (IOException ex) {
+      LOGGER.error(ex.getMessage(), ex);
     }
     return results;
   }
@@ -250,8 +250,8 @@ public class LuceneSearcher {
     Document document = null;
     try {
       document = indexReader.document(scoreDoc.doc);
-    } catch (IOException e) {
-      LOGGER.error(e.getMessage(), e);
+    } catch (IOException ex) {
+      LOGGER.error(ex.getMessage(), ex);
     }
     return document;
   }

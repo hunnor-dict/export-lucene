@@ -45,8 +45,8 @@ public class Launcher {
     CommandLine commandLine;
     try {
       commandLine = parser.parse(options, args);
-    } catch (ParseException e) {
-      LOGGER.error(e.getMessage(), e);
+    } catch (ParseException ex) {
+      LOGGER.error(ex.getMessage(), ex);
       return;
     }
 

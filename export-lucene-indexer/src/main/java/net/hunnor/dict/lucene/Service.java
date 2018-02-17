@@ -42,8 +42,8 @@ public class Service {
 
       luceneIndexer.closeIndexWriter();
 
-    } catch (IOException | XMLStreamException e) {
-      LOGGER.error(e.getMessage(), e);
+    } catch (IOException | XMLStreamException ex) {
+      LOGGER.error(ex.getMessage(), ex);
     }
 
   }
@@ -70,8 +70,8 @@ public class Service {
       luceneIndexer.closeSpellChecker();
       luceneIndexer.closeIndexReader();
 
-    } catch (IOException e) {
-      LOGGER.error(e.getMessage(), e);
+    } catch (IOException ex) {
+      LOGGER.error(ex.getMessage(), ex);
     }
 
   }
