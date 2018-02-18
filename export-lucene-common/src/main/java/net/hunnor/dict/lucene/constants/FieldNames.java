@@ -6,16 +6,6 @@ public class FieldNames {
 
   public static final String ID = "id";
 
-  public static final String ROOTS = "roots";
-
-  public static final String FORMS = "forms";
-
-  public static final String TRANS = "trans";
-
-  public static final String QUOTE = "quote";
-
-  public static final String QUOTETRANS = "quoteTrans";
-
   public static final String TEXT = "text";
 
   public static final String HU_ROOTS = "hu_roots";

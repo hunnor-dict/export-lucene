@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import net.hunnor.dict.lucene.indexer.LuceneIndexer;
 import net.hunnor.dict.lucene.model.Entry;
+import net.hunnor.dict.lucene.model.Language;
 import net.hunnor.dict.lucene.searcher.LuceneSearcher;
 
 import org.junit.Before;
@@ -47,14 +48,14 @@ public class LuceneSearcherTest {
     indexer.openIndexWriter();
 
     Entry entry = new Entry();
-    entry.setLang("hu");
+    entry.setLang(Language.hu);
     entry.setId("1");
     entry.setRoots(new HashSet<String>(Arrays.asList(new String[] {"aaaaaa", "aaaaab"})));
     entry.setForms(new HashSet<String>(Arrays.asList(new String[] {"bbbbbb"})));
     indexer.write(entry);
     
     entry = new Entry();
-    entry.setLang("no");
+    entry.setLang(Language.no);
     entry.setId("2");
     entry.setRoots(new HashSet<String>(Arrays.asList(new String[] {"aaaaab", "aaaaac"})));
     indexer.write(entry);

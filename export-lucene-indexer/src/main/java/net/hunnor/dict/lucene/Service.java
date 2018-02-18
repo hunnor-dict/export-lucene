@@ -2,6 +2,7 @@ package net.hunnor.dict.lucene;
 
 import net.hunnor.dict.lucene.indexer.LuceneIndexer;
 import net.hunnor.dict.lucene.model.Entry;
+import net.hunnor.dict.lucene.model.Language;
 import net.hunnor.dict.lucene.parser.StaxParser;
 
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ public class Service {
    * @param lang the language to index the file as
    * @param indexDir the directory to create the index in
    */
-  public void indexFile(String file, String lang, String indexDir) {
+  public void indexFile(String file, Language lang, String indexDir) {
 
     try {
 

@@ -3,6 +3,7 @@ package net.hunnor.dict.lucene.indexer;
 import net.hunnor.dict.lucene.analyzer.PerFieldAnalyzer;
 import net.hunnor.dict.lucene.constants.FieldNames;
 import net.hunnor.dict.lucene.model.Entry;
+import net.hunnor.dict.lucene.model.Language;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -161,7 +162,7 @@ public class LuceneIndexer {
     String transField = FieldNames.HU_TRANS;
     String quoteField = FieldNames.HU_QUOTE;
     String quoteTransField = FieldNames.HU_QUOTETRANS;
-    if ("no".equals(entry.getLang())) {
+    if (Language.no.equals(entry.getLang())) {
       rootsField = FieldNames.NO_ROOTS;
       formsField = FieldNames.NO_FORMS;
       transField = FieldNames.NO_TRANS;
@@ -173,7 +174,8 @@ public class LuceneIndexer {
 
     if (entry.getLang() != null) {
       document.add(
-          new Field(FieldNames.LANG, entry.getLang(), Field.Store.YES, Field.Index.ANALYZED));
+          new Field(FieldNames.LANG, entry.getLang().toString(),
+              Field.Store.YES, Field.Index.ANALYZED));
     }
     if (entry.getId() != null) {
       document.add(new Field(FieldNames.ID, entry.getId(), Field.Store.YES, Field.Index.ANALYZED));

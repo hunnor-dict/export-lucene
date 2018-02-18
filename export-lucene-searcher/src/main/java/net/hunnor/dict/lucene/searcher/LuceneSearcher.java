@@ -4,6 +4,7 @@ import net.hunnor.dict.lucene.analyzer.PerFieldAnalyzer;
 import net.hunnor.dict.lucene.constants.FieldNames;
 import net.hunnor.dict.lucene.constants.Lucene;
 import net.hunnor.dict.lucene.model.Entry;
+import net.hunnor.dict.lucene.model.Language;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -259,7 +260,7 @@ public class LuceneSearcher {
   private Entry documentToEntry(Document document) {
     Entry entry = new Entry();
     entry.setId(document.get(FieldNames.ID));
-    entry.setLang(document.get(FieldNames.LANG));
+    entry.setLang(Language.valueOf(document.get(FieldNames.LANG)));
     entry.setText(document.get(FieldNames.TEXT));
     return entry;
   }

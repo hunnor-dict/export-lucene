@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class Entry {
 
-  private String lang;
+  private Language lang;
 
   private String id;
 
@@ -21,11 +21,11 @@ public class Entry {
 
   private String text;
 
-  public String getLang() {
+  public Language getLang() {
     return lang;
   }
 
-  public void setLang(String lang) {
+  public void setLang(Language lang) {
     this.lang = lang;
   }
 
