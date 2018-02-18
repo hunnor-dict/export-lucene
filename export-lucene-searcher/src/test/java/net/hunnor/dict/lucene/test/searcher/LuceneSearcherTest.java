@@ -116,24 +116,24 @@ public class LuceneSearcherTest {
 
   @Test
   public void testSearchForRoots() {
-    List<Entry> results = searcher.search("aaaaaa", LuceneSearcher.LANG_HU);
+    List<Entry> results = searcher.search("aaaaaa", Language.hu);
     assertEquals(1, results.size());
-    results = searcher.search("aaaaab", LuceneSearcher.LANG_NO);
+    results = searcher.search("aaaaab", Language.no);
   }
 
   @Test
   public void testSearchForForms() {
-    List<Entry> results = searcher.search("bbbbbb", LuceneSearcher.LANG_HU);
+    List<Entry> results = searcher.search("bbbbbb", Language.hu);
     assertEquals(1, results.size());
-    results = searcher.search("bbbbbb", LuceneSearcher.LANG_NO);
+    results = searcher.search("bbbbbb", Language.no);
     assertEquals(1, results.size());
   }
 
   @Test
   public void testSearchForQuotes() {
-    List<Entry> results = searcher.search("cccccc", LuceneSearcher.LANG_HU);
+    List<Entry> results = searcher.search("cccccc", Language.hu);
     assertEquals(1, results.size());
-    results = searcher.search("cccccc", LuceneSearcher.LANG_NO);
+    results = searcher.search("cccccc", Language.no);
     assertEquals(1, results.size());
   }
 

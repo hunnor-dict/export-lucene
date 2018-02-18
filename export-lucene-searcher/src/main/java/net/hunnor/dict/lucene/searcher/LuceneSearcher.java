@@ -39,10 +39,6 @@ import java.util.stream.Collectors;
 
 public class LuceneSearcher {
 
-  public static final String LANG_HU = "hu";
-
-  public static final String LANG_NO = "no";
-
   public static final int MAX_RESULTS = 1000;
 
   public static final int MAX_SUGGESTION_DOCS = 20;
@@ -158,7 +154,7 @@ public class LuceneSearcher {
    * @param language the source language
    * @return a set of matching Entry objects
    */
-  public List<Entry> search(String userQuery, String language) {
+  public List<Entry> search(String userQuery, Language language) {
     Query query = createRootsQuery(userQuery, language);
     List<Entry> results = executeQuery(query);
     if (results.isEmpty()) {
@@ -172,31 +168,31 @@ public class LuceneSearcher {
     return results;
   }
 
-  private Query createRootsQuery(String userQuery, String language) {
+  private Query createRootsQuery(String userQuery, Language language) {
     String[] fields = new String[] {};
-    if (LANG_HU.equals(language)) {
+    if (Language.hu.equals(language)) {
       fields = new String[] {Lucene.HU_ROOTS};
-    } else if (LANG_NO.equals(language)) {
+    } else if (Language.no.equals(language)) {
       fields = new String[] {Lucene.NO_ROOTS};
     }
     return createQueryFromFields(userQuery, fields, false);
   }
 
-  private Query createFormsQuery(String userQuery, String language) {
+  private Query createFormsQuery(String userQuery, Language language) {
     String[] fields = new String[] {};
-    if (LANG_HU.equals(language)) {
+    if (Language.hu.equals(language)) {
       fields = new String[] {Lucene.HU_FORMS};
-    } else if (LANG_NO.equals(language)) {
+    } else if (Language.no.equals(language)) {
       fields = new String[] {Lucene.NO_FORMS};
     }
     return createQueryFromFields(userQuery, fields, false);
   }
 
-  private Query createFullTextQuery(String userQuery, String language) {
+  private Query createFullTextQuery(String userQuery, Language language) {
     String[] fields = new String[] {};
-    if (LANG_HU.equals(language)) {
+    if (Language.hu.equals(language)) {
       fields = new String[] {Lucene.NO_TRANS, Lucene.HU_QUOTE, Lucene.NO_QUOTETRANS};
-    } else if (LANG_NO.equals(language)) {
+    } else if (Language.no.equals(language)) {
       fields = new String[] {Lucene.HU_TRANS, Lucene.NO_QUOTE, Lucene.HU_QUOTETRANS};
     }
     return createQueryFromFields(userQuery, fields, false);
