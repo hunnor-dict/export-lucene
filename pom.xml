@@ -6,8 +6,10 @@
 	<groupId>net.hunnor.dict</groupId>
 	<artifactId>export-lucene</artifactId>
 	<version>1.0.0</version>
-
 	<packaging>pom</packaging>
+
+	<name>Export (Lucene)</name>
+	<description>Create a Lucene index from the XML exports</description>
 
 	<properties>
 		<junit.version>4.12</junit.version>
