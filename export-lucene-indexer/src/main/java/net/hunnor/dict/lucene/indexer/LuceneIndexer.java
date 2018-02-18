@@ -1,7 +1,7 @@
 package net.hunnor.dict.lucene.indexer;
 
 import net.hunnor.dict.lucene.analyzer.PerFieldAnalyzer;
-import net.hunnor.dict.lucene.constants.FieldNames;
+import net.hunnor.dict.lucene.constants.Lucene;
 import net.hunnor.dict.lucene.model.Entry;
 import net.hunnor.dict.lucene.model.Language;
 
@@ -125,8 +125,8 @@ public class LuceneIndexer {
    * @throws IOException when thrown by Lucene
    */
   public void createSuggestions() throws IOException {
-    Dictionary hungarianDictionary = new LuceneDictionary(indexReader, FieldNames.HU_ROOTS);
-    Dictionary norwegianDictionary = new LuceneDictionary(indexReader, FieldNames.NO_ROOTS);
+    Dictionary hungarianDictionary = new LuceneDictionary(indexReader, Lucene.HU_ROOTS);
+    Dictionary norwegianDictionary = new LuceneDictionary(indexReader, Lucene.NO_ROOTS);
     Analyzer analyzer = PerFieldAnalyzer.getInstance(LUCENE_VERSION);
     IndexWriterConfig indexWriterConfig1 = new IndexWriterConfig(LUCENE_VERSION, analyzer);
     IndexWriterConfig indexWriterConfig2 = new IndexWriterConfig(LUCENE_VERSION, analyzer);
@@ -149,7 +149,7 @@ public class LuceneIndexer {
       for (String root : indexObject.getRoots()) {
         Document suggestion = new Document();
         suggestion.add(
-            new Field(FieldNames.SUGGESTION, root, Field.Store.YES, Field.Index.ANALYZED));
+            new Field(Lucene.SUGGESTION, root, Field.Store.YES, Field.Index.ANALYZED));
         indexWriter.addDocument(suggestion);
       }
     }
@@ -157,28 +157,28 @@ public class LuceneIndexer {
 
   private Document toLuceneDocument(Entry entry) {
 
-    String rootsField = FieldNames.HU_ROOTS;
-    String formsField = FieldNames.HU_FORMS;
-    String transField = FieldNames.HU_TRANS;
-    String quoteField = FieldNames.HU_QUOTE;
-    String quoteTransField = FieldNames.HU_QUOTETRANS;
+    String rootsField = Lucene.HU_ROOTS;
+    String formsField = Lucene.HU_FORMS;
+    String transField = Lucene.HU_TRANS;
+    String quoteField = Lucene.HU_QUOTE;
+    String quoteTransField = Lucene.HU_QUOTETRANS;
     if (Language.no.equals(entry.getLang())) {
-      rootsField = FieldNames.NO_ROOTS;
-      formsField = FieldNames.NO_FORMS;
-      transField = FieldNames.NO_TRANS;
-      quoteField = FieldNames.NO_QUOTE;
-      quoteTransField = FieldNames.NO_QUOTETRANS;
+      rootsField = Lucene.NO_ROOTS;
+      formsField = Lucene.NO_FORMS;
+      transField = Lucene.NO_TRANS;
+      quoteField = Lucene.NO_QUOTE;
+      quoteTransField = Lucene.NO_QUOTETRANS;
     }
 
     Document document = new Document();
 
     if (entry.getLang() != null) {
       document.add(
-          new Field(FieldNames.LANG, entry.getLang().toString(),
+          new Field(Lucene.LANG, entry.getLang().toString(),
               Field.Store.YES, Field.Index.ANALYZED));
     }
     if (entry.getId() != null) {
-      document.add(new Field(FieldNames.ID, entry.getId(), Field.Store.YES, Field.Index.ANALYZED));
+      document.add(new Field(Lucene.ID, entry.getId(), Field.Store.YES, Field.Index.ANALYZED));
     }
     for (String root : entry.getRoots()) {
       document.add(new Field(rootsField, root, Field.Store.YES, Field.Index.ANALYZED));
@@ -198,7 +198,7 @@ public class LuceneIndexer {
 
     if (entry.getText() != null) {
       document.add(
-          new Field(FieldNames.TEXT, entry.getText(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+          new Field(Lucene.TEXT, entry.getText(), Field.Store.YES, Field.Index.NOT_ANALYZED));
     }
 
     return document;

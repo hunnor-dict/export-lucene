@@ -1,6 +1,6 @@
 package net.hunnor.dict.lucene.analyzer;
 
-import net.hunnor.dict.lucene.constants.FieldNames;
+import net.hunnor.dict.lucene.constants.Lucene;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.CharArraySet;
@@ -28,23 +28,23 @@ public final class PerFieldAnalyzer {
     Map<String, Analyzer> mapping = new HashMap<>();
 
     FoldingAnalyzer foldingAnalyzer = new FoldingAnalyzer(version);
-    mapping.put(FieldNames.HU_ROOTS, foldingAnalyzer);
-    mapping.put(FieldNames.NO_ROOTS, foldingAnalyzer);
-    mapping.put(FieldNames.HU_FORMS, foldingAnalyzer);
-    mapping.put(FieldNames.NO_FORMS, foldingAnalyzer);
-    mapping.put(FieldNames.SUGGESTION, foldingAnalyzer);
+    mapping.put(Lucene.HU_ROOTS, foldingAnalyzer);
+    mapping.put(Lucene.NO_ROOTS, foldingAnalyzer);
+    mapping.put(Lucene.HU_FORMS, foldingAnalyzer);
+    mapping.put(Lucene.NO_FORMS, foldingAnalyzer);
+    mapping.put(Lucene.SUGGESTION, foldingAnalyzer);
 
     HungarianAnalyzer hungarianAnalyzer =
         new HungarianAnalyzer(version, CharArraySet.EMPTY_SET);
-    mapping.put(FieldNames.NO_TRANS, hungarianAnalyzer);
-    mapping.put(FieldNames.HU_QUOTE, hungarianAnalyzer);
-    mapping.put(FieldNames.NO_QUOTETRANS, hungarianAnalyzer);
+    mapping.put(Lucene.NO_TRANS, hungarianAnalyzer);
+    mapping.put(Lucene.HU_QUOTE, hungarianAnalyzer);
+    mapping.put(Lucene.NO_QUOTETRANS, hungarianAnalyzer);
 
     NorwegianAnalyzer norwegianAnalyzer =
         new NorwegianAnalyzer(version, CharArraySet.EMPTY_SET);
-    mapping.put(FieldNames.HU_TRANS, norwegianAnalyzer);
-    mapping.put(FieldNames.NO_QUOTE, norwegianAnalyzer);
-    mapping.put(FieldNames.HU_QUOTETRANS, norwegianAnalyzer);
+    mapping.put(Lucene.HU_TRANS, norwegianAnalyzer);
+    mapping.put(Lucene.NO_QUOTE, norwegianAnalyzer);
+    mapping.put(Lucene.HU_QUOTETRANS, norwegianAnalyzer);
 
     KeywordAnalyzer keywordAnalyzer = new KeywordAnalyzer();
     return new PerFieldAnalyzerWrapper(keywordAnalyzer, mapping);

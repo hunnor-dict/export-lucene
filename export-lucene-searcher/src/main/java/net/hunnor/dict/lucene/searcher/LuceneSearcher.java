@@ -1,7 +1,6 @@
 package net.hunnor.dict.lucene.searcher;
 
 import net.hunnor.dict.lucene.analyzer.PerFieldAnalyzer;
-import net.hunnor.dict.lucene.constants.FieldNames;
 import net.hunnor.dict.lucene.constants.Lucene;
 import net.hunnor.dict.lucene.model.Entry;
 import net.hunnor.dict.lucene.model.Language;
@@ -112,9 +111,9 @@ public class LuceneSearcher {
   public List<String> suggestions(String userQuery) {
     List<String> results = new ArrayList<>();
     try (IndexSearcher indexSearcher = new IndexSearcher(indexReader)) {
-      Query query = createQueryFromFields(userQuery, new String[] {FieldNames.SUGGESTION}, true);
+      Query query = createQueryFromFields(userQuery, new String[] {Lucene.SUGGESTION}, true);
 
-      SortField sortField = new SortField(FieldNames.SUGGESTION, SortField.STRING);
+      SortField sortField = new SortField(Lucene.SUGGESTION, SortField.STRING);
       Sort sort = new Sort(sortField);
 
       TopDocs topDocs = indexSearcher.search(query, MAX_SUGGESTION_DOCS, sort);
@@ -123,7 +122,7 @@ public class LuceneSearcher {
       Arrays.stream(scoreDocs)
           .map(this::scoreDocToDocument)
           .filter(Objects::nonNull)
-          .map(document -> document.get(FieldNames.SUGGESTION))
+          .map(document -> document.get(Lucene.SUGGESTION))
           .distinct()
           .forEach(results::add);
 
@@ -174,9 +173,9 @@ public class LuceneSearcher {
   private Query createRootsQuery(String userQuery, String language) {
     String[] fields = new String[] {};
     if (LANG_HU.equals(language)) {
-      fields = new String[] {FieldNames.HU_ROOTS};
+      fields = new String[] {Lucene.HU_ROOTS};
     } else if (LANG_NO.equals(language)) {
-      fields = new String[] {FieldNames.NO_ROOTS};
+      fields = new String[] {Lucene.NO_ROOTS};
     }
     return createQueryFromFields(userQuery, fields, false);
   }
@@ -184,9 +183,9 @@ public class LuceneSearcher {
   private Query createFormsQuery(String userQuery, String language) {
     String[] fields = new String[] {};
     if (LANG_HU.equals(language)) {
-      fields = new String[] {FieldNames.HU_FORMS};
+      fields = new String[] {Lucene.HU_FORMS};
     } else if (LANG_NO.equals(language)) {
-      fields = new String[] {FieldNames.NO_FORMS};
+      fields = new String[] {Lucene.NO_FORMS};
     }
     return createQueryFromFields(userQuery, fields, false);
   }
@@ -194,9 +193,9 @@ public class LuceneSearcher {
   private Query createFullTextQuery(String userQuery, String language) {
     String[] fields = new String[] {};
     if (LANG_HU.equals(language)) {
-      fields = new String[] {FieldNames.NO_TRANS, FieldNames.HU_QUOTE, FieldNames.NO_QUOTETRANS};
+      fields = new String[] {Lucene.NO_TRANS, Lucene.HU_QUOTE, Lucene.NO_QUOTETRANS};
     } else if (LANG_NO.equals(language)) {
-      fields = new String[] {FieldNames.HU_TRANS, FieldNames.NO_QUOTE, FieldNames.HU_QUOTETRANS};
+      fields = new String[] {Lucene.HU_TRANS, Lucene.NO_QUOTE, Lucene.HU_QUOTETRANS};
     }
     return createQueryFromFields(userQuery, fields, false);
   }
@@ -259,9 +258,9 @@ public class LuceneSearcher {
 
   private Entry documentToEntry(Document document) {
     Entry entry = new Entry();
-    entry.setId(document.get(FieldNames.ID));
-    entry.setLang(Language.valueOf(document.get(FieldNames.LANG)));
-    entry.setText(document.get(FieldNames.TEXT));
+    entry.setId(document.get(Lucene.ID));
+    entry.setLang(Language.valueOf(document.get(Lucene.LANG)));
+    entry.setText(document.get(Lucene.TEXT));
     return entry;
   }
 
