@@ -1,7 +1,9 @@
 package net.hunnor.dict.lucene.test.searcher;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import net.hunnor.dict.lucene.indexer.LuceneIndexer;
 import net.hunnor.dict.lucene.model.Entry;
@@ -52,12 +54,15 @@ public class LuceneSearcherTest {
     entry.setId("1");
     entry.setRoots(new HashSet<String>(Arrays.asList(new String[] {"aaaaaa", "aaaaab"})));
     entry.setForms(new HashSet<String>(Arrays.asList(new String[] {"bbbbbb"})));
+    entry.setQuote(new HashSet<String>(Arrays.asList(new String[] {"cccccc"})));
     indexer.write(entry);
     
     entry = new Entry();
     entry.setLang(Language.no);
     entry.setId("2");
     entry.setRoots(new HashSet<String>(Arrays.asList(new String[] {"aaaaab", "aaaaac"})));
+    entry.setForms(new HashSet<String>(Arrays.asList(new String[] {"bbbbbb"})));
+    entry.setQuote(new HashSet<String>(Arrays.asList(new String[] {"cccccc"})));
     indexer.write(entry);
 
     indexer.closeIndexWriter();
@@ -77,9 +82,18 @@ public class LuceneSearcherTest {
    */
   @Before
   public void setUpSearcher() throws IOException {
-    searcher = new LuceneSearcher();
+    searcher = LuceneSearcher.getInstance();
     searcher.open(
         new File(testFolder.getRoot(), INDEX_DIR), new File(testFolder.getRoot(), SPELLING_DIR));
+  }
+
+  @Test
+  public void testOpenAndClose() throws IOException {
+    searcher.close();
+    assertFalse(searcher.isOpen());
+    searcher.open(
+        new File(testFolder.getRoot(), INDEX_DIR), new File(testFolder.getRoot(), SPELLING_DIR));
+    assertTrue(searcher.isOpen());
   }
 
   @Test
@@ -104,11 +118,22 @@ public class LuceneSearcherTest {
   public void testSearchForRoots() {
     List<Entry> results = searcher.search("aaaaaa", LuceneSearcher.LANG_HU);
     assertEquals(1, results.size());
+    results = searcher.search("aaaaab", LuceneSearcher.LANG_NO);
   }
 
   @Test
   public void testSearchForForms() {
     List<Entry> results = searcher.search("bbbbbb", LuceneSearcher.LANG_HU);
+    assertEquals(1, results.size());
+    results = searcher.search("bbbbbb", LuceneSearcher.LANG_NO);
+    assertEquals(1, results.size());
+  }
+
+  @Test
+  public void testSearchForQuotes() {
+    List<Entry> results = searcher.search("cccccc", LuceneSearcher.LANG_HU);
+    assertEquals(1, results.size());
+    results = searcher.search("cccccc", LuceneSearcher.LANG_NO);
     assertEquals(1, results.size());
   }
 

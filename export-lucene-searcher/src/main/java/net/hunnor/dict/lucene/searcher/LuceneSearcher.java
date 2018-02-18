@@ -96,9 +96,11 @@ public class LuceneSearcher {
   public void close() throws IOException {
     if (indexReader != null) {
       indexReader.close();
+      indexReader = null;
     }
     if (spellChecker != null) {
       spellChecker.close();
+      spellChecker = null;
     }
   }
 
@@ -212,14 +214,14 @@ public class LuceneSearcher {
           if (wildcards) {
             WildcardQuery wildcardQuery = new WildcardQuery(
                 new Term(field, attribute.toString() + "*"));
-            fieldQuery.add(new BooleanClause(wildcardQuery, Occur.SHOULD));
+            fieldQuery.add(new BooleanClause(wildcardQuery, Occur.MUST));
           } else {
             TermQuery termQuery = new TermQuery(
                 new Term(field, attribute.toString()));
-            fieldQuery.add(new BooleanClause(termQuery, Occur.SHOULD));
+            fieldQuery.add(new BooleanClause(termQuery, Occur.MUST));
           }
         }
-        luceneQuery.add(new BooleanClause(fieldQuery, Occur.MUST));
+        luceneQuery.add(new BooleanClause(fieldQuery, Occur.SHOULD));
       } catch (IOException ex) {
         LOGGER.error(ex.getMessage(), ex);
       }
