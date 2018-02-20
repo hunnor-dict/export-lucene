@@ -169,7 +169,7 @@ public class LuceneSearcher {
   }
 
   private Query createRootsQuery(String userQuery, Language language) {
-    String[] fields = new String[] {};
+    String[] fields;
     if (Language.hu.equals(language)) {
       fields = new String[] {Lucene.HU_ROOTS};
     } else {
@@ -179,7 +179,7 @@ public class LuceneSearcher {
   }
 
   private Query createFormsQuery(String userQuery, Language language) {
-    String[] fields = new String[] {};
+    String[] fields;
     if (Language.hu.equals(language)) {
       fields = new String[] {Lucene.HU_FORMS};
     } else {
@@ -189,7 +189,7 @@ public class LuceneSearcher {
   }
 
   private Query createFullTextQuery(String userQuery, Language language) {
-    String[] fields = new String[] {};
+    String[] fields;
     if (Language.hu.equals(language)) {
       fields = new String[] {Lucene.NO_TRANS, Lucene.HU_QUOTE, Lucene.NO_QUOTETRANS};
     } else {
