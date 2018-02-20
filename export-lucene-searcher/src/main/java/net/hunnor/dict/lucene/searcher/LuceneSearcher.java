@@ -76,7 +76,7 @@ public class LuceneSearcher {
   }
 
   public boolean isOpen() {
-    return analyzer != null && indexReader != null && spellChecker != null;
+    return indexReader != null && spellChecker != null;
   }
 
   public void open(File indexDirectory, File spellingDirectory) throws IOException {
