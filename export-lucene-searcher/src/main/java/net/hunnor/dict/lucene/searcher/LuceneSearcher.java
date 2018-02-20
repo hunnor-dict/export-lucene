@@ -172,7 +172,7 @@ public class LuceneSearcher {
     String[] fields = new String[] {};
     if (Language.hu.equals(language)) {
       fields = new String[] {Lucene.HU_ROOTS};
-    } else if (Language.no.equals(language)) {
+    } else {
       fields = new String[] {Lucene.NO_ROOTS};
     }
     return createQueryFromFields(userQuery, fields, false);
@@ -182,7 +182,7 @@ public class LuceneSearcher {
     String[] fields = new String[] {};
     if (Language.hu.equals(language)) {
       fields = new String[] {Lucene.HU_FORMS};
-    } else if (Language.no.equals(language)) {
+    } else {
       fields = new String[] {Lucene.NO_FORMS};
     }
     return createQueryFromFields(userQuery, fields, false);
@@ -192,7 +192,7 @@ public class LuceneSearcher {
     String[] fields = new String[] {};
     if (Language.hu.equals(language)) {
       fields = new String[] {Lucene.NO_TRANS, Lucene.HU_QUOTE, Lucene.NO_QUOTETRANS};
-    } else if (Language.no.equals(language)) {
+    } else {
       fields = new String[] {Lucene.HU_TRANS, Lucene.NO_QUOTE, Lucene.HU_QUOTETRANS};
     }
     return createQueryFromFields(userQuery, fields, false);
