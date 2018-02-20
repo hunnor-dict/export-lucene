@@ -90,6 +90,7 @@ public class LuceneSearcherTest {
   @Test
   public void testOpenAndClose() throws IOException {
     searcher.close();
+    searcher.close();
     assertFalse(searcher.isOpen());
     searcher.open(
         new File(testFolder.getRoot(), INDEX_DIR), new File(testFolder.getRoot(), SPELLING_DIR));
