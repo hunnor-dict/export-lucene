@@ -222,9 +222,6 @@ public class LuceneSearcher {
         LOGGER.error(ex.getMessage(), ex);
       }
     });
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Query for '{}' with fields {}: {}", userQuery, fields, luceneQuery);
-    }
     return luceneQuery;
   }
 
