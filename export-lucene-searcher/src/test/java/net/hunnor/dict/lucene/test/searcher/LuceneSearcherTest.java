@@ -137,4 +137,10 @@ public class LuceneSearcherTest {
     assertEquals(1, results.size());
   }
 
+  @Test
+  public void testNoResults() {
+    List<Entry> results = searcher.search("dddddd", Language.hu);
+    assertEquals(0, results.size());
+  }
+
 }
