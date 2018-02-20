@@ -76,24 +76,39 @@ public class LuceneSearcher {
   }
 
   public boolean isOpen() {
-    return indexReader != null && spellChecker != null;
+    return indexReader != null;
   }
 
-  public void open(File indexDirectory, File spellingDirectory) throws IOException {
+  public boolean isSpellCheckerOpen() {
+    return spellChecker != null;
+  }
+
+  public void open(File indexDirectory) throws IOException {
     indexReader = IndexReader.open(new NIOFSDirectory(indexDirectory));
+  }
+
+  public void openSpellChecker(File spellingDirectory) throws IOException {
     spellChecker = new SpellChecker(new NIOFSDirectory(spellingDirectory));
   }
 
   /**
-   * Close the index reader and the spell checker.
+   * Close the index reader.
    *
-   * @throws IOException if an error occurs while closing an index
+   * @throws IOException if there is a low-level IO error
    */
   public void close() throws IOException {
     if (indexReader != null) {
       indexReader.close();
       indexReader = null;
     }
+  }
+
+  /**
+   * Close the spell checker.
+   *
+   * @throws IOException if there is a low-level IO error
+   */
+  public void closeSpellChecker() throws IOException {
     if (spellChecker != null) {
       spellChecker.close();
       spellChecker = null;

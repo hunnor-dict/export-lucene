@@ -83,17 +83,28 @@ public class LuceneSearcherTest {
   @Before
   public void setUpSearcher() throws IOException {
     searcher = LuceneSearcher.getInstance();
-    searcher.open(
-        new File(testFolder.getRoot(), INDEX_DIR), new File(testFolder.getRoot(), SPELLING_DIR));
+    searcher.open(new File(testFolder.getRoot(), INDEX_DIR));
+    searcher.openSpellChecker(new File(testFolder.getRoot(), SPELLING_DIR));
   }
 
   @Test
-  public void testOpenAndClose() throws IOException {
-    searcher.close();
+  public void testClose() throws IOException {
     searcher.close();
     assertFalse(searcher.isOpen());
-    searcher.open(
-        new File(testFolder.getRoot(), INDEX_DIR), new File(testFolder.getRoot(), SPELLING_DIR));
+    searcher.close();
+    assertFalse(searcher.isOpen());
+  }
+
+  @Test
+  public void testCloseSpellChecker() throws IOException {
+    searcher.closeSpellChecker();
+    assertFalse(searcher.isSpellCheckerOpen());
+    searcher.closeSpellChecker();
+    assertFalse(searcher.isSpellCheckerOpen());
+  }
+
+  @Test
+  public void testOpen() throws IOException {
     assertTrue(searcher.isOpen());
   }
 
