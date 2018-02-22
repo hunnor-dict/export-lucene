@@ -48,9 +48,7 @@ public class LuceneSearcher {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LuceneSearcher.class);
 
-  private static volatile LuceneSearcher instance;
-
-  private static final Object MUTEX = new Object();
+  private static volatile LuceneSearcher instance = new LuceneSearcher();
 
   private IndexReader indexReader;
 
@@ -64,16 +62,7 @@ public class LuceneSearcher {
    * @return the single instance of the class
    */
   public static LuceneSearcher getInstance() {
-    LuceneSearcher result = instance;
-    if (result == null) {
-      synchronized (MUTEX) {
-        result = instance;
-        if (result == null) {
-          instance = result = new LuceneSearcher();
-        }
-      }
-    }
-    return result;
+    return instance;
   }
 
   public boolean isOpen() {
