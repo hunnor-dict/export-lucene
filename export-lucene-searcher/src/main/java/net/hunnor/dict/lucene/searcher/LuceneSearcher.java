@@ -9,6 +9,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -286,11 +287,15 @@ public class LuceneSearcher {
   private Document scoreDocToDocument(ScoreDoc scoreDoc) {
     Document document = null;
     try {
-      document = indexReader.document(scoreDoc.doc);
+      document = extractDocument(scoreDoc);
     } catch (IOException ex) {
       LOGGER.error(ex.getMessage(), ex);
     }
     return document;
+  }
+
+  private Document extractDocument(ScoreDoc scoreDoc) throws CorruptIndexException, IOException {
+    return indexReader.document(scoreDoc.doc);
   }
 
   private Entry documentToEntry(Document document) {

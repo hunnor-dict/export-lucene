@@ -9,6 +9,7 @@ import net.hunnor.dict.lucene.model.Entry;
 import net.hunnor.dict.lucene.model.Language;
 import net.hunnor.dict.lucene.searcher.LuceneSearcher;
 
+import org.apache.lucene.index.CorruptIndexException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -137,6 +138,26 @@ public class LuceneSearcherTest {
     LuceneSearcher spySearcher = PowerMockito.spy(searcher);
     PowerMockito.doThrow(new IOException()).when(spySearcher, "extractTokens",
         Matchers.any(), Matchers.any());
+    List<Entry> results = spySearcher.search("aaaaaa", Language.hu);
+    assertNotNull(results);
+    assertEquals(0, results.size());
+  }
+
+  @Test
+  public void testForRootsDocumentError() throws Exception {
+    LuceneSearcher spySearcher = PowerMockito.spy(searcher);
+    PowerMockito.doThrow(new IOException()).when(spySearcher, "extractDocument",
+        Matchers.any());
+    List<Entry> results = spySearcher.search("aaaaaa", Language.hu);
+    assertNotNull(results);
+    assertEquals(0, results.size());
+  }
+
+  @Test
+  public void testForRootsIndexError() throws Exception {
+    LuceneSearcher spySearcher = PowerMockito.spy(searcher);
+    PowerMockito.doThrow(new CorruptIndexException(null)).when(spySearcher, "extractDocument",
+        Matchers.any());
     List<Entry> results = spySearcher.search("aaaaaa", Language.hu);
     assertNotNull(results);
     assertEquals(0, results.size());
