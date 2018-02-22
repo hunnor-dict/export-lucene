@@ -124,6 +124,17 @@ public class LuceneSearcherTest {
   @Test
   public void testForRootsError() throws Exception {
     LuceneSearcher spySearcher = PowerMockito.spy(searcher);
+    PowerMockito.doThrow(new IOException()).when(spySearcher, "executeSearch",
+        Matchers.any(), Matchers.any(),
+        Matchers.anyInt(), Matchers.any());
+    List<Entry> results = spySearcher.search("aaaaaa", Language.hu);
+    assertNotNull(results);
+    assertEquals(0, results.size());
+  }
+
+  @Test
+  public void testForRootsTokenError() throws Exception {
+    LuceneSearcher spySearcher = PowerMockito.spy(searcher);
     PowerMockito.doThrow(new IOException()).when(spySearcher, "extractTokens",
         Matchers.any(), Matchers.any());
     List<Entry> results = spySearcher.search("aaaaaa", Language.hu);

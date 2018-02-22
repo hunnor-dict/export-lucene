@@ -190,7 +190,11 @@ public class LuceneSearcher {
 
   private TopDocs executeSearch(IndexSearcher indexSearcher, Query query,
       int maxSuggestions, Sort sort) throws IOException {
-    return indexSearcher.search(query, maxSuggestions, sort);
+    if (sort == null) {
+      return indexSearcher.search(query, maxSuggestions);
+    } else {
+      return indexSearcher.search(query, maxSuggestions, sort);
+    }
   }
 
   private String[] executeSuggestion(String query, int maxSuggestions) throws IOException {
@@ -266,7 +270,7 @@ public class LuceneSearcher {
   private List<Entry> executeQuery(Query query) {
     List<Entry> results = new ArrayList<>();
     try (IndexSearcher indexSearcher = new IndexSearcher(indexReader)) {
-      TopDocs topDocs = indexSearcher.search(query, MAX_RESULTS);
+      TopDocs topDocs = executeSearch(indexSearcher, query, MAX_RESULTS, null);
       ScoreDoc[] scoreDocs = topDocs.scoreDocs;
       results = Arrays.stream(scoreDocs)
           .map(this::scoreDocToDocument)
