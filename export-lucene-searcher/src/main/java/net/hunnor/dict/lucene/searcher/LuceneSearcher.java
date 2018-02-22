@@ -122,27 +122,32 @@ public class LuceneSearcher {
    * @return a set of matching terms
    */
   public List<String> suggestions(String userQuery) {
-    List<String> results = new ArrayList<>();
+
+    Query query = createQueryFromFields(userQuery, new String[] {Lucene.SUGGESTION}, true);
+    SortField sortField = new SortField(Lucene.SUGGESTION, SortField.STRING);
+    Sort sort = new Sort(sortField);
+
+    TopDocs topDocs = null;
     try (IndexSearcher indexSearcher = new IndexSearcher(indexReader)) {
-      Query query = createQueryFromFields(userQuery, new String[] {Lucene.SUGGESTION}, true);
+      topDocs = executeSearch(indexSearcher, query, MAX_SUGGESTION_DOCS, sort);
+    } catch (IOException ex) {
+      LOGGER.error(ex.getMessage(), ex);
+    }
 
-      SortField sortField = new SortField(Lucene.SUGGESTION, SortField.STRING);
-      Sort sort = new Sort(sortField);
+    List<String> results = new ArrayList<>();
 
-      TopDocs topDocs = indexSearcher.search(query, MAX_SUGGESTION_DOCS, sort);
+    if (topDocs != null) {
       ScoreDoc[] scoreDocs = topDocs.scoreDocs;
-
-      Arrays.stream(scoreDocs)
+      results = Arrays.stream(scoreDocs)
           .map(this::scoreDocToDocument)
           .filter(Objects::nonNull)
           .map(document -> document.get(Lucene.SUGGESTION))
           .distinct()
-          .forEach(results::add);
-
-    } catch (IOException ex) {
-      LOGGER.error(ex.getMessage(), ex);
+          .collect(Collectors.toList());
     }
+
     return results;
+
   }
 
   /**
@@ -154,7 +159,7 @@ public class LuceneSearcher {
   public List<String> spellingSuggestions(String userQuery) {
     List<String> results = new ArrayList<>();
     try {
-      String[] suggestions = spellChecker.suggestSimilar(userQuery, MAX_SPELLING_SUGGESTIONS);
+      String[] suggestions = executeSuggestion(userQuery, MAX_SPELLING_SUGGESTIONS);
       results.addAll(Arrays.asList(suggestions));
     } catch (IOException ex) {
       LOGGER.error(ex.getMessage(), ex);
@@ -181,6 +186,15 @@ public class LuceneSearcher {
       }
     }
     return results;
+  }
+
+  private TopDocs executeSearch(IndexSearcher indexSearcher, Query query,
+      int maxSuggestions, Sort sort) throws IOException {
+    return indexSearcher.search(query, maxSuggestions, sort);
+  }
+
+  private String[] executeSuggestion(String query, int maxSuggestions) throws IOException {
+    return spellChecker.suggestSimilar(query, maxSuggestions);
   }
 
   private Query createRootsQuery(String userQuery, Language language) {
@@ -216,28 +230,37 @@ public class LuceneSearcher {
   private Query createQueryFromFields(String userQuery, String[] fields, boolean wildcards) {
     BooleanQuery luceneQuery = new BooleanQuery();
     Arrays.stream(fields).forEach(field -> {
+      BooleanQuery fieldQuery = new BooleanQuery();
       try {
-        BooleanQuery fieldQuery = new BooleanQuery();
-        Reader reader = new StringReader(userQuery);
-        TokenStream tokenStream = analyzer.tokenStream(field, reader);
-        CharTermAttribute attribute = tokenStream.getAttribute(CharTermAttribute.class);
-        while (tokenStream.incrementToken()) {
+        List<String> tokens = extractTokens(userQuery, field);
+        tokens.forEach(token -> {
           if (wildcards) {
             WildcardQuery wildcardQuery = new WildcardQuery(
-                new Term(field, attribute.toString() + "*"));
+                new Term(field, token + "*"));
             fieldQuery.add(new BooleanClause(wildcardQuery, Occur.MUST));
           } else {
             TermQuery termQuery = new TermQuery(
-                new Term(field, attribute.toString()));
+                new Term(field, token));
             fieldQuery.add(new BooleanClause(termQuery, Occur.MUST));
           }
-        }
-        luceneQuery.add(new BooleanClause(fieldQuery, Occur.SHOULD));
+        });
       } catch (IOException ex) {
         LOGGER.error(ex.getMessage(), ex);
       }
+      luceneQuery.add(new BooleanClause(fieldQuery, Occur.SHOULD));
     });
     return luceneQuery;
+  }
+
+  private List<String> extractTokens(String query, String field) throws IOException {
+    List<String> tokens = new ArrayList<>();
+    Reader reader = new StringReader(query);
+    TokenStream tokenStream = analyzer.tokenStream(field, reader);
+    CharTermAttribute attribute = tokenStream.getAttribute(CharTermAttribute.class);
+    while (tokenStream.incrementToken()) {
+      tokens.add(attribute.toString());
+    }
+    return tokens;
   }
 
   private List<Entry> executeQuery(Query query) {

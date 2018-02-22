@@ -5,75 +5,30 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import net.hunnor.dict.lucene.indexer.LuceneIndexer;
 import net.hunnor.dict.lucene.model.Entry;
 import net.hunnor.dict.lucene.model.Language;
 import net.hunnor.dict.lucene.searcher.LuceneSearcher;
 
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
+@RunWith(PowerMockRunner.class)
+@PowerMockIgnore("javax.management.*")
+@PrepareForTest(LuceneSearcher.class)
 public class LuceneSearcherTest {
 
-  private static final String INDEX_DIR = "hunnor-lucene-index";
-
-  private static final String SPELLING_DIR = "hunnor-lucene-spelling";
-
-  private static TemporaryFolder testFolder = new TemporaryFolder();
-
   private LuceneSearcher searcher;
-
-  /**
-   * Create the index for the tests.
-   * 
-   * @throws IOException if an error occurs
-   */
-  @BeforeClass
-  public static void setUpIndex() throws IOException {
-
-    testFolder.create();
-
-    LuceneIndexer indexer = new LuceneIndexer();
-    File indexDir = testFolder.newFolder(INDEX_DIR);
-    indexer.setIndexDir(indexDir.getAbsolutePath());
-    File spellingDir = testFolder.newFolder(SPELLING_DIR);
-    indexer.setSpellingDir(spellingDir.getAbsolutePath());
-
-    indexer.openIndexWriter();
-
-    Entry entry = new Entry();
-    entry.setLang(Language.hu);
-    entry.setId("1");
-    entry.setRoots(new HashSet<String>(Arrays.asList(new String[] {"aaaaaa", "aaaaab"})));
-    entry.setForms(new HashSet<String>(Arrays.asList(new String[] {"bbbbbb"})));
-    entry.setQuote(new HashSet<String>(Arrays.asList(new String[] {"cccccc"})));
-    indexer.write(entry);
-    
-    entry = new Entry();
-    entry.setLang(Language.no);
-    entry.setId("2");
-    entry.setRoots(new HashSet<String>(Arrays.asList(new String[] {"aaaaab", "aaaaac"})));
-    entry.setForms(new HashSet<String>(Arrays.asList(new String[] {"bbbbbb"})));
-    entry.setQuote(new HashSet<String>(Arrays.asList(new String[] {"cccccc"})));
-    indexer.write(entry);
-
-    indexer.closeIndexWriter();
-
-    indexer.openIndexReader();
-    indexer.openSpellChecker();
-    indexer.createSuggestions();
-    indexer.closeSpellChecker();
-    indexer.closeIndexReader();
-
-  }
 
   /**
    * Initialize the searcher before each text.
@@ -81,10 +36,18 @@ public class LuceneSearcherTest {
    * @throws IOException if an error occurs
    */
   @Before
-  public void setUpSearcher() throws IOException {
+  public void setUp() throws IOException {
     searcher = LuceneSearcher.getInstance();
-    searcher.open(new File(testFolder.getRoot(), INDEX_DIR));
-    searcher.openSpellChecker(new File(testFolder.getRoot(), SPELLING_DIR));
+    searcher.open(new File(
+        getClass().getResource("/lucene-index").getFile()));
+    searcher.openSpellChecker(new File(
+        getClass().getResource("/lucene-spellchecker-index").getFile()));
+  }
+
+  @After
+  public void tearDown() throws IOException {
+    searcher.close();
+    searcher.closeSpellChecker();
   }
 
   @Test
@@ -109,6 +72,11 @@ public class LuceneSearcherTest {
   }
 
   @Test
+  public void testOpenSpellChecker() throws IOException {
+    assertTrue(searcher.isSpellCheckerOpen());
+  }
+
+  @Test
   public void testSuggestion() {
     List<String> suggestions = searcher.suggestions("aaa");
     assertNotNull(suggestions);
@@ -116,6 +84,16 @@ public class LuceneSearcherTest {
     assertEquals("aaaaaa", suggestions.get(0));
     assertEquals("aaaaab", suggestions.get(1));
     assertEquals("aaaaac", suggestions.get(2));
+  }
+
+  @Test
+  public void testSuggestionError() throws Exception {
+    LuceneSearcher spySearcher = PowerMockito.spy(searcher);
+    PowerMockito.doThrow(new IOException()).when(spySearcher, "executeSearch",
+        Matchers.any(), Matchers.any(),
+        Matchers.anyInt(), Matchers.any());
+    List<String> suggestions = spySearcher.suggestions("aaa");
+    assertEquals(0, suggestions.size());
   }
 
   @Test
@@ -127,10 +105,30 @@ public class LuceneSearcherTest {
   }
 
   @Test
+  public void testSpellingSuggestionsError() throws Exception {
+    LuceneSearcher spySearcher = PowerMockito.spy(searcher);
+    PowerMockito.doThrow(new IOException()).when(spySearcher, "executeSuggestion",
+        Matchers.any(), Matchers.anyInt());
+    List<String> suggestions = spySearcher.spellingSuggestions("aabaaa");
+    assertNotNull(suggestions);
+    assertEquals(0, suggestions.size());
+  }
+
+  @Test
   public void testSearchForRoots() {
     List<Entry> results = searcher.search("aaaaaa", Language.hu);
     assertEquals(1, results.size());
     results = searcher.search("aaaaab", Language.no);
+  }
+
+  @Test
+  public void testForRootsError() throws Exception {
+    LuceneSearcher spySearcher = PowerMockito.spy(searcher);
+    PowerMockito.doThrow(new IOException()).when(spySearcher, "extractTokens",
+        Matchers.any(), Matchers.any());
+    List<Entry> results = spySearcher.search("aaaaaa", Language.hu);
+    assertNotNull(results);
+    assertEquals(0, results.size());
   }
 
   @Test
