@@ -21,6 +21,34 @@ public class StaxParser {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(StaxParser.class);
 
+  public static final String ENTRY = "entry";
+
+  public static final String FORM_GRP = "formGrp";
+
+  public static final String FORM = "form";
+
+  public static final String ORTH = "orth";
+
+  public static final String POS = "pos";
+
+  public static final String INFL_CODE = "inflCode";
+
+  public static final String INFL_PAR = "inflPar";
+
+  public static final String INFL_SEQ = "inflSeq";
+
+  public static final String SENSE_GRP = "senseGrp";
+
+  public static final String SENSE = "sense";
+
+  public static final String LBL = "lbl";
+
+  public static final String EG = "eg";
+
+  public static final String Q = "q";
+
+  public static final String TRANS = "trans";
+
   private FileInputStream stream;
 
   private XMLStreamReader2 reader;
@@ -31,23 +59,23 @@ public class StaxParser {
 
   static {
     glues = new HashMap<>();
-    glues.put(TagNames.TRANS + "2" + TagNames.LBL, ", ");
-    glues.put(TagNames.LBL + "2" + TagNames.LBL, " ");
-    glues.put(TagNames.EG + "2" + TagNames.LBL, "; ");
-    glues.put(TagNames.TRANS + "2" + TagNames.EG, "; ");
-    glues.put(TagNames.EG + "2" + TagNames.EG, "; ");
-    glues.put(TagNames.LBL + "2" + TagNames.EG, " ");
-    glues.put(TagNames.TRANS + "2" + TagNames.TRANS, ", ");
-    glues.put(TagNames.LBL + "2" + TagNames.TRANS, " ");
-    glues.put(TagNames.EG + "2" + TagNames.TRANS, "; ");
+    glues.put(TRANS + "2" + LBL, ", ");
+    glues.put(LBL + "2" + LBL, " ");
+    glues.put(EG + "2" + LBL, "; ");
+    glues.put(TRANS + "2" + EG, "; ");
+    glues.put(EG + "2" + EG, "; ");
+    glues.put(LBL + "2" + EG, " ");
+    glues.put(TRANS + "2" + TRANS, ", ");
+    glues.put(LBL + "2" + TRANS, " ");
+    glues.put(EG + "2" + TRANS, "; ");
 
     textNodes = new HashSet<>();
-    textNodes.add(TagNames.ORTH);
-    textNodes.add(TagNames.POS);
-    textNodes.add(TagNames.INFL_SEQ);
-    textNodes.add(TagNames.TRANS);
-    textNodes.add(TagNames.LBL);
-    textNodes.add(TagNames.Q);
+    textNodes.add(ORTH);
+    textNodes.add(POS);
+    textNodes.add(INFL_SEQ);
+    textNodes.add(TRANS);
+    textNodes.add(LBL);
+    textNodes.add(Q);
   }
 
   /**
@@ -145,7 +173,7 @@ public class StaxParser {
   }
 
   private void processEntryStart(String element, ParserState parserState) {
-    if (!TagNames.ENTRY.equals(element)) {
+    if (!ENTRY.equals(element)) {
       return;
     }
     Entry entry = new Entry();
@@ -156,14 +184,14 @@ public class StaxParser {
   }
 
   private void processFormGrpStart(String element, ParserState parserState) {
-    if (!TagNames.FORM_GRP.equals(element)) {
+    if (!FORM_GRP.equals(element)) {
       return;
     }
     parserState.setFormBuffer(new StringBuilder());
   }
 
   private void processFormStart(String element, ParserState parserState) {
-    if (!TagNames.FORM.equals(element)) {
+    if (!FORM.equals(element)) {
       return;
     }
     parserState.setRegularInflection(false);
@@ -172,7 +200,7 @@ public class StaxParser {
   }
 
   private void processInflCodeStart(String element, ParserState parserState) {
-    if (!TagNames.INFL_CODE.equals(element)) {
+    if (!INFL_CODE.equals(element)) {
       return;
     }
     if ("suff".equals(reader.getAttributeValue(null, "type"))) {
@@ -182,7 +210,7 @@ public class StaxParser {
   }
 
   private void processInflParStart(String element, ParserState parserState) {
-    if (!TagNames.INFL_PAR.equals(element)) {
+    if (!INFL_PAR.equals(element)) {
       return;
     }
     if (parserState.getInflParBuffer().length() > 0) {
@@ -192,7 +220,7 @@ public class StaxParser {
   }
 
   private void processSenseGrpStart(String element, ParserState parserState) {
-    if (!TagNames.SENSE_GRP.equals(element)) {
+    if (!SENSE_GRP.equals(element)) {
       return;
     }
     parserState.setSenseBuffer(new StringBuilder());
@@ -208,7 +236,7 @@ public class StaxParser {
   }
 
   private void processSenseStart(String element, ParserState parserState) {
-    if (!TagNames.SENSE.equals(element)) {
+    if (!SENSE.equals(element)) {
       return;
     }
     if (parserState.getSenseCount() > 0) {
@@ -220,7 +248,7 @@ public class StaxParser {
   }
 
   private void processEgStart(String element, ParserState parserState) {
-    if (!TagNames.EG.equals(element)) {
+    if (!EG.equals(element)) {
       return;
     }
     parserState.setEgBuffer(new StringBuilder());
@@ -234,7 +262,7 @@ public class StaxParser {
   }
 
   private void processEntryEnd(String element, ParserState parserState) {
-    if (!TagNames.ENTRY.equals(element)) {
+    if (!ENTRY.equals(element)) {
       return;
     }
     parserState
@@ -247,7 +275,7 @@ public class StaxParser {
   }
 
   private void processFormEnd(String element, ParserState parserState) {
-    if (!TagNames.FORM.equals(element)) {
+    if (!FORM.equals(element)) {
       return;
     }
     if (!parserState.isRegularInflection() && parserState.getInflParBuffer().length() > 0) {
@@ -256,7 +284,7 @@ public class StaxParser {
   }
 
   private void processOrthEnd(String element, ParserState parserState) {
-    if (!TagNames.ORTH.equals(element)) {
+    if (!ORTH.equals(element)) {
       return;
     }
     parserState.getEntry().getRoots().add(parserState.getCharacters().toString());
@@ -268,7 +296,7 @@ public class StaxParser {
   }
 
   private void processPosEnd(String element, ParserState parserState) {
-    if (!TagNames.POS.equals(element)) {
+    if (!POS.equals(element)) {
       return;
     }
     if (parserState.isPrimaryForm()) {
@@ -278,7 +306,7 @@ public class StaxParser {
   }
 
   private void processInflCodeEnd(String element, ParserState parserState) {
-    if (!TagNames.INFL_CODE.equals(element)) {
+    if (!INFL_CODE.equals(element)) {
       return;
     }
     if (parserState.getCharacters().length() > 0) {
@@ -288,7 +316,7 @@ public class StaxParser {
   }
 
   private void processInflParEnd(String element, ParserState parserState) {
-    if (!TagNames.INFL_PAR.equals(element)) {
+    if (!INFL_PAR.equals(element)) {
       return;
     }
     if (parserState.getInflParBuffer().length() > 0) {
@@ -299,7 +327,7 @@ public class StaxParser {
   }
 
   private void processInflSeqEnd(String element, ParserState parserState) {
-    if (!TagNames.INFL_SEQ.equals(element)) {
+    if (!INFL_SEQ.equals(element)) {
       return;
     }
     parserState.getEntry().getForms().add(parserState.getCharacters().toString());
@@ -311,7 +339,7 @@ public class StaxParser {
   }
 
   private void processSenseGrpEnd(String element, ParserState parserState) {
-    if (!TagNames.SENSE_GRP.equals(element)) {
+    if (!SENSE_GRP.equals(element)) {
       return;
     }
     parserState.getSenseGrpBuffer().append(parserState.getSenseBuffer());
@@ -320,22 +348,22 @@ public class StaxParser {
   }
 
   private void processSenseEnd(String element, ParserState parserState) {
-    if (!TagNames.SENSE.equals(element)) {
+    if (!SENSE.equals(element)) {
       return;
     }
     parserState.setSenseCount(parserState.getSenseCount() + 1);
   }
 
   private void processTransEnd(String element, ParserState parserState) {
-    if (!TagNames.TRANS.equals(element)) {
+    if (!TRANS.equals(element)) {
       return;
     }
     if (parserState.isEg()) {
       parserState.getEntry().getQuoteTrans().add(parserState.getCharacters().toString());
-      if (TagNames.TRANS.equals(parserState.getPrevious())) {
+      if (TRANS.equals(parserState.getPrevious())) {
         parserState.getEgBuffer().append(", ");
-      } else if (TagNames.LBL.equals(parserState.getPrevious())
-          || TagNames.Q.equals(parserState.getPrevious())) {
+      } else if (LBL.equals(parserState.getPrevious())
+          || Q.equals(parserState.getPrevious())) {
         parserState.getEgBuffer().append(" ");
       }
       parserState.getEgBuffer().append(parserState.getCharacters().toString());
@@ -348,7 +376,7 @@ public class StaxParser {
   }
 
   private void processLblEnd(String element, ParserState parserState) {
-    if (!TagNames.LBL.equals(element)) {
+    if (!LBL.equals(element)) {
       return;
     }
     if (parserState.getSenseBuffer().length() > 0) {
@@ -359,7 +387,7 @@ public class StaxParser {
   }
 
   private void processEgEnd(String element, ParserState parserState) {
-    if (!TagNames.EG.equals(element)) {
+    if (!EG.equals(element)) {
       return;
     }
     parserState.setEg(false);
@@ -370,7 +398,7 @@ public class StaxParser {
   }
 
   private void processQEnd(String element, ParserState parserState) {
-    if (!TagNames.Q.equals(element)) {
+    if (!Q.equals(element)) {
       return;
     }
     parserState.getEntry().getQuote().add(parserState.getCharacters().toString());
