@@ -28,44 +28,54 @@ public class LuceneIndexerTest {
 
     LuceneIndexer indexer = new LuceneIndexer();
 
-    indexer.closeSpellChecker();
     indexer.closeIndexReader();
+    indexer.closeIndexWriter();
+    indexer.closeSpellChecker();
 
     File indexDir = testFolder.newFolder(INDEX_DIR);
     File spellingDir = testFolder.newFolder(SPELLING_DIR);
 
     indexer.setIndexDir(indexDir.getAbsolutePath());
     indexer.setSpellingDir(spellingDir.getAbsolutePath());
-
     assertEquals(indexDir.getAbsolutePath(), indexer.getIndexDir());
     assertEquals(spellingDir.getAbsolutePath(), indexer.getSpellingDir());
 
+    Entry entry1 = new Entry();
+    entry1.setLang(Language.hu);
+    entry1.setId("1");
+    entry1.setRoots(new HashSet<String>(Arrays.asList(new String[] {"aaaaaa", "aaaaab"})));
+    entry1.setForms(new HashSet<String>(Arrays.asList(new String[] {"bbbbbb"})));
+    entry1.setQuote(new HashSet<String>(Arrays.asList(new String[] {"cccccc"})));
+    entry1.setTrans(new HashSet<String>(Arrays.asList(new String[] {"dddddd"})));
+    entry1.setQuoteTrans(new HashSet<String>(Arrays.asList(new String[] {"eeeeee"})));
+    entry1.setText("ffffff");
+    indexer.write(entry1);
+    Entry entry2 = new Entry();
+    entry2.setLang(Language.no);
+    entry2.setId("2");
+    entry2.setRoots(new HashSet<String>(Arrays.asList(new String[] {"aaaaab", "aaaaac"})));
+    entry2.setForms(new HashSet<String>(Arrays.asList(new String[] {"bbbbbb"})));
+    entry2.setQuote(new HashSet<String>(Arrays.asList(new String[] {"cccccc"})));
+    entry2.setTrans(new HashSet<String>(Arrays.asList(new String[] {"dddddd"})));
+    entry2.setQuoteTrans(new HashSet<String>(Arrays.asList(new String[] {"eeeeee"})));
+    entry2.setText("ffffff");
+    indexer.write(entry2);
+    Entry entry0 = new Entry();
+    indexer.write(entry0);
+
     indexer.openIndexWriter();
-
-    Entry entry = new Entry();
-    entry.setLang(Language.hu);
-    entry.setId("1");
-    entry.setRoots(new HashSet<String>(Arrays.asList(new String[] {"aaaaaa", "aaaaab"})));
-    entry.setForms(new HashSet<String>(Arrays.asList(new String[] {"bbbbbb"})));
-    entry.setQuote(new HashSet<String>(Arrays.asList(new String[] {"cccccc"})));
-    indexer.write(entry);
-
-    entry = new Entry();
-    entry.setLang(Language.no);
-    entry.setId("2");
-    entry.setRoots(new HashSet<String>(Arrays.asList(new String[] {"aaaaab", "aaaaac"})));
-    entry.setForms(new HashSet<String>(Arrays.asList(new String[] {"bbbbbb"})));
-    entry.setQuote(new HashSet<String>(Arrays.asList(new String[] {"cccccc"})));
-    indexer.write(entry);
-
+    indexer.write(entry1);
+    indexer.write(entry2);
     indexer.closeIndexWriter();
 
     indexer.openIndexReader();
-    indexer.openSpellChecker();
 
     indexer.createSuggestions();
 
+    indexer.openSpellChecker();
+    indexer.createSuggestions();
     indexer.closeSpellChecker();
+
     indexer.closeIndexReader();
 
   }
