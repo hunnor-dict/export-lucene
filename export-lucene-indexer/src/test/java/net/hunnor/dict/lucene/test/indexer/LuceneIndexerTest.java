@@ -1,5 +1,7 @@
 package net.hunnor.dict.lucene.test.indexer;
 
+import static org.junit.Assert.assertEquals;
+
 import net.hunnor.dict.lucene.indexer.LuceneIndexer;
 import net.hunnor.dict.lucene.model.Entry;
 import net.hunnor.dict.lucene.model.Language;
@@ -7,8 +9,6 @@ import net.hunnor.dict.lucene.model.Language;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
