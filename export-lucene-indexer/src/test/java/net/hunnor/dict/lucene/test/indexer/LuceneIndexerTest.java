@@ -8,6 +8,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -26,11 +28,17 @@ public class LuceneIndexerTest {
 
     LuceneIndexer indexer = new LuceneIndexer();
 
+    indexer.closeSpellChecker();
+    indexer.closeIndexReader();
+
     File indexDir = testFolder.newFolder(INDEX_DIR);
     File spellingDir = testFolder.newFolder(SPELLING_DIR);
 
     indexer.setIndexDir(indexDir.getAbsolutePath());
     indexer.setSpellingDir(spellingDir.getAbsolutePath());
+
+    assertEquals(indexDir.getAbsolutePath(), indexer.getIndexDir());
+    assertEquals(spellingDir.getAbsolutePath(), indexer.getSpellingDir());
 
     indexer.openIndexWriter();
 
