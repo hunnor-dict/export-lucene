@@ -40,12 +40,6 @@ import java.util.stream.Collectors;
 
 public class LuceneSearcher {
 
-  public static final int MAX_RESULTS = 1000;
-
-  public static final int MAX_SUGGESTION_DOCS = 20;
-
-  public static final int MAX_SPELLING_SUGGESTIONS = 5;
-
   private static final Logger LOGGER = LoggerFactory.getLogger(LuceneSearcher.class);
 
   private static volatile LuceneSearcher instance = new LuceneSearcher();
@@ -109,9 +103,10 @@ public class LuceneSearcher {
    * Suggest terms from the index.
    *
    * @param userQuery the user query to return suggestions for
+   * @param max the maximum number of suggestions to return
    * @return a set of matching terms
    */
-  public List<String> suggestions(String userQuery) {
+  public List<String> suggestions(String userQuery, int max) {
 
     Query query = createQueryFromFields(userQuery, new String[] {Lucene.SUGGESTION}, true);
     SortField sortField = new SortField(Lucene.SUGGESTION, SortField.STRING);
@@ -119,7 +114,7 @@ public class LuceneSearcher {
 
     TopDocs topDocs = null;
     try (IndexSearcher indexSearcher = new IndexSearcher(indexReader)) {
-      topDocs = executeSearch(indexSearcher, query, MAX_SUGGESTION_DOCS, sort);
+      topDocs = executeSearch(indexSearcher, query, max, sort);
     } catch (IOException ex) {
       LOGGER.error(ex.getMessage(), ex);
     }
@@ -144,12 +139,13 @@ public class LuceneSearcher {
    * Suggest terms similar to the user query, using Lucene's spell checker.
    *
    * @param userQuery the user query to return suggestions for
+   * @param max the maximum number of spelling suggestions to return
    * @return a set of terms returned by the spell checker
    */
-  public List<String> spellingSuggestions(String userQuery) {
+  public List<String> spellingSuggestions(String userQuery, int max) {
     List<String> results = new ArrayList<>();
     try {
-      String[] suggestions = executeSuggestion(userQuery, MAX_SPELLING_SUGGESTIONS);
+      String[] suggestions = executeSuggestion(userQuery, max);
       results.addAll(Arrays.asList(suggestions));
     } catch (IOException ex) {
       LOGGER.error(ex.getMessage(), ex);
@@ -162,17 +158,18 @@ public class LuceneSearcher {
    *
    * @param userQuery the string to search for
    * @param language the source language
+   * @param max the maximum number of results to return
    * @return a set of matching Entry objects
    */
-  public List<Entry> search(String userQuery, Language language) {
+  public List<Entry> search(String userQuery, Language language, int max) {
     Query query = createRootsQuery(userQuery, language);
-    List<Entry> results = executeQuery(query);
+    List<Entry> results = executeQuery(query, max);
     if (results.isEmpty()) {
       query = createFormsQuery(userQuery, language);
-      results = executeQuery(query);
+      results = executeQuery(query, max);
       if (results.isEmpty()) {
         query = createFullTextQuery(userQuery, language);
-        results = executeQuery(query);
+        results = executeQuery(query, max);
       }
     }
     return results;
@@ -257,10 +254,10 @@ public class LuceneSearcher {
     return tokens;
   }
 
-  private List<Entry> executeQuery(Query query) {
+  private List<Entry> executeQuery(Query query, int max) {
     List<Entry> results = new ArrayList<>();
     try (IndexSearcher indexSearcher = new IndexSearcher(indexReader)) {
-      TopDocs topDocs = executeSearch(indexSearcher, query, MAX_RESULTS, null);
+      TopDocs topDocs = executeSearch(indexSearcher, query, max, null);
       ScoreDoc[] scoreDocs = topDocs.scoreDocs;
       results = Arrays.stream(scoreDocs)
           .map(this::scoreDocToDocument)
