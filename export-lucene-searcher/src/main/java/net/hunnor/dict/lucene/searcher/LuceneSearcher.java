@@ -9,7 +9,6 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -107,32 +106,15 @@ public class LuceneSearcher {
    * @return a set of matching terms
    */
   public List<String> suggestions(String userQuery, int max) {
-
     Query query = createQueryFromFields(userQuery, new String[] {Lucene.SUGGESTION}, true);
     SortField sortField = new SortField(Lucene.SUGGESTION, SortField.STRING);
     Sort sort = new Sort(sortField);
-
-    TopDocs topDocs = null;
-    try (IndexSearcher indexSearcher = new IndexSearcher(indexReader)) {
-      topDocs = executeSearch(indexSearcher, query, max, sort);
-    } catch (IOException ex) {
-      LOGGER.error(ex.getMessage(), ex);
-    }
-
-    List<String> results = new ArrayList<>();
-
-    if (topDocs != null) {
-      ScoreDoc[] scoreDocs = topDocs.scoreDocs;
-      results = Arrays.stream(scoreDocs)
-          .map(this::scoreDocToDocument)
-          .filter(Objects::nonNull)
-          .map(document -> document.get(Lucene.SUGGESTION))
-          .distinct()
-          .collect(Collectors.toList());
-    }
-
-    return results;
-
+    List<Document> documents = docsFromQuery(query, sort, max);
+    return documents.stream()
+        .map(document -> document.get(Lucene.SUGGESTION))
+        .filter(Objects::nonNull)
+        .distinct()
+        .collect(Collectors.toList());
   }
 
   /**
@@ -163,29 +145,18 @@ public class LuceneSearcher {
    */
   public List<Entry> search(String userQuery, Language language, int max) {
     Query query = createRootsQuery(userQuery, language);
-    List<Entry> results = executeQuery(query, max);
-    if (results.isEmpty()) {
+    List<Document> documents = docsFromQuery(query, null, max);
+    if (documents.isEmpty()) {
       query = createFormsQuery(userQuery, language);
-      results = executeQuery(query, max);
-      if (results.isEmpty()) {
+      documents = docsFromQuery(query, null, max);
+      if (documents.isEmpty()) {
         query = createFullTextQuery(userQuery, language);
-        results = executeQuery(query, max);
+        documents = docsFromQuery(query, null, max);
       }
     }
-    return results;
-  }
-
-  private TopDocs executeSearch(IndexSearcher indexSearcher, Query query,
-      int maxSuggestions, Sort sort) throws IOException {
-    if (sort == null) {
-      return indexSearcher.search(query, maxSuggestions);
-    } else {
-      return indexSearcher.search(query, maxSuggestions, sort);
-    }
-  }
-
-  private String[] executeSuggestion(String query, int maxSuggestions) throws IOException {
-    return spellChecker.suggestSimilar(query, maxSuggestions);
+    return documents.stream()
+        .map(this::documentToEntry)
+        .collect(Collectors.toList());
   }
 
   private Query createRootsQuery(String userQuery, Language language) {
@@ -254,34 +225,19 @@ public class LuceneSearcher {
     return tokens;
   }
 
-  private List<Entry> executeQuery(Query query, int max) {
-    List<Entry> results = new ArrayList<>();
+  private List<Document> docsFromQuery(Query query, Sort sort, int max) {
+    List<Document> results = new ArrayList<>();
     try (IndexSearcher indexSearcher = new IndexSearcher(indexReader)) {
-      TopDocs topDocs = executeSearch(indexSearcher, query, max, null);
+      TopDocs topDocs = executeSearch(indexSearcher, query, max, sort);
       ScoreDoc[] scoreDocs = topDocs.scoreDocs;
-      results = Arrays.stream(scoreDocs)
-          .map(this::scoreDocToDocument)
-          .filter(Objects::nonNull)
-          .map(this::documentToEntry)
-          .collect(Collectors.toList());
+      for (ScoreDoc scoreDoc: scoreDocs) {
+        Document document = extractDocument(scoreDoc);
+        results.add(document);
+      }
     } catch (IOException ex) {
       LOGGER.error(ex.getMessage(), ex);
     }
     return results;
-  }
-
-  private Document scoreDocToDocument(ScoreDoc scoreDoc) {
-    Document document = null;
-    try {
-      document = extractDocument(scoreDoc);
-    } catch (IOException ex) {
-      LOGGER.error(ex.getMessage(), ex);
-    }
-    return document;
-  }
-
-  private Document extractDocument(ScoreDoc scoreDoc) throws CorruptIndexException, IOException {
-    return indexReader.document(scoreDoc.doc);
   }
 
   private Entry documentToEntry(Document document) {
@@ -290,6 +246,23 @@ public class LuceneSearcher {
     entry.setLang(Language.valueOf(document.get(Lucene.LANG)));
     entry.setText(document.get(Lucene.TEXT));
     return entry;
+  }
+
+  private String[] executeSuggestion(String query, int maxSuggestions) throws IOException {
+    return spellChecker.suggestSimilar(query, maxSuggestions);
+  }
+
+  private TopDocs executeSearch(IndexSearcher indexSearcher, Query query,
+      int maxSuggestions, Sort sort) throws IOException {
+    if (sort == null) {
+      return indexSearcher.search(query, maxSuggestions);
+    } else {
+      return indexSearcher.search(query, maxSuggestions, sort);
+    }
+  }
+
+  private Document extractDocument(ScoreDoc scoreDoc) throws IOException {
+    return indexReader.document(scoreDoc.doc);
   }
 
 }
