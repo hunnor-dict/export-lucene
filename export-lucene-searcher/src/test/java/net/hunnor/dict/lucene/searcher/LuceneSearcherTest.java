@@ -1,4 +1,4 @@
-package net.hunnor.dict.lucene.test.searcher;
+package net.hunnor.dict.lucene.searcher;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
