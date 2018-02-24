@@ -8,11 +8,18 @@ import net.hunnor.dict.lucene.model.Entry;
 import net.hunnor.dict.lucene.parser.StaxParser;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(StaxParser.class)
 public class StaxParserTest {
 
   @Test
@@ -26,6 +33,22 @@ public class StaxParserTest {
     StaxParser staxParser = new StaxParser();
     staxParser.openFile("src/test/resources/xml/sample-text-file.txt");
     staxParser.next();
+  }
+
+  @Test
+  public void testCloseFileStreamError() throws Exception {
+    StaxParser spyParser = PowerMockito.spy(new StaxParser());
+    PowerMockito.doThrow(new XMLStreamException()).when(spyParser, "closeResources");
+    spyParser.openFile("src/test/resources/xml/sample-entry-entry.xml");
+    spyParser.closeFile();
+  }
+
+  @Test
+  public void testCloseFileIoError() throws Exception {
+    StaxParser spyParser = PowerMockito.spy(new StaxParser());
+    PowerMockito.doThrow(new IOException()).when(spyParser, "closeResources");
+    spyParser.openFile("src/test/resources/xml/sample-entry-entry.xml");
+    spyParser.closeFile();
   }
 
   @Test

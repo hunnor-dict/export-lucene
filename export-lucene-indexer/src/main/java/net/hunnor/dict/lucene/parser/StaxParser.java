@@ -102,11 +102,15 @@ public class StaxParser {
    */
   public void closeFile() {
     try {
-      reader.close();
-      stream.close();
+      closeResources();
     } catch (IOException | XMLStreamException ex) {
       LOGGER.error(ex.getMessage(), ex);
     }
+  }
+
+  private void closeResources() throws XMLStreamException, IOException {
+    reader.close();
+    stream.close();
   }
 
   public boolean hasNext() throws XMLStreamException {
