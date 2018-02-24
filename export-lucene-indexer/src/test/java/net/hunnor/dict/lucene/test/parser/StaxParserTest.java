@@ -95,7 +95,9 @@ public class StaxParserTest {
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
     assertEquals(
-        " <b>I</b> <b>1</b> trans1 <b>2</b> trans2 <b>II</b>" + " <b>1</b> trans3 <b>2</b> trans4",
+        " <b>I</b> <b>1</b> trans1 <b>2</b> trans2"
+            + " <b>II</b> <b>1</b> trans3 <b>2</b> trans4 <b>3</b> trans5"
+            + " <b>III</b> trans6",
         entry.getText());
   }
 

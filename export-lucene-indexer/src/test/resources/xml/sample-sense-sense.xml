@@ -18,6 +18,14 @@
 				<sense>
 					<trans>trans4</trans>
 				</sense>
+				<sense>
+					<trans>trans5</trans>
+				</sense>
+			</senseGrp>
+			<senseGrp>
+				<sense>
+					<trans>trans6</trans>
+				</sense>
 			</senseGrp>
 		</entry>
 	</entryGrp>
