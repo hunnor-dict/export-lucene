@@ -17,19 +17,19 @@ import java.lang.reflect.Method;
 @PrepareForTest(Launcher.class)
 public class LauncherTest {
 
-  @Test(expected = RuntimeException.class)
+  @Test(expected = InvalidArgumentsException.class)
   public void testIncompleteArguments() {
     String[] args = new String[] {"-x", "file.xml"};
     Launcher.main(args);
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test(expected = InvalidArgumentsException.class)
   public void testInvalidArguments() {
     String[] args = new String[] {"-l", "h", "-x", "file.xml", "-d", "index", "-s", "speling"};
     Launcher.main(args);
   }
 
-  @Test(expected = InvalidArgumentsException.class)
+  @Test
   public void testValidArgiments() throws Exception {
     Service mockService = Mockito.mock(Service.class);
     PowerMockito.mockStatic(Launcher.class);
