@@ -63,7 +63,7 @@ public class Service {
 
     try {
 
-      LuceneIndexer luceneIndexer = getIndexer();
+      luceneIndexer = getIndexer();
 
       luceneIndexer.setIndexDir(indexDir);
       luceneIndexer.openIndexReader();
