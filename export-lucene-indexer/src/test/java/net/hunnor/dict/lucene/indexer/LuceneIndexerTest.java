@@ -21,7 +21,8 @@ public class LuceneIndexerTest {
 
   private static final String SPELLING_DIR = "spellingDir";
 
-  @Rule public TemporaryFolder testFolder = new TemporaryFolder();
+  @Rule
+  public TemporaryFolder testFolder = new TemporaryFolder();
 
   @Test
   public void testIndexing() throws IOException {
