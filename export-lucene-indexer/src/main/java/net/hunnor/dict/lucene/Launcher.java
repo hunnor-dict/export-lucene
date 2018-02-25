@@ -73,12 +73,11 @@ public class Launcher {
       HelpFormatter formatter = new HelpFormatter();
       formatter.printHelp("java -jar export-lucene.jar", options);
 
-      System.exit(1);
+      throw new RuntimeException();
 
     }
 
-
-    Service service = new Service();
+    Service service = getService();
     service.indexFile(
         commandLine.getOptionValue(OPTS_XML),
         lang,
@@ -87,6 +86,10 @@ public class Launcher {
         commandLine.getOptionValue(OPTS_INDEX_DIR),
         commandLine.getOptionValue(OPTS_SPELLCHECK_INDEX_DIR));
 
+  }
+
+  private static Service getService() {
+    return new Service();
   }
 
 }
