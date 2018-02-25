@@ -15,8 +15,8 @@ public class EntryTest {
   @Test
   public void testLanguage() {
     Entry entry = new Entry();
-    entry.setLang(Language.hu);
-    assertEquals(Language.hu, entry.getLang());
+    entry.setLang(Language.HU);
+    assertEquals(Language.HU, entry.getLang());
   }
 
   @Test

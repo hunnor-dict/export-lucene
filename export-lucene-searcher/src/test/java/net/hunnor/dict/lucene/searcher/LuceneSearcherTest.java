@@ -116,9 +116,9 @@ public class LuceneSearcherTest {
 
   @Test
   public void testSearchForRoots() {
-    List<Entry> results = searcher.search("aaaaaa", Language.hu, 100);
+    List<Entry> results = searcher.search("aaaaaa", Language.HU, 100);
     assertEquals(1, results.size());
-    results = searcher.search("aaaaab", Language.no, 100);
+    results = searcher.search("aaaaab", Language.NO, 100);
   }
 
   @Test
@@ -127,7 +127,7 @@ public class LuceneSearcherTest {
     PowerMockito.doThrow(new IOException()).when(spySearcher, "executeSearch",
         Matchers.any(), Matchers.any(),
         Matchers.anyInt(), Matchers.any());
-    List<Entry> results = spySearcher.search("aaaaaa", Language.hu, 100);
+    List<Entry> results = spySearcher.search("aaaaaa", Language.HU, 100);
     assertNotNull(results);
     assertEquals(0, results.size());
   }
@@ -137,7 +137,7 @@ public class LuceneSearcherTest {
     LuceneSearcher spySearcher = PowerMockito.spy(searcher);
     PowerMockito.doThrow(new IOException()).when(spySearcher, "extractTokens",
         Matchers.any(), Matchers.any());
-    List<Entry> results = spySearcher.search("aaaaaa", Language.hu, 100);
+    List<Entry> results = spySearcher.search("aaaaaa", Language.HU, 100);
     assertNotNull(results);
     assertEquals(0, results.size());
   }
@@ -147,30 +147,30 @@ public class LuceneSearcherTest {
     LuceneSearcher spySearcher = PowerMockito.spy(searcher);
     PowerMockito.doThrow(new IOException()).when(spySearcher, "extractDocument",
         Matchers.any());
-    List<Entry> results = spySearcher.search("aaaaaa", Language.hu, 100);
+    List<Entry> results = spySearcher.search("aaaaaa", Language.HU, 100);
     assertNotNull(results);
     assertEquals(0, results.size());
   }
 
   @Test
   public void testSearchForForms() {
-    List<Entry> results = searcher.search("bbbbbb", Language.hu, 100);
+    List<Entry> results = searcher.search("bbbbbb", Language.HU, 100);
     assertEquals(1, results.size());
-    results = searcher.search("bbbbbb", Language.no, 100);
+    results = searcher.search("bbbbbb", Language.NO, 100);
     assertEquals(1, results.size());
   }
 
   @Test
   public void testSearchForQuotes() {
-    List<Entry> results = searcher.search("cccccc", Language.hu, 100);
+    List<Entry> results = searcher.search("cccccc", Language.HU, 100);
     assertEquals(1, results.size());
-    results = searcher.search("cccccc", Language.no, 100);
+    results = searcher.search("cccccc", Language.NO, 100);
     assertEquals(1, results.size());
   }
 
   @Test
   public void testNoResults() {
-    List<Entry> results = searcher.search("dddddd", Language.hu, 100);
+    List<Entry> results = searcher.search("ffffff", Language.HU, 100);
     assertEquals(0, results.size());
   }
 

@@ -31,7 +31,7 @@ public class ServiceTest {
     Service service = new Service();
     File file = new File("src/test/resources/xml/sample-entry-entry.xml");
     File indexDir = testFolder.newFolder("index");
-    service.indexFile(file.getAbsolutePath(), Language.hu, indexDir.getAbsolutePath());
+    service.indexFile(file.getAbsolutePath(), Language.HU, indexDir.getAbsolutePath());
     File spellingDir = testFolder.newFolder("spelling");
     service.indexSuggestions(indexDir.getAbsolutePath(), spellingDir.getAbsolutePath());
   }
@@ -44,7 +44,7 @@ public class ServiceTest {
     PowerMockito.when(spyService, "getParser").thenReturn(spyParser);
     File file = new File("src/test/resources/xml/sample-entry-entry.xml");
     File indexDir = testFolder.newFolder("index");
-    spyService.indexFile(file.getAbsolutePath(), Language.hu, indexDir.getAbsolutePath());
+    spyService.indexFile(file.getAbsolutePath(), Language.HU, indexDir.getAbsolutePath());
   }
 
   @Test
@@ -55,7 +55,7 @@ public class ServiceTest {
     PowerMockito.when(spyService, "getIndexer").thenReturn(spyIndexer);
     File file = new File("src/test/resources/xml/sample-entry-entry.xml");
     File indexDir = testFolder.newFolder("index");
-    spyService.indexFile(file.getAbsolutePath(), Language.hu, indexDir.getAbsolutePath());
+    spyService.indexFile(file.getAbsolutePath(), Language.HU, indexDir.getAbsolutePath());
     File spellingDir = testFolder.newFolder("spelling");
     spyService.indexSuggestions(indexDir.getAbsolutePath(), spellingDir.getAbsolutePath());
   }

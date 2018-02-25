@@ -29,7 +29,7 @@ public class LauncherTest {
     Launcher.main(args);
   }
 
-  @Test
+  @Test(expected = InvalidArgumentsException.class)
   public void testValidArgiments() throws Exception {
     Service mockService = Mockito.mock(Service.class);
     PowerMockito.mockStatic(Launcher.class);

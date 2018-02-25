@@ -42,7 +42,7 @@ public class LuceneIndexerTest {
     assertEquals(spellingDir.getAbsolutePath(), indexer.getSpellingDir());
 
     Entry entry1 = new Entry();
-    entry1.setLang(Language.hu);
+    entry1.setLang(Language.HU);
     entry1.setId("1");
     entry1.setRoots(new HashSet<String>(Arrays.asList(new String[] {"aaaaaa", "aaaaab"})));
     entry1.setForms(new HashSet<String>(Arrays.asList(new String[] {"bbbbbb"})));
@@ -52,7 +52,7 @@ public class LuceneIndexerTest {
     entry1.setText("ffffff");
     indexer.write(entry1);
     Entry entry2 = new Entry();
-    entry2.setLang(Language.no);
+    entry2.setLang(Language.NO);
     entry2.setId("2");
     entry2.setRoots(new HashSet<String>(Arrays.asList(new String[] {"aaaaab", "aaaaac"})));
     entry2.setForms(new HashSet<String>(Arrays.asList(new String[] {"bbbbbb"})));

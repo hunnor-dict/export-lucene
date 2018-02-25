@@ -162,7 +162,7 @@ public class LuceneIndexer {
     String transField = Lucene.HU_TRANS;
     String quoteField = Lucene.HU_QUOTE;
     String quoteTransField = Lucene.HU_QUOTETRANS;
-    if (Language.no.equals(entry.getLang())) {
+    if (Language.NO.equals(entry.getLang())) {
       rootsField = Lucene.NO_ROOTS;
       formsField = Lucene.NO_FORMS;
       transField = Lucene.NO_TRANS;

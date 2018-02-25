@@ -2,8 +2,8 @@ package net.hunnor.dict.lucene.model;
 
 public enum Language {
 
-  hu,
+  HU,
 
-  no
+  NO
 
 }

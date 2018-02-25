@@ -73,7 +73,7 @@ public class Launcher {
       HelpFormatter formatter = new HelpFormatter();
       formatter.printHelp("java -jar export-lucene.jar", options);
 
-      throw new RuntimeException();
+      throw new InvalidArgumentsException();
 
     }
 
