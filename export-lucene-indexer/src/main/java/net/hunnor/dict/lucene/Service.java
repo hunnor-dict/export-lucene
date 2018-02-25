@@ -15,10 +15,6 @@ public class Service {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Service.class);
 
-  private StaxParser staxParser;
-
-  private LuceneIndexer luceneIndexer;
-
   /**
    * Create the main index.
    *
@@ -30,11 +26,11 @@ public class Service {
 
     try {
 
-      luceneIndexer = getIndexer();
+      LuceneIndexer luceneIndexer = getIndexer();
       luceneIndexer.setIndexDir(indexDir);
       luceneIndexer.openIndexWriter();
 
-      staxParser = getParser();
+      StaxParser staxParser = getParser();
       staxParser.openFile(file);
       while (staxParser.hasNext()) {
         Entry entry = staxParser.next();
@@ -63,7 +59,7 @@ public class Service {
 
     try {
 
-      luceneIndexer = getIndexer();
+      LuceneIndexer luceneIndexer = getIndexer();
 
       luceneIndexer.setIndexDir(indexDir);
       luceneIndexer.openIndexReader();
