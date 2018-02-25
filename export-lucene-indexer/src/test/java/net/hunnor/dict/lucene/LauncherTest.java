@@ -35,7 +35,7 @@ public class LauncherTest {
     PowerMockito.mockStatic(Launcher.class);
     PowerMockito.when(Launcher.class, "getService").thenReturn(mockService);
     PowerMockito.when(Launcher.class, "main", Matchers.any()).thenCallRealMethod();
-    String[] args = new String[] {"-l", "hu", "-x", "file.xml", "-d", "index", "-s", "speling"};
+    String[] args = new String[] {"-l", "HU", "-x", "file.xml", "-d", "index", "-s", "speling"};
     Launcher.main(args);
   }
 
