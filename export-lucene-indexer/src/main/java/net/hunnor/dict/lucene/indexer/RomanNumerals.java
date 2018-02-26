@@ -1,4 +1,4 @@
-package net.hunnor.dict.lucene.util;
+package net.hunnor.dict.lucene.indexer;
 
 public class RomanNumerals {
 

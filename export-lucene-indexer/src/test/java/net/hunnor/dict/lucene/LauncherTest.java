@@ -2,6 +2,8 @@ package net.hunnor.dict.lucene;
 
 import static org.junit.Assert.assertEquals;
 
+import net.hunnor.dict.lucene.indexer.Service;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;

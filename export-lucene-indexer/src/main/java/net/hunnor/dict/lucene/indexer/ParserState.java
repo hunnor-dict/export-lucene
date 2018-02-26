@@ -1,4 +1,4 @@
-package net.hunnor.dict.lucene.parser;
+package net.hunnor.dict.lucene.indexer;
 
 import net.hunnor.dict.lucene.model.Entry;
 

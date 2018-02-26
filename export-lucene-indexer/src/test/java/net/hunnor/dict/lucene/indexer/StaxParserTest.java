@@ -1,11 +1,11 @@
-package net.hunnor.dict.lucene.parser;
+package net.hunnor.dict.lucene.indexer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import net.hunnor.dict.lucene.indexer.StaxParser;
 import net.hunnor.dict.lucene.model.Entry;
-import net.hunnor.dict.lucene.parser.StaxParser;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

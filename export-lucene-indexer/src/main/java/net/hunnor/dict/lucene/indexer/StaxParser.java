@@ -1,7 +1,6 @@
-package net.hunnor.dict.lucene.parser;
+package net.hunnor.dict.lucene.indexer;
 
 import net.hunnor.dict.lucene.model.Entry;
-import net.hunnor.dict.lucene.util.RomanNumerals;
 
 import org.codehaus.stax2.XMLInputFactory2;
 import org.codehaus.stax2.XMLStreamReader2;

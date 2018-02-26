@@ -1,9 +1,9 @@
-package net.hunnor.dict.lucene.util;
+package net.hunnor.dict.lucene.indexer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import net.hunnor.dict.lucene.util.RomanNumerals;
+import net.hunnor.dict.lucene.indexer.RomanNumerals;
 
 import org.junit.Test;
 

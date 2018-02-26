@@ -1,9 +1,7 @@
-package net.hunnor.dict.lucene;
+package net.hunnor.dict.lucene.indexer;
 
-import net.hunnor.dict.lucene.indexer.LuceneIndexer;
 import net.hunnor.dict.lucene.model.Entry;
 import net.hunnor.dict.lucene.model.Language;
-import net.hunnor.dict.lucene.parser.StaxParser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

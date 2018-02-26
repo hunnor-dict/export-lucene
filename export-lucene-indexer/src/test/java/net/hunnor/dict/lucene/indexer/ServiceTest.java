@@ -1,8 +1,9 @@
-package net.hunnor.dict.lucene;
+package net.hunnor.dict.lucene.indexer;
 
 import net.hunnor.dict.lucene.indexer.LuceneIndexer;
+import net.hunnor.dict.lucene.indexer.Service;
+import net.hunnor.dict.lucene.indexer.StaxParser;
 import net.hunnor.dict.lucene.model.Language;
-import net.hunnor.dict.lucene.parser.StaxParser;
 
 import org.junit.Rule;
 import org.junit.Test;
