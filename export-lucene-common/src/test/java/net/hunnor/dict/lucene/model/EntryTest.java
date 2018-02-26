@@ -7,8 +7,8 @@ import net.hunnor.dict.lucene.model.Entry;
 
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
 
 public class EntryTest {
 
@@ -29,9 +29,7 @@ public class EntryTest {
   @Test
   public void testRoots() {
     Entry entry = new Entry();
-    Set<String> roots = new HashSet<>();
-    roots.add("root");
-    entry.setRoots(roots);
+    entry.setRoots(new HashSet<String>(Arrays.asList(new String[] {"root"})));
     assertEquals(1, entry.getRoots().size());
     assertTrue(entry.getRoots().contains("root"));
   }
@@ -39,9 +37,7 @@ public class EntryTest {
   @Test
   public void testForms() {
     Entry entry = new Entry();
-    Set<String> forms = new HashSet<>();
-    forms.add("form");
-    entry.setForms(forms);
+    entry.setForms(new HashSet<String>(Arrays.asList(new String[] {"form"})));
     assertEquals(1, entry.getForms().size());
     assertTrue(entry.getForms().contains("form"));
   }
@@ -49,9 +45,7 @@ public class EntryTest {
   @Test
   public void testTrans() {
     Entry entry = new Entry();
-    Set<String> trans = new HashSet<>();
-    trans.add("trans");
-    entry.setTrans(trans);
+    entry.setTrans(new HashSet<String>(Arrays.asList(new String[] {"trans"})));
     assertEquals(1, entry.getTrans().size());
     assertTrue(entry.getTrans().contains("trans"));
   }
@@ -59,9 +53,7 @@ public class EntryTest {
   @Test
   public void testQuote() {
     Entry entry = new Entry();
-    Set<String> quote = new HashSet<>();
-    quote.add("quote");
-    entry.setQuote(quote);
+    entry.setQuote(new HashSet<String>(Arrays.asList(new String[] {"quote"})));
     assertEquals(1, entry.getQuote().size());
     assertTrue(entry.getQuote().contains("quote"));
   }
@@ -69,9 +61,7 @@ public class EntryTest {
   @Test
   public void testQuoteTrans() {
     Entry entry = new Entry();
-    Set<String> quoteTrans = new HashSet<>();
-    quoteTrans.add("quoteTrans");
-    entry.setQuoteTrans(quoteTrans);
+    entry.setQuoteTrans(new HashSet<String>(Arrays.asList(new String[] {"quoteTrans"})));
     assertEquals(1, entry.getQuoteTrans().size());
     assertTrue(entry.getQuoteTrans().contains("quoteTrans"));
   }
