@@ -32,8 +32,8 @@ public class LuceneSearcherTest {
 
   /**
    * Initialize the searcher before each text.
-
-   * @throws IOException if an error occurs
+   *
+   * @throws IOException if there is a low-level IO error
    */
   @Before
   public void setUp() throws IOException {
