@@ -1,24 +1,12 @@
 package net.hunnor.dict.lucene.indexer;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import net.hunnor.dict.lucene.indexer.RomanNumerals;
 
 import org.junit.Test;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
-
 public class RomanNumeralsTest {
-
-  @Test
-  public void testPrivateConstructor() throws Exception {
-    Constructor<RomanNumerals> constructor = RomanNumerals.class.getDeclaredConstructor();
-    assertTrue(Modifier.isPrivate(constructor.getModifiers()));
-    constructor.setAccessible(true);
-    constructor.newInstance();
-  }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidNumber() {
