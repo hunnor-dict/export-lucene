@@ -25,15 +25,15 @@ import javax.xml.stream.XMLStreamException;
 public class ServiceTest {
 
   @Rule
-  public TemporaryFolder testFolder = new TemporaryFolder();
+  public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Test
   public void test() throws IOException {
     Service service = new Service();
     File file = new File("src/test/resources/xml/sample-entry-entry.xml");
-    File indexDir = testFolder.newFolder("index");
+    File indexDir = temporaryFolder.newFolder("index");
     service.indexFile(file.getAbsolutePath(), Language.HU, indexDir.getAbsolutePath());
-    File spellingDir = testFolder.newFolder("spelling");
+    File spellingDir = temporaryFolder.newFolder("spelling");
     service.indexSuggestions(indexDir.getAbsolutePath(), spellingDir.getAbsolutePath());
   }
 
@@ -44,7 +44,7 @@ public class ServiceTest {
     Service spyService = PowerMockito.spy(new Service());
     PowerMockito.when(spyService, "getParser").thenReturn(spyParser);
     File file = new File("src/test/resources/xml/sample-entry-entry.xml");
-    File indexDir = testFolder.newFolder("index");
+    File indexDir = temporaryFolder.newFolder("index");
     spyService.indexFile(file.getAbsolutePath(), Language.HU, indexDir.getAbsolutePath());
   }
 
@@ -55,9 +55,9 @@ public class ServiceTest {
     Service spyService = PowerMockito.spy(new Service());
     PowerMockito.when(spyService, "getIndexer").thenReturn(spyIndexer);
     File file = new File("src/test/resources/xml/sample-entry-entry.xml");
-    File indexDir = testFolder.newFolder("index");
+    File indexDir = temporaryFolder.newFolder("index");
     spyService.indexFile(file.getAbsolutePath(), Language.HU, indexDir.getAbsolutePath());
-    File spellingDir = testFolder.newFolder("spelling");
+    File spellingDir = temporaryFolder.newFolder("spelling");
     spyService.indexSuggestions(indexDir.getAbsolutePath(), spellingDir.getAbsolutePath());
   }
 
