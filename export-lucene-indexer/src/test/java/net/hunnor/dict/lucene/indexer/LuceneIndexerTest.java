@@ -1,6 +1,7 @@
 package net.hunnor.dict.lucene.indexer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import net.hunnor.dict.lucene.indexer.LuceneIndexer;
 import net.hunnor.dict.lucene.model.Entry;
@@ -17,27 +18,39 @@ import java.util.HashSet;
 
 public class LuceneIndexerTest {
 
-  private static final String INDEX_DIR = "indexDir";
+  private static final String INDEX_DIR = "index";
 
-  private static final String SPELLING_DIR = "spellingDir";
+  private static final String SPELLING_DIR = "spelling";
 
   @Rule
-  public TemporaryFolder testFolder = new TemporaryFolder();
+  public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+  @Test
+  public void closeWhenAlreadyClosed() throws IOException {
+    LuceneIndexer indexer = new LuceneIndexer();
+    indexer.closeIndexReader();
+    indexer.closeIndexWriter();
+    indexer.closeSpellChecker();
+  }
+
+  @Test
+  public void writeEntryToClosedWriter() throws IOException {
+    LuceneIndexer indexer = new LuceneIndexer();
+    Entry entry = new Entry();
+    indexer.write(entry);
+  }
 
   @Test
   public void testIndexing() throws IOException {
 
     LuceneIndexer indexer = new LuceneIndexer();
 
-    indexer.closeIndexReader();
-    indexer.closeIndexWriter();
-    indexer.closeSpellChecker();
-
-    File indexDir = testFolder.newFolder(INDEX_DIR);
-    File spellingDir = testFolder.newFolder(SPELLING_DIR);
+    File indexDir = temporaryFolder.newFolder(INDEX_DIR);
+    File spellingDir = temporaryFolder.newFolder(SPELLING_DIR);
 
     indexer.setIndexDir(indexDir.getAbsolutePath());
     indexer.setSpellingDir(spellingDir.getAbsolutePath());
+
     assertEquals(indexDir.getAbsolutePath(), indexer.getIndexDir());
     assertEquals(spellingDir.getAbsolutePath(), indexer.getSpellingDir());
 
@@ -50,7 +63,6 @@ public class LuceneIndexerTest {
     entry1.setTrans(new HashSet<String>(Arrays.asList(new String[] {"dddddd"})));
     entry1.setQuoteTrans(new HashSet<String>(Arrays.asList(new String[] {"eeeeee"})));
     entry1.setText("ffffff");
-    indexer.write(entry1);
     Entry entry2 = new Entry();
     entry2.setLang(Language.NO);
     entry2.setId("2");
@@ -60,9 +72,6 @@ public class LuceneIndexerTest {
     entry2.setTrans(new HashSet<String>(Arrays.asList(new String[] {"dddddd"})));
     entry2.setQuoteTrans(new HashSet<String>(Arrays.asList(new String[] {"eeeeee"})));
     entry2.setText("ffffff");
-    indexer.write(entry2);
-    Entry entry0 = new Entry();
-    indexer.write(entry0);
 
     indexer.openIndexWriter();
     indexer.write(entry1);
@@ -70,14 +79,13 @@ public class LuceneIndexerTest {
     indexer.closeIndexWriter();
 
     indexer.openIndexReader();
-
-    indexer.createSuggestions();
-
     indexer.openSpellChecker();
     indexer.createSuggestions();
     indexer.closeSpellChecker();
-
     indexer.closeIndexReader();
+
+    assertTrue(indexDir.list().length > 0);
+    assertTrue(spellingDir.list().length > 0);
 
   }
 
