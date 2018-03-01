@@ -1,23 +1,16 @@
 package net.hunnor.dict.lucene;
 
-import static org.junit.Assert.assertEquals;
-
-import net.hunnor.dict.lucene.indexer.Service;
-
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.rules.TemporaryFolder;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.io.File;
+import java.io.IOException;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(Launcher.class)
 public class LauncherTest {
+
+  @Rule
+  public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Test(expected = InvalidArgumentsException.class)
   public void testIncompleteArguments() {
@@ -32,22 +25,17 @@ public class LauncherTest {
   }
 
   @Test
-  public void testValidArgiments() throws Exception {
-    Service mockService = Mockito.mock(Service.class);
-    PowerMockito.mockStatic(Launcher.class);
-    PowerMockito.when(Launcher.class, "getService").thenReturn(mockService);
-    PowerMockito.when(Launcher.class, "main", Matchers.any()).thenCallRealMethod();
-    String[] args = new String[] {"-l", "HU", "-x", "file.xml", "-d", "index", "-s", "speling"};
+  public void execValidArguments() throws IOException {
+    File xmlFile = new File("src/test/resources/xml/sample-entry-entry.xml");
+    File indexDir = temporaryFolder.newFolder("index");
+    File spellingDir = temporaryFolder.newFolder("spelling");
+    String[] args = new String[] {
+        "-l", "HU",
+        "-x", xmlFile.getAbsolutePath(),
+        "-d", indexDir.getAbsolutePath(),
+        "-s", spellingDir.getAbsolutePath()
+    };
     Launcher.main(args);
-  }
-
-  @Test
-  public void testServiceInitialization() throws NoSuchMethodException, SecurityException,
-      IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-    Method method = Launcher.class.getDeclaredMethod("getService");
-    method.setAccessible(true);
-    Object service = method.invoke(null, new Object[] {});
-    assertEquals(Service.class, service.getClass());
   }
 
 }
