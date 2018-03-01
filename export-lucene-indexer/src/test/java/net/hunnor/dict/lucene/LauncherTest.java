@@ -25,7 +25,7 @@ public class LauncherTest {
   }
 
   @Test
-  public void execValidArguments() throws IOException {
+  public void testValidArguments() throws IOException {
     File xmlFile = new File("src/test/resources/xml/sample-entry-entry.xml");
     File indexDir = temporaryFolder.newFolder("index");
     File spellingDir = temporaryFolder.newFolder("spelling");
