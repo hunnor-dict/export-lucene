@@ -13,6 +13,8 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Locale;
+
 public class Launcher {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
@@ -38,7 +40,7 @@ public class Launcher {
     Options options = new Options();
 
     Option language = Option.builder(OPTS_LANG)
-        .desc("the language to index the file as ('hu' or 'no')")
+        .desc("the language to index the file as ('HU' or 'NO')")
         .hasArg().required().build();
     options.addOption(language);
 
@@ -65,7 +67,8 @@ public class Launcher {
 
       commandLine = parser.parse(options, args);
 
-      lang = Language.valueOf(commandLine.getOptionValue(OPTS_LANG));
+      lang = Language.valueOf(
+        commandLine.getOptionValue(OPTS_LANG).toUpperCase(Locale.getDefault()));
 
     } catch (ParseException | IllegalArgumentException ex) {
 
