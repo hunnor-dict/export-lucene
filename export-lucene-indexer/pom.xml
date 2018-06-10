@@ -15,6 +15,7 @@
 		<apache.cli.version>1.4</apache.cli.version>
 		<mockito.version>1.10.19</mockito.version>
 		<powermock.version>1.7.3</powermock.version>
+		<stax.version>4.1</stax.version>
 	</properties>
 
 	<dependencies>
@@ -56,7 +57,7 @@
 		<dependency>
 			<groupId>org.codehaus.woodstox</groupId>
 			<artifactId>stax2-api</artifactId>
-			<version>4.0.0</version>
+			<version>${stax.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

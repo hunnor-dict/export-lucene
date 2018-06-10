@@ -13,7 +13,7 @@
 
 	<properties>
 		<jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
-		<jacoco.version>0.8.0</jacoco.version>
+		<jacoco.version>0.8.1</jacoco.version>
 		<junit.version>4.12</junit.version>
 		<lucene.version>3.6.2</lucene.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
