@@ -12,6 +12,7 @@
 	<description>Create a Lucene index from the XML exports</description>
 
 	<properties>
+		<checkstyle.version>3.0.0</checkstyle.version>
 		<jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
 		<jacoco.version>0.8.1</jacoco.version>
 		<junit.version>4.12</junit.version>
@@ -20,6 +21,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<slf4j.version>1.7.25</slf4j.version>
+		<spotbugs.version>3.1.5</spotbugs.version>
 	</properties>
 
 	<modules>
@@ -39,15 +41,10 @@
 
 	<build>
 		<plugins>
-			<!--
-			To use the code quality plugins in Eclipse or STS, install the
-			m2e-code-quality plugin from software site
-			http://m2e-code-quality.github.com/m2e-code-quality/site/latest/
-			 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>${checkstyle.version}</version>
 				<executions>
 					<execution>
 						<id>validate</id>
@@ -68,7 +65,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.2</version>
+				<version>${spotbugs.version}</version>
 				<configuration>
 					<effort>Max</effort>
 					<threshold>Low</threshold>
