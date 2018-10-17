@@ -14,16 +14,16 @@
 	<properties>
 		<checkstyle.version>3.0.0</checkstyle.version>
 		<jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
-		<jacoco.version>0.8.1</jacoco.version>
+		<jacoco.version>0.8.2</jacoco.version>
 		<junit.version>4.12</junit.version>
 		<lucene.version>3.6.2</lucene.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.enforcer.plugin.version>3.0.0-M2</maven.enforcer.plugin.version>
-		<maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
+		<maven.surefire.plugin.version>2.22.1</maven.surefire.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<slf4j.version>1.7.25</slf4j.version>
-		<spotbugs.version>3.1.6</spotbugs.version>
+		<spotbugs.version>3.1.7</spotbugs.version>
 	</properties>
 
 	<modules>
