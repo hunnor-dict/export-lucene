@@ -41,7 +41,7 @@ public class LuceneSearcher {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LuceneSearcher.class);
 
-  private static volatile LuceneSearcher instance = new LuceneSearcher();
+  private static LuceneSearcher instance = new LuceneSearcher();
 
   private IndexReader indexReader;
 
