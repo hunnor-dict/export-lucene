@@ -77,6 +77,14 @@ public class StaxParser {
     textNodes.add(Q);
   }
 
+  public void setStream(FileInputStream stream) {
+    this.stream = stream;
+  }
+
+  public void setReader(XMLStreamReader2 reader) {
+    this.reader = reader;
+  }
+
   /**
    * Open a stream from an XML file.
    *
@@ -84,10 +92,14 @@ public class StaxParser {
    */
   public void openFile(String file) {
     try {
-      stream = new FileInputStream(file);
-      XMLInputFactory2 xmlInputFactory2 = (XMLInputFactory2) XMLInputFactory2.newInstance();
-      xmlInputFactory2.setProperty(XMLInputFactory2.IS_NAMESPACE_AWARE, false);
-      reader = (XMLStreamReader2) xmlInputFactory2.createXMLStreamReader(stream);
+      if (stream == null) {
+        stream = new FileInputStream(file);
+      }
+      if (reader == null) {
+        XMLInputFactory2 xmlInputFactory2 = (XMLInputFactory2) XMLInputFactory2.newInstance();
+        xmlInputFactory2.setProperty(XMLInputFactory2.IS_NAMESPACE_AWARE, false);
+        reader = (XMLStreamReader2) xmlInputFactory2.createXMLStreamReader(stream);
+      }
     } catch (IOException | XMLStreamException ex) {
       LOGGER.error(ex.getMessage(), ex);
     }
@@ -101,15 +113,11 @@ public class StaxParser {
    */
   public void closeFile() {
     try {
-      closeResources();
+      reader.close();
+      stream.close();
     } catch (IOException | XMLStreamException ex) {
       LOGGER.error(ex.getMessage(), ex);
     }
-  }
-
-  private void closeResources() throws XMLStreamException, IOException {
-    reader.close();
-    stream.close();
   }
 
   public boolean hasNext() throws XMLStreamException {

@@ -18,16 +18,21 @@ public class FoldingAnalyzerTest {
 
   @Test
   public void analyzerTest() throws IOException {
+
     Analyzer analyzer = new FoldingAnalyzer(Lucene.VERSION);
     Reader reader = new StringReader("åaøo; ÆaE");
     TokenStream stream = analyzer.tokenStream(Lucene.ID, reader);
+
     stream.incrementToken();
     CharTermAttribute attribute = stream.getAttribute(CharTermAttribute.class);
     assertEquals("aaoo", attribute.toString());
+
     stream.incrementToken();
     attribute = stream.getAttribute(CharTermAttribute.class);
     assertEquals("aeae", attribute.toString());
+
     analyzer.close();
+
   }
 
 }

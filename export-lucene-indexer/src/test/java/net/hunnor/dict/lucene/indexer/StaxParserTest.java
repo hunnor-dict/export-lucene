@@ -3,23 +3,23 @@ package net.hunnor.dict.lucene.indexer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.spy;
 
 import net.hunnor.dict.lucene.indexer.StaxParser;
 import net.hunnor.dict.lucene.model.Entry;
 
+import org.codehaus.stax2.XMLInputFactory2;
+import org.codehaus.stax2.XMLStreamReader2;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(StaxParser.class)
 public class StaxParserTest {
 
   @Test
@@ -36,19 +36,28 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testCloseFileStreamError() throws Exception {
-    StaxParser spyParser = PowerMockito.spy(new StaxParser());
-    PowerMockito.doThrow(new XMLStreamException()).when(spyParser, "closeResources");
-    spyParser.openFile("src/test/resources/xml/sample-entry-entry.xml");
-    spyParser.closeFile();
+  public void testCloseFileStreamError() throws FileNotFoundException, XMLStreamException {
+    FileInputStream stream = new FileInputStream("src/test/resources/xml/sample-entry-entry.xml");
+    XMLInputFactory2 xmlInputFactory2 = (XMLInputFactory2) XMLInputFactory2.newInstance();
+    xmlInputFactory2.setProperty(XMLInputFactory2.IS_NAMESPACE_AWARE, false);
+    XMLStreamReader2 spyReader = spy(
+        (XMLStreamReader2) xmlInputFactory2.createXMLStreamReader(stream));
+    doThrow(new XMLStreamException()).when(spyReader).close();
+    StaxParser parser = new StaxParser();
+    parser.setReader(spyReader);
+    parser.openFile("src/test/resources/xml/sample-entry-entry.xml");
+    parser.closeFile();
   }
 
   @Test
-  public void testCloseFileIoError() throws Exception {
-    StaxParser spyParser = PowerMockito.spy(new StaxParser());
-    PowerMockito.doThrow(new IOException()).when(spyParser, "closeResources");
-    spyParser.openFile("src/test/resources/xml/sample-entry-entry.xml");
-    spyParser.closeFile();
+  public void testCloseFileIoError() throws IOException {
+    FileInputStream spyStream = spy(
+        new FileInputStream("src/test/resources/xml/sample-entry-entry.xml"));
+    doThrow(new IOException()).when(spyStream).close();
+    StaxParser parser = new StaxParser();
+    parser.setStream(spyStream);
+    parser.openFile("src/test/resources/xml/sample-entry-entry.xml");
+    parser.closeFile();
   }
 
   @Test

@@ -58,6 +58,10 @@ public class LuceneSearcher {
     return instance;
   }
 
+  public void setSpellChecker(SpellChecker spellChecker) {
+    this.spellChecker = spellChecker;
+  }
+
   public boolean isOpen() {
     return indexReader != null;
   }

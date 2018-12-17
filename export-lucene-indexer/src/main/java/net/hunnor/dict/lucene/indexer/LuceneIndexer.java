@@ -125,12 +125,12 @@ public class LuceneIndexer {
    * @throws IOException when thrown by Lucene
    */
   public void createSuggestions() throws IOException {
-    Dictionary hungarianDictionary = new LuceneDictionary(indexReader, Lucene.HU_ROOTS);
-    Dictionary norwegianDictionary = new LuceneDictionary(indexReader, Lucene.NO_ROOTS);
-    Analyzer analyzer = PerFieldAnalyzer.getInstance(LUCENE_VERSION);
-    IndexWriterConfig indexWriterConfig1 = new IndexWriterConfig(LUCENE_VERSION, analyzer);
-    IndexWriterConfig indexWriterConfig2 = new IndexWriterConfig(LUCENE_VERSION, analyzer);
     if (spellChecker != null) {
+      Dictionary hungarianDictionary = new LuceneDictionary(indexReader, Lucene.HU_ROOTS);
+      Dictionary norwegianDictionary = new LuceneDictionary(indexReader, Lucene.NO_ROOTS);
+      Analyzer analyzer = PerFieldAnalyzer.getInstance(LUCENE_VERSION);
+      IndexWriterConfig indexWriterConfig1 = new IndexWriterConfig(LUCENE_VERSION, analyzer);
+      IndexWriterConfig indexWriterConfig2 = new IndexWriterConfig(LUCENE_VERSION, analyzer);
       spellChecker.indexDictionary(hungarianDictionary, indexWriterConfig1, false);
       spellChecker.indexDictionary(norwegianDictionary, indexWriterConfig2, false);
     }

@@ -79,6 +79,7 @@ public class LuceneIndexerTest {
     indexer.closeIndexWriter();
 
     indexer.openIndexReader();
+    indexer.createSuggestions();
     indexer.openSpellChecker();
     indexer.createSuggestions();
     indexer.closeSpellChecker();
