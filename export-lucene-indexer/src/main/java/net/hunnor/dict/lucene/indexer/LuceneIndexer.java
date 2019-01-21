@@ -20,6 +20,7 @@ import org.apache.lucene.util.Version;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 public class LuceneIndexer {
 
@@ -173,8 +174,10 @@ public class LuceneIndexer {
     Document document = new Document();
 
     if (entry.getLang() != null) {
+      // Lower case for compatibility with the native Android app
+      String lang = entry.getLang().toString().toLowerCase(Locale.getDefault());
       document.add(
-          new Field(Lucene.LANG, entry.getLang().toString(),
+          new Field(Lucene.LANG, lang,
               Field.Store.YES, Field.Index.ANALYZED));
     }
     if (entry.getId() != null) {

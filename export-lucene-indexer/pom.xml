@@ -12,6 +12,7 @@
 	<artifactId>export-lucene-indexer</artifactId>
 
 	<properties>
+		<ant.version>1.10.5</ant.version>
 		<apache.cli.version>1.4</apache.cli.version>
 		<jar.version>3.1.1</jar.version>
 		<mockito.version>2.23.4</mockito.version>
@@ -60,6 +61,12 @@
 			<groupId>org.codehaus.woodstox</groupId>
 			<artifactId>stax2-api</artifactId>
 			<version>${stax.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>${ant.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
