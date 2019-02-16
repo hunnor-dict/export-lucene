@@ -13,7 +13,7 @@
 
 	<properties>
 		<checkstyle.version>3.0.0</checkstyle.version>
-		<jacoco.version>0.8.2</jacoco.version>
+		<jacoco.version>0.8.3</jacoco.version>
 		<junit.version>4.12</junit.version>
 		<lucene.version>3.6.2</lucene.version>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -22,7 +22,7 @@
 		<maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<slf4j.version>1.7.25</slf4j.version>
-		<spotbugs.version>3.1.10</spotbugs.version>
+		<spotbugs.version>3.1.11</spotbugs.version>
 	</properties>
 
 	<modules>
