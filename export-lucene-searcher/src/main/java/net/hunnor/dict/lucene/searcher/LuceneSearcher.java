@@ -34,6 +34,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -290,7 +291,7 @@ public class LuceneSearcher {
   private Entry documentToEntry(Document document) {
     Entry entry = new Entry();
     entry.setId(document.get(Lucene.ID));
-    entry.setLang(Language.valueOf(document.get(Lucene.LANG)));
+    entry.setLang(Language.valueOf(document.get(Lucene.LANG).toUpperCase(Locale.getDefault())));
     entry.setText(document.get(Lucene.TEXT));
     return entry;
   }
