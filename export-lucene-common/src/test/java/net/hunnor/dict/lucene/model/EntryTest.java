@@ -67,6 +67,13 @@ public class EntryTest {
   }
 
   @Test
+  public void testSort() {
+    Entry entry = new Entry();
+    entry.setSort("sort");
+    assertEquals("sort", entry.getSort());
+  }
+
+  @Test
   public void testText() {
     Entry entry = new Entry();
     entry.setText("<html/>");

@@ -10,6 +10,8 @@ public class Lucene {
 
   public static final String ID = "id";
 
+  public static final String SORT = "sort";
+
   public static final String TEXT = "text";
 
   public static final String HU_ROOTS = "hu_roots";

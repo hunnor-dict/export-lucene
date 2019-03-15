@@ -32,6 +32,7 @@ public final class PerFieldAnalyzer {
     mapping.put(Lucene.NO_ROOTS, foldingAnalyzer);
     mapping.put(Lucene.HU_FORMS, foldingAnalyzer);
     mapping.put(Lucene.NO_FORMS, foldingAnalyzer);
+    mapping.put(Lucene.SORT, foldingAnalyzer);
     mapping.put(Lucene.SUGGESTION, foldingAnalyzer);
 
     HungarianAnalyzer hungarianAnalyzer =

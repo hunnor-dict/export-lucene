@@ -299,6 +299,9 @@ public class StaxParser {
       return;
     }
     parserState.getEntry().getRoots().add(parserState.getCharacters().toString());
+    if (parserState.getEntry().getSort() == null) {
+      parserState.getEntry().setSort(parserState.getCharacters().toString());
+    }
     if (parserState.getFormBuffer().length() > 0) {
       parserState.getFormBuffer().append(" ");
     }

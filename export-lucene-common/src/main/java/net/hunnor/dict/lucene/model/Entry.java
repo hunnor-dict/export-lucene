@@ -19,6 +19,8 @@ public class Entry {
 
   private Set<String> quoteTrans = new HashSet<>();
 
+  private String sort;
+
   private String text;
 
   public Language getLang() {
@@ -75,6 +77,14 @@ public class Entry {
 
   public void setQuoteTrans(Set<String> quoteTrans) {
     this.quoteTrans = quoteTrans;
+  }
+
+  public String getSort() {
+    return sort;
+  }
+
+  public void setSort(String sort) {
+    this.sort = sort;
   }
 
   public String getText() {

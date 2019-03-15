@@ -180,9 +180,11 @@ public class LuceneIndexer {
           new Field(Lucene.LANG, lang,
               Field.Store.YES, Field.Index.ANALYZED));
     }
+
     if (entry.getId() != null) {
       document.add(new Field(Lucene.ID, entry.getId(), Field.Store.YES, Field.Index.ANALYZED));
     }
+
     for (String root : entry.getRoots()) {
       document.add(new Field(rootsField, root, Field.Store.YES, Field.Index.ANALYZED));
     }
@@ -197,6 +199,10 @@ public class LuceneIndexer {
     }
     for (String quoteTr : entry.getQuoteTrans()) {
       document.add(new Field(quoteTransField, quoteTr, Field.Store.NO, Field.Index.ANALYZED));
+    }
+
+    if (entry.getSort() != null) {
+      document.add(new Field(Lucene.SORT, entry.getSort(), Field.Store.YES, Field.Index.ANALYZED));
     }
 
     if (entry.getText() != null) {

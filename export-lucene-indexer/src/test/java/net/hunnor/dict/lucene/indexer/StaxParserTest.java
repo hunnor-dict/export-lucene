@@ -2,6 +2,7 @@ package net.hunnor.dict.lucene.indexer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
@@ -88,6 +89,7 @@ public class StaxParserTest {
     roots.add("orth2");
     roots.add("orth3");
     assertEquals(roots, entry.getRoots());
+    assertEquals("orth1", entry.getSort());
     assertEquals(
         "<b>orth1</b> pos1 suff1 <b>orth2</b>"
             + " (inflSeq1, inflSeq2, inflSeq3, inflSeq4; ;"
@@ -103,6 +105,7 @@ public class StaxParserTest {
     assertEquals("1", entry.getId());
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
+    assertNull(entry.getSort());
     assertEquals(
         " <b>I</b> <b>1</b> trans1 <b>2</b> trans2"
             + " <b>II</b> <b>1</b> trans3 <b>2</b> trans4 <b>3</b> trans5"
@@ -118,6 +121,7 @@ public class StaxParserTest {
     assertEquals("1", entry.getId());
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
+    assertNull(entry.getSort());
     assertEquals(" <i>lbl1</i> <i>lbl2</i>", entry.getText());
   }
 
@@ -129,6 +133,7 @@ public class StaxParserTest {
     assertEquals("1", entry.getId());
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
+    assertNull(entry.getSort());
     assertEquals(" <i>lbl1</i> trans1", entry.getText());
   }
 
@@ -140,6 +145,7 @@ public class StaxParserTest {
     assertEquals("1", entry.getId());
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
+    assertNull(entry.getSort());
     assertEquals(" <i>lbl1</i>; <b>q1</b> trans1", entry.getText());
   }
 
@@ -151,6 +157,7 @@ public class StaxParserTest {
     assertEquals("1", entry.getId());
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
+    assertNull(entry.getSort());
     assertEquals(" trans1", entry.getText());
   }
 
@@ -162,6 +169,7 @@ public class StaxParserTest {
     assertEquals("1", entry.getId());
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
+    assertNull(entry.getSort());
     assertEquals(" trans1, <i>lbl1</i>", entry.getText());
   }
 
@@ -173,6 +181,7 @@ public class StaxParserTest {
     assertEquals("1", entry.getId());
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
+    assertNull(entry.getSort());
     assertEquals(" trans1, trans2", entry.getText());
   }
 
@@ -184,6 +193,7 @@ public class StaxParserTest {
     assertEquals("1", entry.getId());
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
+    assertNull(entry.getSort());
     assertEquals(" trans1; <b>q1</b> trans2", entry.getText());
   }
 
@@ -195,6 +205,7 @@ public class StaxParserTest {
     assertEquals("1", entry.getId());
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
+    assertNull(entry.getSort());
     assertEquals(" <b>q1</b> trans1; trans2", entry.getText());
   }
 
@@ -206,6 +217,7 @@ public class StaxParserTest {
     assertEquals("1", entry.getId());
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
+    assertNull(entry.getSort());
     assertEquals(" <b>q1</b>, <b>q2</b> trans1", entry.getText());
   }
 
@@ -217,6 +229,7 @@ public class StaxParserTest {
     assertEquals("1", entry.getId());
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
+    assertNull(entry.getSort());
     assertEquals(" <b>q1</b> trans1, trans2", entry.getText());
   }
 
@@ -228,6 +241,7 @@ public class StaxParserTest {
     assertEquals("1", entry.getId());
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
+    assertNull(entry.getSort());
     assertEquals(" <i>lbl1</i>; <b>q1</b> trans1", entry.getText());
   }
 

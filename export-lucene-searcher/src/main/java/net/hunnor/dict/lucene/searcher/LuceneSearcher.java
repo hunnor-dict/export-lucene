@@ -143,24 +143,56 @@ public class LuceneSearcher {
    * Search the index for entries matching the query string.
    *
    * @param userQuery the string to search for
+   * @param max the maximum number of results to return
+   * @return a set of matching Entry objects
+   */
+  public List<Entry> search(String userQuery, int max) {
+    Query query = createRootsQuery(userQuery);
+    SortField sortField = new SortField(Lucene.SORT, SortField.STRING);
+    Sort sort = new Sort(sortField);
+    List<Document> documents = docsFromQuery(query, sort, max);
+    if (documents.isEmpty()) {
+      query = createFormsQuery(userQuery);
+      documents = docsFromQuery(query, sort, max);
+      if (documents.isEmpty()) {
+        query = createFullTextQuery(userQuery);
+        documents = docsFromQuery(query, sort, max);
+      }
+    }
+    return documents.stream()
+        .map(this::documentToEntry)
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * Search the index for entries matching the query string.
+   *
+   * @param userQuery the string to search for
    * @param language the source language
    * @param max the maximum number of results to return
    * @return a set of matching Entry objects
    */
   public List<Entry> search(String userQuery, Language language, int max) {
     Query query = createRootsQuery(userQuery, language);
-    List<Document> documents = docsFromQuery(query, null, max);
+    SortField sortField = new SortField(Lucene.SORT, SortField.STRING);
+    Sort sort = new Sort(sortField);
+    List<Document> documents = docsFromQuery(query, sort, max);
     if (documents.isEmpty()) {
       query = createFormsQuery(userQuery, language);
-      documents = docsFromQuery(query, null, max);
+      documents = docsFromQuery(query, sort, max);
       if (documents.isEmpty()) {
         query = createFullTextQuery(userQuery, language);
-        documents = docsFromQuery(query, null, max);
+        documents = docsFromQuery(query, sort, max);
       }
     }
     return documents.stream()
         .map(this::documentToEntry)
         .collect(Collectors.toList());
+  }
+
+  private Query createRootsQuery(String userQuery) {
+    String[] fields = new String[] {Lucene.HU_ROOTS, Lucene.NO_ROOTS};
+    return createQueryFromFields(userQuery, fields, false);
   }
 
   private Query createRootsQuery(String userQuery, Language language) {
@@ -173,6 +205,11 @@ public class LuceneSearcher {
     return createQueryFromFields(userQuery, fields, false);
   }
 
+  private Query createFormsQuery(String userQuery) {
+    String[] fields = new String[] {Lucene.HU_FORMS, Lucene.NO_FORMS};
+    return createQueryFromFields(userQuery, fields, false);
+  }
+
   private Query createFormsQuery(String userQuery, Language language) {
     String[] fields;
     if (Language.HU.equals(language)) {
@@ -180,6 +217,12 @@ public class LuceneSearcher {
     } else {
       fields = new String[] {Lucene.NO_FORMS};
     }
+    return createQueryFromFields(userQuery, fields, false);
+  }
+
+  private Query createFullTextQuery(String userQuery) {
+    String[] fields = new String[] {Lucene.NO_TRANS, Lucene.HU_QUOTE, Lucene.NO_QUOTETRANS,
+        Lucene.HU_TRANS, Lucene.NO_QUOTE, Lucene.HU_QUOTETRANS};
     return createQueryFromFields(userQuery, fields, false);
   }
 
