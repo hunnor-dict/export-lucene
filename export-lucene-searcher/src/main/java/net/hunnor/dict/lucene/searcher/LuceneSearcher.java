@@ -315,11 +315,7 @@ public class LuceneSearcher {
 
   private TopDocs executeSearch(IndexSearcher indexSearcher, Query query,
       int maxSuggestions, Sort sort) throws IOException {
-    if (sort == null) {
-      return indexSearcher.search(query, maxSuggestions);
-    } else {
-      return indexSearcher.search(query, maxSuggestions, sort);
-    }
+    return indexSearcher.search(query, maxSuggestions, sort);
   }
 
   private Document extractDocument(ScoreDoc scoreDoc) throws IOException {

@@ -15,7 +15,9 @@ import org.apache.lucene.search.spell.SpellChecker;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +26,9 @@ import java.util.List;
 public class LuceneSearcherTest {
 
   private LuceneSearcher searcher;
+
+  @Rule
+  public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   /**
    * Initialize the searcher before each text.
@@ -72,6 +77,17 @@ public class LuceneSearcherTest {
   }
 
   @Test
+  public void testOpenSpellCheckerNewDirectory() throws IOException {
+    searcher.closeSpellChecker();
+    File directory = temporaryFolder.newFolder();
+    assertTrue(directory.isDirectory());
+    File[] files = directory.listFiles();
+    assertEquals(0, files.length);
+    searcher.openSpellChecker(directory);
+    assertFalse(searcher.isSpellCheckerOpen());
+  }
+
+  @Test
   public void testSuggestion() {
     List<String> suggestions = searcher.suggestions("aaa", 20);
     assertNotNull(suggestions);
@@ -101,13 +117,32 @@ public class LuceneSearcherTest {
 
   @Test
   public void testSearchForRoots() {
-    List<Entry> results = searcher.search("aaaaaa", Language.HU, 100);
+    List<Entry> results = searcher.search("aaaaaa", 100);
     assertEquals(1, results.size());
-    results = searcher.search("aaaaab", Language.NO, 100);
   }
 
   @Test
   public void testSearchForForms() {
+    List<Entry> results = searcher.search("bbbbbb", 100);
+    assertEquals(2, results.size());
+  }
+
+  @Test
+  public void testSearchForQuotes() {
+    List<Entry> results = searcher.search("cccccc", 100);
+    assertEquals(2, results.size());
+  }
+
+  @Test
+  public void testSearchForRootsLang() {
+    List<Entry> results = searcher.search("aaaaaa", Language.HU, 100);
+    assertEquals(1, results.size());
+    results = searcher.search("aaaaab", Language.NO, 100);
+    assertEquals(1, results.size());
+  }
+
+  @Test
+  public void testSearchForFormsLang() {
     List<Entry> results = searcher.search("bbbbbb", Language.HU, 100);
     assertEquals(1, results.size());
     results = searcher.search("bbbbbb", Language.NO, 100);
@@ -115,7 +150,7 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testSearchForQuotes() {
+  public void testSearchForQuotesLang() {
     List<Entry> results = searcher.search("cccccc", Language.HU, 100);
     assertEquals(1, results.size());
     results = searcher.search("cccccc", Language.NO, 100);
