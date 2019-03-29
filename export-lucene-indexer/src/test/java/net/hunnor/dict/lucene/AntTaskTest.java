@@ -1,5 +1,7 @@
 package net.hunnor.dict.lucene;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
@@ -12,24 +14,28 @@ public class AntTaskTest {
   public void testLanguage() {
     AntTask task = new AntTask();
     task.setLanguage("language");
+    assertEquals("language", task.getLanguage());
   }
 
   @Test
   public void testMain() {
     AntTask task = new AntTask();
     task.setMain("main");
+    assertEquals("main", task.getMain());
   }
 
   @Test
   public void testSource() {
     AntTask task = new AntTask();
     task.setSource("source");
+    assertEquals("source", task.getSource());
   }
 
   @Test
   public void testSpelling() {
     AntTask task = new AntTask();
     task.setSpelling("spelling");
+    assertEquals("spelling", task.getSpelling());
   }
 
   @Test
