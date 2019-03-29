@@ -97,6 +97,7 @@ public class StaxParser {
       }
       if (reader == null) {
         XMLInputFactory2 xmlInputFactory2 = (XMLInputFactory2) XMLInputFactory2.newInstance();
+        xmlInputFactory2.setProperty(XMLInputFactory2.SUPPORT_DTD, false);
         xmlInputFactory2.setProperty(XMLInputFactory2.IS_NAMESPACE_AWARE, false);
         reader = (XMLStreamReader2) xmlInputFactory2.createXMLStreamReader(stream);
       }

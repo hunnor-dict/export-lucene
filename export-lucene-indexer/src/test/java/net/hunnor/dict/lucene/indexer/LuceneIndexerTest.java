@@ -1,6 +1,7 @@
 package net.hunnor.dict.lucene.indexer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import net.hunnor.dict.lucene.indexer.LuceneIndexer;
@@ -28,14 +29,17 @@ public class LuceneIndexerTest {
   @Test
   public void closeWhenAlreadyClosed() throws IOException {
     LuceneIndexer indexer = new LuceneIndexer();
+    assertNull(indexer.getIndexDir());
     indexer.closeIndexReader();
     indexer.closeIndexWriter();
+    assertNull(indexer.getSpellingDir());
     indexer.closeSpellChecker();
   }
 
   @Test
   public void writeEntryToClosedWriter() throws IOException {
     LuceneIndexer indexer = new LuceneIndexer();
+    assertNull(indexer.getIndexDir());
     Entry entry = new Entry();
     indexer.write(entry);
   }
