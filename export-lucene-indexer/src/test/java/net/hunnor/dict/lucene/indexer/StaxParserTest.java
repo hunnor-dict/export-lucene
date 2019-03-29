@@ -14,6 +14,7 @@ import org.codehaus.stax2.XMLInputFactory2;
 import org.codehaus.stax2.XMLStreamReader2;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,12 +27,16 @@ public class StaxParserTest {
   @Test
   public void testFileNotFoundException() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
+    File file = new File("src/test/resources/xml/no-such-file.xml");
+    assertFalse(file.exists());
     staxParser.openFile("src/test/resources/xml/no-such-file.xml");
   }
 
   @Test(expected = XMLStreamException.class)
   public void testXmlStreamException() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
+    File file = new File("src/test/resources/xml/sample-text-file.txt");
+    assertTrue(file.isFile());
     staxParser.openFile("src/test/resources/xml/sample-text-file.txt");
     staxParser.next();
   }
@@ -46,6 +51,8 @@ public class StaxParserTest {
     doThrow(new XMLStreamException()).when(spyReader).close();
     StaxParser parser = new StaxParser();
     parser.setReader(spyReader);
+    File file = new File("src/test/resources/xml/sample-entry-entry.xml");
+    assertTrue(file.isFile());
     parser.openFile("src/test/resources/xml/sample-entry-entry.xml");
     parser.closeFile();
   }
@@ -57,6 +64,8 @@ public class StaxParserTest {
     doThrow(new IOException()).when(spyStream).close();
     StaxParser parser = new StaxParser();
     parser.setStream(spyStream);
+    File file = new File("src/test/resources/xml/sample-entry-entry.xml");
+    assertTrue(file.isFile());
     parser.openFile("src/test/resources/xml/sample-entry-entry.xml");
     parser.closeFile();
   }

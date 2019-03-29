@@ -1,5 +1,6 @@
 package net.hunnor.dict.lucene.indexer;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
 
@@ -25,6 +26,7 @@ public class ServiceTest {
   public void test() throws IOException {
     Service service = new Service();
     File file = new File("src/test/resources/xml/sample-entry-entry.xml");
+    assertTrue(file.isFile());
     File indexDir = temporaryFolder.newFolder("index");
     service.indexFile(file.getAbsolutePath(), Language.HU, indexDir.getAbsolutePath());
     File spellingDir = temporaryFolder.newFolder("spelling");
@@ -38,6 +40,7 @@ public class ServiceTest {
     Service service = new Service();
     service.setParser(spyParser);
     File file = new File("src/test/resources/xml/sample-entry-entry.xml");
+    assertTrue(file.isFile());
     File indexDir = temporaryFolder.newFolder("index");
     service.indexFile(file.getAbsolutePath(), Language.HU, indexDir.getAbsolutePath());
   }
@@ -49,8 +52,11 @@ public class ServiceTest {
     Service service = new Service();
     service.setIndexer(spyIndexer);
     File file = new File("src/test/resources/xml/sample-entry-entry.xml");
+    assertTrue(file.isFile());
     File indexDir = temporaryFolder.newFolder("index");
     service.indexFile(file.getAbsolutePath(), Language.HU, indexDir.getAbsolutePath());
+    File[] indexFiles = indexDir.listFiles();
+    assertTrue(indexFiles.length > 0);
     File spellingDir = temporaryFolder.newFolder("spelling");
     service.indexSuggestions(indexDir.getAbsolutePath(), spellingDir.getAbsolutePath());
   }
