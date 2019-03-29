@@ -1,6 +1,7 @@
 package net.hunnor.dict.lucene;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -56,6 +57,11 @@ public class AntTaskTest {
     task.setSpelling(spellingDir.getAbsolutePath());
 
     task.execute();
+
+    File[] indexFiles = indexDir.listFiles();
+    assertTrue(indexFiles.length > 0);
+    File[] spellingFiles = spellingDir.listFiles();
+    assertTrue(spellingFiles.length > 0);
 
   }
 
