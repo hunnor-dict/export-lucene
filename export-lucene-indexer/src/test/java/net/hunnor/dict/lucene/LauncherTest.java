@@ -1,42 +1,38 @@
 package net.hunnor.dict.lucene;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.IOException;
 
 public class LauncherTest {
 
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
-
   @Test
-  public void testIncompleteArguments() {
+  public void testIncompleteArguments(@TempDir File tempDir) {
     String[] args = new String[] {"-x", "file.xml"};
     Launcher.main(args);
-    String[] files = temporaryFolder.getRoot().list();
+    String[] files = tempDir.list();
     assertEquals(0, files.length);
   }
 
   @Test
-  public void testInvalidArguments() {
+  public void testInvalidArguments(@TempDir File tempDir) {
     String[] args = new String[] {"-l", "h", "-x", "file.xml", "-d", "index", "-s", "speling"};
     Launcher.main(args);
-    String[] files = temporaryFolder.getRoot().list();
+    String[] files = tempDir.list();
     assertEquals(0, files.length);
   }
 
   @Test
-  public void testValidArguments() throws IOException {
+  public void testValidArguments(@TempDir File tempDir) throws IOException {
 
     File xmlFile = new File("src/test/resources/xml/sample-entry-entry.xml");
-    File indexDir = temporaryFolder.newFolder("index");
-    File spellingDir = temporaryFolder.newFolder("spelling");
+    File indexDir = new File(tempDir, "index");
+    File spellingDir = new File(tempDir, "spelling");
     String[] args = new String[] {
         "-l", "HU",
         "-x", xmlFile.getAbsolutePath(),
@@ -44,15 +40,15 @@ public class LauncherTest {
         "-s", spellingDir.getAbsolutePath()
     };
     Launcher.main(args);
-    String[] files = temporaryFolder.getRoot().list();
+    String[] files = tempDir.list();
     assertEquals(2, files.length);
 
-    File index = new File(temporaryFolder.getRoot(), "index");
+    File index = new File(tempDir, "index");
     assertTrue(index.isDirectory());
     files = index.list();
     assertTrue(files.length > 0);
 
-    File spelling = new File(temporaryFolder.getRoot(), "spelling");
+    File spelling = new File(tempDir, "spelling");
     assertTrue(spelling.isDirectory());
     files = spelling.list();
     assertTrue(files.length > 0);

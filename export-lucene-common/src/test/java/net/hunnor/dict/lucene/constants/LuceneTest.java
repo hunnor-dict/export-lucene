@@ -1,9 +1,9 @@
 package net.hunnor.dict.lucene.constants;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.lucene.util.Version;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class LuceneTest {
 

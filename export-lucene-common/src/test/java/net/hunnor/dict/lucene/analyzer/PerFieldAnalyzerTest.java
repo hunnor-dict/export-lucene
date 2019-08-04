@@ -1,7 +1,7 @@
 package net.hunnor.dict.lucene.analyzer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import net.hunnor.dict.lucene.analyzer.PerFieldAnalyzer;
 import net.hunnor.dict.lucene.constants.Lucene;
@@ -9,7 +9,7 @@ import net.hunnor.dict.lucene.constants.Lucene;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.Reader;

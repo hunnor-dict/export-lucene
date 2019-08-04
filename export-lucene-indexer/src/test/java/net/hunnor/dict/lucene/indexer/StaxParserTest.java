@@ -1,9 +1,10 @@
 package net.hunnor.dict.lucene.indexer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
 
@@ -12,7 +13,7 @@ import net.hunnor.dict.lucene.model.Entry;
 
 import org.codehaus.stax2.XMLInputFactory2;
 import org.codehaus.stax2.XMLStreamReader2;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,13 +33,15 @@ public class StaxParserTest {
     staxParser.openFile("src/test/resources/xml/no-such-file.xml");
   }
 
-  @Test(expected = XMLStreamException.class)
+  @Test
   public void testXmlStreamException() throws XMLStreamException {
-    StaxParser staxParser = new StaxParser();
-    File file = new File("src/test/resources/xml/sample-text-file.txt");
-    assertTrue(file.isFile());
-    staxParser.openFile("src/test/resources/xml/sample-text-file.txt");
-    staxParser.next();
+    assertThrows(XMLStreamException.class, () -> {
+      StaxParser staxParser = new StaxParser();
+      File file = new File("src/test/resources/xml/sample-text-file.txt");
+      assertTrue(file.isFile());
+      staxParser.openFile("src/test/resources/xml/sample-text-file.txt");
+      staxParser.next();
+    });
   }
 
   @Test

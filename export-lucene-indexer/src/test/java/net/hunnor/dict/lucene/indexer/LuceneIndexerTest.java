@@ -1,16 +1,15 @@
 package net.hunnor.dict.lucene.indexer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import net.hunnor.dict.lucene.indexer.LuceneIndexer;
 import net.hunnor.dict.lucene.model.Entry;
 import net.hunnor.dict.lucene.model.Language;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,9 +21,6 @@ public class LuceneIndexerTest {
   private static final String INDEX_DIR = "index";
 
   private static final String SPELLING_DIR = "spelling";
-
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Test
   public void closeWhenAlreadyClosed() throws IOException {
@@ -45,12 +41,12 @@ public class LuceneIndexerTest {
   }
 
   @Test
-  public void testIndexing() throws IOException {
+  public void testIndexing(@TempDir File tempDir) throws IOException {
 
     LuceneIndexer indexer = new LuceneIndexer();
 
-    File indexDir = temporaryFolder.newFolder(INDEX_DIR);
-    File spellingDir = temporaryFolder.newFolder(SPELLING_DIR);
+    File indexDir = new File(tempDir, INDEX_DIR);
+    File spellingDir = new File(tempDir, SPELLING_DIR);
 
     indexer.setIndexDir(indexDir.getAbsolutePath());
     indexer.setSpellingDir(spellingDir.getAbsolutePath());

@@ -1,10 +1,10 @@
 package net.hunnor.dict.lucene;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,14 +40,11 @@ public class AntTaskTest {
   }
 
   @Test
-  public void testExecute() throws IOException {
-
-    TemporaryFolder temporaryFolder = new TemporaryFolder();
-    temporaryFolder.create();
+  public void testExecute(@TempDir File tempDir) throws IOException {
 
     File xmlFile = new File("src/test/resources/xml/sample-entry-entry.xml");
-    File indexDir = temporaryFolder.newFolder("index");
-    File spellingDir = temporaryFolder.newFolder("spelling");
+    File indexDir = new File(tempDir, "index");
+    File spellingDir = new File(tempDir, "spelling");
 
     AntTask task = new AntTask();
 

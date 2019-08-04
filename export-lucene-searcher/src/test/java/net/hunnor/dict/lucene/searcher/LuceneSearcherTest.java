@@ -1,9 +1,9 @@
 package net.hunnor.dict.lucene.searcher;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
 
@@ -13,11 +13,10 @@ import net.hunnor.dict.lucene.searcher.LuceneSearcher;
 
 import org.apache.lucene.search.spell.SpellChecker;
 import org.apache.lucene.store.NIOFSDirectory;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,15 +26,12 @@ public class LuceneSearcherTest {
 
   private LuceneSearcher searcher;
 
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
-
   /**
    * Initialize the searcher before each text.
    *
    * @throws IOException if there is a low-level IO error
    */
-  @Before
+  @BeforeEach
   public void setUp() throws IOException {
     searcher = LuceneSearcher.getInstance();
     searcher.open(new File(
@@ -44,7 +40,7 @@ public class LuceneSearcherTest {
         getClass().getResource("/lucene-spellchecker-index").getFile()));
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws IOException {
     searcher.close();
     searcher.closeSpellChecker();
@@ -77,9 +73,11 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testOpenSpellCheckerNewDirectory() throws IOException {
+  public void testOpenSpellCheckerNewDirectory(@TempDir File tempDir) throws IOException {
     searcher.closeSpellChecker();
-    File directory = temporaryFolder.newFolder();
+    File directory = new File(tempDir, "tempDir");
+    boolean createDirectory = directory.mkdir();
+    assertTrue(createDirectory);
     assertTrue(directory.isDirectory());
     File[] files = directory.listFiles();
     assertEquals(0, files.length);
