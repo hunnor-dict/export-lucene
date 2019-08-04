@@ -1,5 +1,7 @@
 package net.hunnor.dict.lucene.analyzer;
 
+import java.io.Reader;
+
 import org.apache.lucene.analysis.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.LowerCaseFilter;
@@ -7,8 +9,6 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.util.Version;
-
-import java.io.Reader;
 
 public final class FoldingAnalyzer extends Analyzer {
 

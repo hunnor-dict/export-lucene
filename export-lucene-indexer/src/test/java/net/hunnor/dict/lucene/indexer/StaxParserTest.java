@@ -8,13 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
 
-import net.hunnor.dict.lucene.indexer.StaxParser;
-import net.hunnor.dict.lucene.model.Entry;
-
-import org.codehaus.stax2.XMLInputFactory2;
-import org.codehaus.stax2.XMLStreamReader2;
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,6 +15,13 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import javax.xml.stream.XMLStreamException;
+
+import net.hunnor.dict.lucene.indexer.StaxParser;
+import net.hunnor.dict.lucene.model.Entry;
+
+import org.codehaus.stax2.XMLInputFactory2;
+import org.codehaus.stax2.XMLStreamReader2;
+import org.junit.jupiter.api.Test;
 
 public class StaxParserTest {
 

@@ -1,5 +1,7 @@
 package net.hunnor.dict.lucene;
 
+import java.util.Locale;
+
 import net.hunnor.dict.lucene.indexer.Service;
 import net.hunnor.dict.lucene.model.Language;
 
@@ -12,8 +14,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Locale;
 
 public class Launcher {
 

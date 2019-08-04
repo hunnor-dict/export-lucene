@@ -1,5 +1,16 @@
 package net.hunnor.dict.lucene.searcher;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import net.hunnor.dict.lucene.analyzer.PerFieldAnalyzer;
 import net.hunnor.dict.lucene.constants.Lucene;
 import net.hunnor.dict.lucene.model.Entry;
@@ -26,17 +37,6 @@ import org.apache.lucene.search.spell.SpellChecker;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class LuceneSearcher {
 

@@ -14,7 +14,7 @@
 	<properties>
 		<ant.version>1.10.6</ant.version>
 		<apache.cli.version>1.4</apache.cli.version>
-		<jar.version>3.1.1</jar.version>
+		<jar.version>3.1.2</jar.version>
 		<mockito.version>2.28.2</mockito.version>
 		<shade.version>3.2.1</shade.version>
 		<stax.version>4.2</stax.version>

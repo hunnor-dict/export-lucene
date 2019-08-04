@@ -1,5 +1,8 @@
 package net.hunnor.dict.lucene.analyzer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.hunnor.dict.lucene.constants.Lucene;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -9,9 +12,6 @@ import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.hu.HungarianAnalyzer;
 import org.apache.lucene.analysis.no.NorwegianAnalyzer;
 import org.apache.lucene.util.Version;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public final class PerFieldAnalyzer {
 

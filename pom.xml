@@ -12,7 +12,7 @@
 	<description>Create a Lucene index from the XML exports</description>
 
 	<properties>
-		<checkstyle.version>3.0.0</checkstyle.version>
+		<checkstyle.version>3.1.0</checkstyle.version>
 		<jacoco.version>0.8.4</jacoco.version>
 		<junit5.version>5.5.1</junit5.version>
 		<lucene.version>3.6.2</lucene.version>
@@ -22,7 +22,7 @@
 		<maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<slf4j.version>1.7.25</slf4j.version>
-		<spotbugs.version>3.1.11</spotbugs.version>
+		<spotbugs.version>3.1.12</spotbugs.version>
 	</properties>
 
 	<modules>
