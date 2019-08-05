@@ -15,7 +15,7 @@
 		<ant.version>1.10.6</ant.version>
 		<apache.cli.version>1.4</apache.cli.version>
 		<jar.version>3.1.2</jar.version>
-		<mockito.version>2.28.2</mockito.version>
+		<mockito.version>3.0.0</mockito.version>
 		<shade.version>3.2.1</shade.version>
 		<stax.version>4.2</stax.version>
 		<woodstox.core.version>4.4.1</woodstox.core.version>
