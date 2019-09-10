@@ -12,7 +12,7 @@
 	<artifactId>export-lucene-indexer</artifactId>
 
 	<properties>
-		<ant.version>1.10.6</ant.version>
+		<ant.version>1.10.7</ant.version>
 		<apache.cli.version>1.4</apache.cli.version>
 		<maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
 		<maven.jar.plugin.version>3.1.2</maven.jar.plugin.version>
