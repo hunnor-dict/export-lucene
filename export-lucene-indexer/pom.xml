@@ -20,8 +20,6 @@
 		<maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
 		<mockito.version>3.0.0</mockito.version>
 		<shade.version>3.2.1</shade.version>
-		<stax.version>4.2</stax.version>
-		<woodstox.core.version>4.4.1</woodstox.core.version>
 	</properties>
 
 	<dependencies>
@@ -54,16 +52,6 @@
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-spellchecker</artifactId>
 			<version>${lucene.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.woodstox</groupId>
-			<artifactId>woodstox-core-asl</artifactId>
-			<version>${woodstox.core.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.woodstox</groupId>
-			<artifactId>stax2-api</artifactId>
-			<version>${stax.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ant</groupId>

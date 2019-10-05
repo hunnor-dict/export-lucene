@@ -14,13 +14,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-
+import javax.xml.stream.XMLStreamReader;
 import net.hunnor.dict.lucene.indexer.StaxParser;
 import net.hunnor.dict.lucene.model.Entry;
 
-import org.codehaus.stax2.XMLInputFactory2;
-import org.codehaus.stax2.XMLStreamReader2;
 import org.junit.jupiter.api.Test;
 
 public class StaxParserTest {
@@ -47,10 +46,10 @@ public class StaxParserTest {
   @Test
   public void testCloseFileStreamError() throws FileNotFoundException, XMLStreamException {
     FileInputStream stream = new FileInputStream("src/test/resources/xml/sample-entry-entry.xml");
-    XMLInputFactory2 xmlInputFactory2 = (XMLInputFactory2) XMLInputFactory2.newInstance();
-    xmlInputFactory2.setProperty(XMLInputFactory2.IS_NAMESPACE_AWARE, false);
-    XMLStreamReader2 spyReader = spy(
-        (XMLStreamReader2) xmlInputFactory2.createXMLStreamReader(stream));
+    XMLInputFactory xmlInputFactory2 = (XMLInputFactory) XMLInputFactory.newInstance();
+    xmlInputFactory2.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, false);
+    XMLStreamReader spyReader = spy(
+        (XMLStreamReader) xmlInputFactory2.createXMLStreamReader(stream));
     doThrow(new XMLStreamException()).when(spyReader).close();
     StaxParser parser = new StaxParser();
     parser.setReader(spyReader);

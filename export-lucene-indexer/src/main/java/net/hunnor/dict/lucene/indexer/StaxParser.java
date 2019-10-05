@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
 
 import net.hunnor.dict.lucene.model.Entry;
 
-import org.codehaus.stax2.XMLInputFactory2;
-import org.codehaus.stax2.XMLStreamReader2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +50,7 @@ public class StaxParser {
 
   private FileInputStream stream;
 
-  private XMLStreamReader2 reader;
+  private XMLStreamReader reader;
 
   private static Map<String, String> glues;
 
@@ -81,7 +81,7 @@ public class StaxParser {
     this.stream = stream;
   }
 
-  public void setReader(XMLStreamReader2 reader) {
+  public void setReader(XMLStreamReader reader) {
     this.reader = reader;
   }
 
@@ -96,10 +96,10 @@ public class StaxParser {
         stream = new FileInputStream(file);
       }
       if (reader == null) {
-        XMLInputFactory2 xmlInputFactory2 = (XMLInputFactory2) XMLInputFactory2.newInstance();
-        xmlInputFactory2.setProperty(XMLInputFactory2.SUPPORT_DTD, false);
-        xmlInputFactory2.setProperty(XMLInputFactory2.IS_NAMESPACE_AWARE, false);
-        reader = (XMLStreamReader2) xmlInputFactory2.createXMLStreamReader(stream);
+        XMLInputFactory xmlInputFactory2 = (XMLInputFactory) XMLInputFactory.newInstance();
+        xmlInputFactory2.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+        xmlInputFactory2.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, false);
+        reader = (XMLStreamReader) xmlInputFactory2.createXMLStreamReader(stream);
       }
     } catch (IOException | XMLStreamException ex) {
       LOGGER.error(ex.getMessage(), ex);
