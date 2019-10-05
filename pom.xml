@@ -27,7 +27,7 @@
 		<maven.versions.plugin.version>2.7</maven.versions.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<slf4j.version>1.7.28</slf4j.version>
-		<spotbugs.version>3.1.12</spotbugs.version>
+		<spotbugs.version>3.1.12.2</spotbugs.version>
 	</properties>
 
 	<modules>
