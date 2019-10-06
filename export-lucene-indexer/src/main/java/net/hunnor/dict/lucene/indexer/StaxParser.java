@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
@@ -96,10 +97,10 @@ public class StaxParser {
         stream = new FileInputStream(file);
       }
       if (reader == null) {
-        XMLInputFactory xmlInputFactory2 = (XMLInputFactory) XMLInputFactory.newInstance();
+        XMLInputFactory xmlInputFactory2 = XMLInputFactory.newInstance();
         xmlInputFactory2.setProperty(XMLInputFactory.SUPPORT_DTD, false);
         xmlInputFactory2.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, false);
-        reader = (XMLStreamReader) xmlInputFactory2.createXMLStreamReader(stream);
+        reader = xmlInputFactory2.createXMLStreamReader(stream);
       }
     } catch (IOException | XMLStreamException ex) {
       LOGGER.error(ex.getMessage(), ex);
@@ -137,15 +138,15 @@ public class StaxParser {
     while (reader.hasNext() && !parserState.isEntryComplete()) {
       int eventType = reader.next();
       switch (eventType) {
-        case XMLEvent.START_ELEMENT:
+        case XMLStreamConstants.START_ELEMENT:
           processStartElement(reader.getLocalName(), parserState);
           break;
-        case XMLEvent.CHARACTERS:
+        case XMLStreamConstants.CHARACTERS:
           if (parserState.isCollectText()) {
             parserState.getCharacters().append(reader.getText());
           }
           break;
-        case XMLEvent.END_ELEMENT:
+        case XMLStreamConstants.END_ELEMENT:
           processEndElement(reader.getLocalName(), parserState);
           break;
         default:
