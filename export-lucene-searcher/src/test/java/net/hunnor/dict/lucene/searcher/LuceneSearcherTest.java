@@ -86,6 +86,29 @@ public class LuceneSearcherTest {
   }
 
   @Test
+  public void testOpenSpellCheckerFile(@TempDir File tempDir) throws IOException {
+    searcher.closeSpellChecker();
+    File file = new File(tempDir, "tempFile");
+    boolean createFile = file.createNewFile();
+    assertTrue(createFile);
+    assertTrue(file.isFile());
+    searcher.openSpellChecker(file);
+    assertFalse(searcher.isSpellCheckerOpen());
+  }
+
+  @Test
+  public void testOpenSpellcheckerUnreadable(@TempDir File tempDir) throws IOException {
+    searcher.closeSpellChecker();
+    File file = new File(tempDir, "tempFile");
+    boolean createFile = file.createNewFile();
+    assertTrue(createFile);
+    assertTrue(file.isFile());
+    file.setReadable(false);
+    searcher.openSpellChecker(file);
+    assertFalse(searcher.isSpellCheckerOpen());
+  }
+
+  @Test
   public void testSuggestion() {
     List<String> suggestions = searcher.suggestions("aaa", 20);
     assertNotNull(suggestions);
