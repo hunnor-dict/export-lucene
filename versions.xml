@@ -4,6 +4,7 @@
 		<ignoreVersion type="regex">.*-alpha[\d]+</ignoreVersion>
 		<ignoreVersion type="regex">.*-beta[\d]+</ignoreVersion>
 		<ignoreVersion type="regex">.*-M[\d]+</ignoreVersion>
+		<ignoreVersion type="regex">.*-RC[\d]+</ignoreVersion>
 	</ignoreVersions>
 	<rules>
 		<rule groupId="org.apache.lucene" comparisonMethod="maven">
