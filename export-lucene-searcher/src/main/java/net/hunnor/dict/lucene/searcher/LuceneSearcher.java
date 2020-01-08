@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import net.hunnor.dict.lucene.analyzer.PerFieldAnalyzer;
 import net.hunnor.dict.lucene.constants.Lucene;
@@ -35,12 +33,8 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.search.spell.SpellChecker;
 import org.apache.lucene.store.NIOFSDirectory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LuceneSearcher {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(LuceneSearcher.class);
 
   private static LuceneSearcher instance = new LuceneSearcher();
 
@@ -52,15 +46,10 @@ public class LuceneSearcher {
 
   /**
    * Get the single instance of the class.
-   *
    * @return the single instance of the class
    */
   public static LuceneSearcher getInstance() {
     return instance;
-  }
-
-  public void setSpellChecker(SpellChecker spellChecker) {
-    this.spellChecker = spellChecker;
   }
 
   public boolean isOpen() {
@@ -82,8 +71,8 @@ public class LuceneSearcher {
    * @throws IOException if the directory cannot be opened
    */
   public void openSpellChecker(File spellingDirectory) throws IOException {
-    // The searcher module should only use an existing spelling index
-    if (spellingDirectory.canRead() && spellingDirectory.isDirectory()) {
+    if (spellingDirectory.canRead()) {
+      // The searcher module should only use an existing spelling index
       File[] files = spellingDirectory.listFiles();
       if (files != null && files.length > 0) {
         NIOFSDirectory directory = new NIOFSDirectory(spellingDirectory);
@@ -94,7 +83,6 @@ public class LuceneSearcher {
 
   /**
    * Close the index reader.
-   *
    * @throws IOException if there is a low-level IO error
    */
   public void close() throws IOException {
@@ -106,7 +94,6 @@ public class LuceneSearcher {
 
   /**
    * Close the spell checker.
-   *
    * @throws IOException if there is a low-level IO error
    */
   public void closeSpellChecker() throws IOException {
@@ -118,49 +105,48 @@ public class LuceneSearcher {
 
   /**
    * Suggest terms from the index.
-   *
    * @param userQuery the user query to return suggestions for
    * @param max the maximum number of suggestions to return
    * @return a set of matching terms
+   * @throws IOException if there is a low-level IO error
    */
-  public List<String> suggestions(String userQuery, int max) {
+  public List<String> suggestions(String userQuery, int max) throws IOException {
     Query query = createQueryFromFields(userQuery, new String[] {Lucene.SUGGESTION}, true);
     SortField sortField = new SortField(Lucene.SUGGESTION, SortField.STRING);
     Sort sort = new Sort(sortField);
     List<Document> documents = docsFromQuery(query, sort, max);
-    return documents.stream()
-        .map(document -> document.get(Lucene.SUGGESTION))
-        .filter(Objects::nonNull)
-        .distinct()
-        .collect(Collectors.toList());
+    List<String> suggestions = new ArrayList<>();
+    for (Document document : documents) {
+      String suggestion = document.get(Lucene.SUGGESTION);
+      if (!suggestions.contains(suggestion)) {
+        suggestions.add(suggestion);
+      }
+    }
+    return suggestions;
   }
 
   /**
    * Suggest terms similar to the user query, using Lucene's spell checker.
-   *
    * @param userQuery the user query to return suggestions for
    * @param max the maximum number of spelling suggestions to return
    * @return a set of terms returned by the spell checker
+   * @throws IOException if there is a low-level IO error
    */
-  public List<String> spellingSuggestions(String userQuery, int max) {
+  public List<String> spellingSuggestions(String userQuery, int max) throws IOException {
     List<String> results = new ArrayList<>();
-    try {
-      String[] suggestions = executeSuggestion(userQuery, max);
-      results.addAll(Arrays.asList(suggestions));
-    } catch (IOException ex) {
-      LOGGER.error(ex.getMessage(), ex);
-    }
+    String[] suggestions = executeSuggestion(userQuery, max);
+    results.addAll(Arrays.asList(suggestions));
     return results;
   }
 
   /**
    * Search the index for entries matching the query string.
-   *
    * @param userQuery the string to search for
    * @param max the maximum number of results to return
    * @return a set of matching Entry objects
+   * @throws IOException if there is a low-level IO error
    */
-  public List<Entry> search(String userQuery, int max) {
+  public List<Entry> search(String userQuery, int max) throws IOException {
     Query query = createRootsQuery(userQuery);
     SortField sortField = new SortField(Lucene.SORT, SortField.STRING);
     Sort sort = new Sort(sortField);
@@ -173,20 +159,23 @@ public class LuceneSearcher {
         documents = docsFromQuery(query, sort, max);
       }
     }
-    return documents.stream()
-        .map(this::documentToEntry)
-        .collect(Collectors.toList());
+    List<Entry> entryList = new ArrayList<>();
+    for (Document document : documents) {
+      Entry entry = documentToEntry(document);
+      entryList.add(entry);
+    }
+    return entryList;
   }
 
   /**
    * Search the index for entries matching the query string.
-   *
    * @param userQuery the string to search for
    * @param language the source language
    * @param max the maximum number of results to return
    * @return a set of matching Entry objects
+   * @throws IOException if there is a low-level IO error
    */
-  public List<Entry> search(String userQuery, Language language, int max) {
+  public List<Entry> search(String userQuery, Language language, int max) throws IOException {
     Query query = createRootsQuery(userQuery, language);
     SortField sortField = new SortField(Lucene.SORT, SortField.STRING);
     Sort sort = new Sort(sortField);
@@ -199,17 +188,20 @@ public class LuceneSearcher {
         documents = docsFromQuery(query, sort, max);
       }
     }
-    return documents.stream()
-        .map(this::documentToEntry)
-        .collect(Collectors.toList());
+    List<Entry> entryList = new ArrayList<>();
+    for (Document document : documents) {
+      Entry entry = documentToEntry(document);
+      entryList.add(entry);
+    }
+    return entryList;
   }
 
-  private Query createRootsQuery(String userQuery) {
+  private Query createRootsQuery(String userQuery) throws IOException {
     String[] fields = new String[] {Lucene.HU_ROOTS, Lucene.NO_ROOTS};
     return createQueryFromFields(userQuery, fields, false);
   }
 
-  private Query createRootsQuery(String userQuery, Language language) {
+  private Query createRootsQuery(String userQuery, Language language) throws IOException {
     String[] fields;
     if (Language.HU.equals(language)) {
       fields = new String[] {Lucene.HU_ROOTS};
@@ -219,12 +211,12 @@ public class LuceneSearcher {
     return createQueryFromFields(userQuery, fields, false);
   }
 
-  private Query createFormsQuery(String userQuery) {
+  private Query createFormsQuery(String userQuery) throws IOException {
     String[] fields = new String[] {Lucene.HU_FORMS, Lucene.NO_FORMS};
     return createQueryFromFields(userQuery, fields, false);
   }
 
-  private Query createFormsQuery(String userQuery, Language language) {
+  private Query createFormsQuery(String userQuery, Language language) throws IOException {
     String[] fields;
     if (Language.HU.equals(language)) {
       fields = new String[] {Lucene.HU_FORMS};
@@ -234,13 +226,13 @@ public class LuceneSearcher {
     return createQueryFromFields(userQuery, fields, false);
   }
 
-  private Query createFullTextQuery(String userQuery) {
+  private Query createFullTextQuery(String userQuery) throws IOException {
     String[] fields = new String[] {Lucene.NO_TRANS, Lucene.HU_QUOTE, Lucene.NO_QUOTETRANS,
         Lucene.HU_TRANS, Lucene.NO_QUOTE, Lucene.HU_QUOTETRANS};
     return createQueryFromFields(userQuery, fields, false);
   }
 
-  private Query createFullTextQuery(String userQuery, Language language) {
+  private Query createFullTextQuery(String userQuery, Language language) throws IOException {
     String[] fields;
     if (Language.HU.equals(language)) {
       fields = new String[] {Lucene.NO_TRANS, Lucene.HU_QUOTE, Lucene.NO_QUOTETRANS};
@@ -250,28 +242,25 @@ public class LuceneSearcher {
     return createQueryFromFields(userQuery, fields, false);
   }
 
-  private Query createQueryFromFields(String userQuery, String[] fields, boolean wildcards) {
+  private Query createQueryFromFields(String userQuery, String[] fields, boolean wildcards)
+      throws IOException {
     BooleanQuery luceneQuery = new BooleanQuery();
-    Arrays.stream(fields).forEach(field -> {
+    for (String field : fields) {
       BooleanQuery fieldQuery = new BooleanQuery();
-      try {
-        List<String> tokens = extractTokens(userQuery, field);
-        tokens.forEach(token -> {
-          if (wildcards) {
-            WildcardQuery wildcardQuery = new WildcardQuery(
-                new Term(field, token + "*"));
-            fieldQuery.add(new BooleanClause(wildcardQuery, Occur.MUST));
-          } else {
-            TermQuery termQuery = new TermQuery(
-                new Term(field, token));
-            fieldQuery.add(new BooleanClause(termQuery, Occur.MUST));
-          }
-        });
-      } catch (IOException ex) {
-        LOGGER.error(ex.getMessage(), ex);
+      List<String> tokens = extractTokens(userQuery, field);
+      for (String token : tokens) {
+        if (wildcards) {
+          WildcardQuery wildcardQuery = new WildcardQuery(
+              new Term(field, token + "*"));
+          fieldQuery.add(new BooleanClause(wildcardQuery, Occur.MUST));
+        } else {
+          TermQuery termQuery = new TermQuery(
+              new Term(field, token));
+          fieldQuery.add(new BooleanClause(termQuery, Occur.MUST));
+        }
       }
       luceneQuery.add(new BooleanClause(fieldQuery, Occur.SHOULD));
-    });
+    }
     return luceneQuery;
   }
 
@@ -286,17 +275,14 @@ public class LuceneSearcher {
     return tokens;
   }
 
-  private List<Document> docsFromQuery(Query query, Sort sort, int max) {
+  private List<Document> docsFromQuery(Query query, Sort sort, int max) throws IOException {
     List<Document> results = new ArrayList<>();
-    try (IndexSearcher indexSearcher = new IndexSearcher(indexReader)) {
-      TopDocs topDocs = executeSearch(indexSearcher, query, max, sort);
-      ScoreDoc[] scoreDocs = topDocs.scoreDocs;
-      for (ScoreDoc scoreDoc: scoreDocs) {
-        Document document = extractDocument(scoreDoc);
-        results.add(document);
-      }
-    } catch (IOException ex) {
-      LOGGER.error(ex.getMessage(), ex);
+    IndexSearcher indexSearcher = new IndexSearcher(indexReader);
+    TopDocs topDocs = executeSearch(indexSearcher, query, max, sort);
+    ScoreDoc[] scoreDocs = topDocs.scoreDocs;
+    for (ScoreDoc scoreDoc: scoreDocs) {
+      Document document = extractDocument(scoreDoc);
+      results.add(document);
     }
     return results;
   }

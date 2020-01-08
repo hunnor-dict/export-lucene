@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.spy;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,8 +13,6 @@ import net.hunnor.dict.lucene.model.Entry;
 import net.hunnor.dict.lucene.model.Language;
 import net.hunnor.dict.lucene.searcher.LuceneSearcher;
 
-import org.apache.lucene.search.spell.SpellChecker;
-import org.apache.lucene.store.NIOFSDirectory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -109,7 +105,7 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testSuggestion() {
+  public void testSuggestion() throws IOException {
     List<String> suggestions = searcher.suggestions("aaa", 20);
     assertNotNull(suggestions);
     assertEquals(3, suggestions.size());
@@ -119,7 +115,7 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testSpellingSuggestions() {
+  public void testSpellingSuggestions() throws IOException {
     List<String> suggestions = searcher.spellingSuggestions("aabaaa", 5);
     assertNotNull(suggestions);
     assertEquals(3, suggestions.size());
@@ -127,35 +123,25 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testSpellingSuggestionsError() throws Exception {
-    SpellChecker spySpellChecker = spy(new SpellChecker(new NIOFSDirectory(new File(
-        getClass().getResource("/lucene-spellchecker-index").getFile()))));
-    doThrow(new IOException()).when(spySpellChecker).suggestSimilar("aaa", 20);
-    searcher.setSpellChecker(spySpellChecker);
-    List<String> suggestions = searcher.spellingSuggestions("aaa", 20);
-    assertEquals(0, suggestions.size());
-  }
-
-  @Test
-  public void testSearchForRoots() {
+  public void testSearchForRoots() throws IOException {
     List<Entry> results = searcher.search("aaaaaa", 100);
     assertEquals(1, results.size());
   }
 
   @Test
-  public void testSearchForForms() {
+  public void testSearchForForms() throws IOException {
     List<Entry> results = searcher.search("bbbbbb", 100);
     assertEquals(2, results.size());
   }
 
   @Test
-  public void testSearchForQuotes() {
+  public void testSearchForQuotes() throws IOException {
     List<Entry> results = searcher.search("cccccc", 100);
     assertEquals(2, results.size());
   }
 
   @Test
-  public void testSearchForRootsLang() {
+  public void testSearchForRootsLang() throws IOException {
     List<Entry> results = searcher.search("aaaaaa", Language.HU, 100);
     assertEquals(1, results.size());
     results = searcher.search("aaaaab", Language.NO, 100);
@@ -163,7 +149,7 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testSearchForFormsLang() {
+  public void testSearchForFormsLang() throws IOException {
     List<Entry> results = searcher.search("bbbbbb", Language.HU, 100);
     assertEquals(1, results.size());
     results = searcher.search("bbbbbb", Language.NO, 100);
@@ -171,7 +157,7 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testSearchForQuotesLang() {
+  public void testSearchForQuotesLang() throws IOException {
     List<Entry> results = searcher.search("cccccc", Language.HU, 100);
     assertEquals(1, results.size());
     results = searcher.search("cccccc", Language.NO, 100);
@@ -179,7 +165,7 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testNoResults() {
+  public void testNoResults() throws IOException {
     List<Entry> results = searcher.search("ffffff", Language.HU, 100);
     assertEquals(0, results.size());
   }
