@@ -227,8 +227,8 @@ public class StaxParser {
     }
     if (parserState.getInflParBuffer().length() > 0) {
       parserState.getInflParBuffer().append("; ");
-      parserState.setInflSeqBuffer(new StringBuilder());
     }
+    parserState.setInflSeqBuffer(new StringBuilder());
   }
 
   private void processSenseGrpStart(String element, ParserState parserState) {
@@ -333,9 +333,6 @@ public class StaxParser {
   private void processInflParEnd(String element, ParserState parserState) {
     if (!INFL_PAR.equals(element)) {
       return;
-    }
-    if (parserState.getInflParBuffer().length() > 0) {
-      parserState.getInflParBuffer().append("; ");
     }
     parserState.getInflParBuffer().append(parserState.getInflSeqBuffer());
     parserState.setCollectText(false);

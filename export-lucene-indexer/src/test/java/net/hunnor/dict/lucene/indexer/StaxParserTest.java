@@ -102,9 +102,9 @@ public class StaxParserTest {
     assertEquals(roots, entry.getRoots());
     assertEquals("orth1", entry.getSort());
     assertEquals(
-        "<b>orth1</b> pos1 suff1 <b>orth2</b>"
-            + " (inflSeq1, inflSeq2, inflSeq3, inflSeq4; ;"
-            + " inflSeq5, inflSeq6) <b>orth3</b> ",
+        "<b>orth1</b> pos1 suff1"
+        + " <b>orth2</b> (inflSeq3, inflSeq4; inflSeq5, inflSeq6)"
+        + " <b>orth3</b> ",
         entry.getText());
   }
 
