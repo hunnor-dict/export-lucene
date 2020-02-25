@@ -3,12 +3,10 @@ package net.hunnor.dict.lucene.indexer;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
-
 import net.hunnor.dict.lucene.analyzer.PerFieldAnalyzer;
 import net.hunnor.dict.lucene.constants.Lucene;
 import net.hunnor.dict.lucene.model.Entry;
 import net.hunnor.dict.lucene.model.Language;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;

@@ -15,11 +15,11 @@
 		<ant.version>1.10.7</ant.version>
 		<apache.cli.version>1.4</apache.cli.version>
 		<maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
-		<maven.jar.plugin.version>3.1.2</maven.jar.plugin.version>
+		<maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
 		<maven.resources.plugin.version>3.1.0</maven.resources.plugin.version>
 		<maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
 		<mockito.version>3.2.4</mockito.version>
-		<shade.version>3.2.1</shade.version>
+		<maven.shade.plugin.version>3.2.2</maven.shade.plugin.version>
 	</properties>
 
 	<dependencies>
@@ -109,7 +109,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>${shade.version}</version>
+				<version>${maven.shade.plugin.version}</version>
 				<executions>
 					<execution>
 						<phase>package</phase>

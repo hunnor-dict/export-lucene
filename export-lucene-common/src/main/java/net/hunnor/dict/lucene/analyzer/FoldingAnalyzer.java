@@ -1,7 +1,6 @@
 package net.hunnor.dict.lucene.analyzer;
 
 import java.io.Reader;
-
 import org.apache.lucene.analysis.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.LowerCaseFilter;

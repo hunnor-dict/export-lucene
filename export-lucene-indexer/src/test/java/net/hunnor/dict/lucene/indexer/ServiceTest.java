@@ -6,13 +6,10 @@ import static org.mockito.Mockito.spy;
 
 import java.io.File;
 import java.io.IOException;
-
 import javax.xml.stream.XMLStreamException;
-
 import net.hunnor.dict.lucene.indexer.LuceneIndexer;
 import net.hunnor.dict.lucene.indexer.Service;
 import net.hunnor.dict.lucene.model.Language;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 

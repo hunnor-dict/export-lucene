@@ -6,10 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-
 import net.hunnor.dict.lucene.analyzer.PerFieldAnalyzer;
 import net.hunnor.dict.lucene.constants.Lucene;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;

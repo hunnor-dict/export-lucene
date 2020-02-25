@@ -19,7 +19,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import net.hunnor.dict.lucene.indexer.StaxParser;
 import net.hunnor.dict.lucene.model.Entry;
-
 import org.junit.jupiter.api.Test;
 
 public class StaxParserTest {

@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import net.hunnor.dict.lucene.indexer.RomanNumerals;
-
 import org.junit.jupiter.api.Test;
 
 public class RomanNumeralsTest {

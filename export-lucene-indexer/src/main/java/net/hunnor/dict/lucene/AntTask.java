@@ -2,7 +2,6 @@ package net.hunnor.dict.lucene;
 
 import net.hunnor.dict.lucene.indexer.Service;
 import net.hunnor.dict.lucene.model.Language;
-
 import org.apache.tools.ant.Task;
 
 public class AntTask extends Task {

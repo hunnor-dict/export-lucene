@@ -2,9 +2,7 @@ package net.hunnor.dict.lucene.analyzer;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import net.hunnor.dict.lucene.constants.Lucene;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.KeywordAnalyzer;

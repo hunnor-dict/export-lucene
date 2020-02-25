@@ -1,10 +1,8 @@
 package net.hunnor.dict.lucene;
 
 import java.util.Locale;
-
 import net.hunnor.dict.lucene.indexer.Service;
 import net.hunnor.dict.lucene.model.Language;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
