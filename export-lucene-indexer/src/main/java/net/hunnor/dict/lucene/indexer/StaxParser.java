@@ -204,7 +204,6 @@ public class StaxParser {
     if (!FORM.equals(element)) {
       return;
     }
-    parserState.setRegularInflection(false);
     parserState.setInflParBuffer(new StringBuilder());
     parserState.setPrimaryForm("yes".equals(reader.getAttributeValue(null, "primary")));
   }
@@ -215,7 +214,6 @@ public class StaxParser {
     }
     if ("suff".equals(reader.getAttributeValue(null, "type"))) {
       parserState.setCollectText(true);
-      parserState.setRegularInflection(true);
     }
   }
 
@@ -278,7 +276,7 @@ public class StaxParser {
     parserState
         .getText()
         .append(parserState.getFormBuffer())
-        .append(" ")
+        .append("<br/>")
         .append(parserState.getSenseGrpBuffer());
     parserState.getEntry().setText(parserState.getText().toString());
     parserState.setEntryComplete(true);
@@ -288,8 +286,11 @@ public class StaxParser {
     if (!FORM.equals(element)) {
       return;
     }
-    if (!parserState.isRegularInflection() && parserState.getInflParBuffer().length() > 0) {
-      parserState.getFormBuffer().append(" (" + parserState.getInflParBuffer() + ")");
+    if (parserState.getInflParBuffer().length() > 0) {
+      parserState.getFormBuffer()
+          .append("<br/><small>")
+          .append(parserState.getInflParBuffer())
+          .append("</small>");
     }
   }
 
@@ -302,7 +303,7 @@ public class StaxParser {
       parserState.getEntry().setSort(parserState.getCharacters().toString());
     }
     if (parserState.getFormBuffer().length() > 0) {
-      parserState.getFormBuffer().append(" ");
+      parserState.getFormBuffer().append("<br/>");
     }
     parserState.getFormBuffer().append("<b>" + parserState.getCharacters().toString() + "</b>");
     parserState.setCollectText(false);

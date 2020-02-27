@@ -20,8 +20,6 @@ public final class ParserState {
 
   private boolean primaryForm;
 
-  private boolean regularInflection;
-
   private StringBuilder inflParBuffer = new StringBuilder();
 
   private StringBuilder inflSeqBuffer = new StringBuilder();
@@ -100,14 +98,6 @@ public final class ParserState {
 
   public void setPrimaryForm(final boolean primaryForm) {
     this.primaryForm = primaryForm;
-  }
-
-  public boolean isRegularInflection() {
-    return regularInflection;
-  }
-
-  public void setRegularInflection(final boolean regularInflection) {
-    this.regularInflection = regularInflection;
   }
 
   public StringBuilder getInflParBuffer() {

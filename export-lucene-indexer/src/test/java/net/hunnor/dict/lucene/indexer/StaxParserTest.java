@@ -102,8 +102,10 @@ public class StaxParserTest {
     assertEquals("orth1", entry.getSort());
     assertEquals(
         "<b>orth1</b> pos1 suff1"
-        + " <b>orth2</b> (inflSeq3, inflSeq4; inflSeq5, inflSeq6)"
-        + " <b>orth3</b> ",
+        + "<br/><small>inflSeq1, inflSeq2</small>"
+        + "<br/><b>orth2</b>"
+        + "<br/><small>inflSeq3, inflSeq4; inflSeq5, inflSeq6</small>"
+        + "<br/><b>orth3</b><br/>",
         entry.getText());
   }
 
@@ -117,7 +119,7 @@ public class StaxParserTest {
     assertEquals(roots, entry.getRoots());
     assertNull(entry.getSort());
     assertEquals(
-        " <b>I</b> <b>1</b> trans1 <b>2</b> trans2"
+        "<br/><b>I</b> <b>1</b> trans1 <b>2</b> trans2"
             + " <b>II</b> <b>1</b> trans3 <b>2</b> trans4 <b>3</b> trans5"
             + " <b>III</b> trans6",
         entry.getText());
@@ -132,7 +134,7 @@ public class StaxParserTest {
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
     assertNull(entry.getSort());
-    assertEquals(" <i>lbl1</i> <i>lbl2</i>", entry.getText());
+    assertEquals("<br/><i>lbl1</i> <i>lbl2</i>", entry.getText());
   }
 
   @Test
@@ -144,7 +146,7 @@ public class StaxParserTest {
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
     assertNull(entry.getSort());
-    assertEquals(" <i>lbl1</i> trans1", entry.getText());
+    assertEquals("<br/><i>lbl1</i> trans1", entry.getText());
   }
 
   @Test
@@ -156,7 +158,7 @@ public class StaxParserTest {
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
     assertNull(entry.getSort());
-    assertEquals(" <i>lbl1</i>; <b>q1</b> trans1", entry.getText());
+    assertEquals("<br/><i>lbl1</i>; <b>q1</b> trans1", entry.getText());
   }
 
   @Test
@@ -168,7 +170,7 @@ public class StaxParserTest {
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
     assertNull(entry.getSort());
-    assertEquals(" trans1", entry.getText());
+    assertEquals("<br/>trans1", entry.getText());
   }
 
   @Test
@@ -180,7 +182,7 @@ public class StaxParserTest {
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
     assertNull(entry.getSort());
-    assertEquals(" trans1, <i>lbl1</i>", entry.getText());
+    assertEquals("<br/>trans1, <i>lbl1</i>", entry.getText());
   }
 
   @Test
@@ -192,7 +194,7 @@ public class StaxParserTest {
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
     assertNull(entry.getSort());
-    assertEquals(" trans1, trans2", entry.getText());
+    assertEquals("<br/>trans1, trans2", entry.getText());
   }
 
   @Test
@@ -204,7 +206,7 @@ public class StaxParserTest {
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
     assertNull(entry.getSort());
-    assertEquals(" trans1; <b>q1</b> trans2", entry.getText());
+    assertEquals("<br/>trans1; <b>q1</b> trans2", entry.getText());
   }
 
   @Test
@@ -216,7 +218,7 @@ public class StaxParserTest {
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
     assertNull(entry.getSort());
-    assertEquals(" <b>q1</b> trans1; trans2", entry.getText());
+    assertEquals("<br/><b>q1</b> trans1; trans2", entry.getText());
   }
 
   @Test
@@ -228,7 +230,7 @@ public class StaxParserTest {
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
     assertNull(entry.getSort());
-    assertEquals(" <b>q1</b>, <b>q2</b> trans1", entry.getText());
+    assertEquals("<br/><b>q1</b>, <b>q2</b> trans1", entry.getText());
   }
 
   @Test
@@ -240,7 +242,7 @@ public class StaxParserTest {
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
     assertNull(entry.getSort());
-    assertEquals(" <b>q1</b> trans1, trans2", entry.getText());
+    assertEquals("<br/><b>q1</b> trans1, trans2", entry.getText());
   }
 
   @Test
@@ -252,7 +254,7 @@ public class StaxParserTest {
     Set<String> roots = new HashSet<>();
     assertEquals(roots, entry.getRoots());
     assertNull(entry.getSort());
-    assertEquals(" <i>lbl1</i>; <b>q1</b> trans1", entry.getText());
+    assertEquals("<br/><i>lbl1</i>; <b>q1</b> trans1", entry.getText());
   }
 
 }
