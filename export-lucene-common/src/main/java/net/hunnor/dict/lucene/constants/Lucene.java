@@ -18,6 +18,10 @@ public class Lucene {
 
   public static final String NO_ROOTS = "no_roots";
 
+  public static final String HU_ROOTS_LC = "hu_roots_lc";
+
+  public static final String NO_ROOTS_LC = "no_roots_lc";
+
   public static final String HU_FORMS = "hu_forms";
 
   public static final String NO_FORMS = "no_forms";

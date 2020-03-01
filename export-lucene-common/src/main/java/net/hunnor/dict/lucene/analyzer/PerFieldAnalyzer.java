@@ -26,8 +26,12 @@ public final class PerFieldAnalyzer {
     Map<String, Analyzer> mapping = new HashMap<>();
 
     FoldingAnalyzer foldingAnalyzer = new FoldingAnalyzer(version);
+    LowercaseAnalyzer lowercaseAnalyzer = new LowercaseAnalyzer(version);
+
     mapping.put(Lucene.HU_ROOTS, foldingAnalyzer);
+    mapping.put(Lucene.HU_ROOTS_LC, lowercaseAnalyzer);
     mapping.put(Lucene.NO_ROOTS, foldingAnalyzer);
+    mapping.put(Lucene.NO_ROOTS_LC, lowercaseAnalyzer);
     mapping.put(Lucene.HU_FORMS, foldingAnalyzer);
     mapping.put(Lucene.NO_FORMS, foldingAnalyzer);
     mapping.put(Lucene.SORT, foldingAnalyzer);

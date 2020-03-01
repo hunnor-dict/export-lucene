@@ -18,5 +18,19 @@
 				</sense>
 			</senseGrp>
 		</entry>
+		<entry id="2">
+			<formGrp>
+				<form>
+					<orth>ttttó</orth>
+				</form>
+			</formGrp>
+		</entry>
+		<entry id="3">
+			<formGrp>
+				<form>
+					<orth>ttttő</orth>
+				</form>
+			</formGrp>
+		</entry>
 	</entryGrp>
 </hnDict>

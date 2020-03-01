@@ -168,4 +168,29 @@ public class LuceneSearcherTest {
     assertEquals(0, results.size());
   }
 
+  @Test
+  public void testAsciiFolding() throws IOException {
+    List<Entry> results = searcher.search("tttto", Language.HU, 100);
+    assertEquals(2, results.size());
+    results = searcher.search("ttttó", Language.HU, 100);
+    assertEquals(2, results.size());
+    results = searcher.search("ttttő", Language.HU, 100);
+    assertEquals(2, results.size());
+    results = searcher.search("tttto", Language.NO, 100);
+    assertEquals(2, results.size());
+    results = searcher.search("ttttø", Language.NO, 100);
+    assertEquals(2, results.size());
+  }
+
+  @Test
+  public void testSpellingSuggestionsSpecials() throws IOException {
+    List<String> suggestions = searcher.spellingSuggestions("ttttt", 5);
+    assertNotNull(suggestions);
+    assertEquals(4, suggestions.size());
+    assertTrue(suggestions.contains("ttttó"));
+    assertTrue(suggestions.contains("ttttő"));
+    assertTrue(suggestions.contains("tttto"));
+    assertTrue(suggestions.contains("ttttø"));
+  }
+
 }

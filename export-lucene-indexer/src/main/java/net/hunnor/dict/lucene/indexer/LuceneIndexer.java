@@ -125,8 +125,8 @@ public class LuceneIndexer {
    */
   public void createSuggestions() throws IOException {
     if (spellChecker != null) {
-      Dictionary hungarianDictionary = new LuceneDictionary(indexReader, Lucene.HU_ROOTS);
-      Dictionary norwegianDictionary = new LuceneDictionary(indexReader, Lucene.NO_ROOTS);
+      Dictionary hungarianDictionary = new LuceneDictionary(indexReader, Lucene.HU_ROOTS_LC);
+      Dictionary norwegianDictionary = new LuceneDictionary(indexReader, Lucene.NO_ROOTS_LC);
       Analyzer analyzer = PerFieldAnalyzer.getInstance(LUCENE_VERSION);
       IndexWriterConfig indexWriterConfig1 = new IndexWriterConfig(LUCENE_VERSION, analyzer);
       IndexWriterConfig indexWriterConfig2 = new IndexWriterConfig(LUCENE_VERSION, analyzer);
@@ -157,12 +157,14 @@ public class LuceneIndexer {
   private Document toLuceneDocument(Entry entry) {
 
     String rootsField = Lucene.HU_ROOTS;
+    String rootsLcField = Lucene.HU_ROOTS_LC;
     String formsField = Lucene.HU_FORMS;
     String transField = Lucene.HU_TRANS;
     String quoteField = Lucene.HU_QUOTE;
     String quoteTransField = Lucene.HU_QUOTETRANS;
     if (Language.NO.equals(entry.getLang())) {
       rootsField = Lucene.NO_ROOTS;
+      rootsLcField = Lucene.NO_ROOTS_LC;
       formsField = Lucene.NO_FORMS;
       transField = Lucene.NO_TRANS;
       quoteField = Lucene.NO_QUOTE;
@@ -185,6 +187,7 @@ public class LuceneIndexer {
 
     for (String root : entry.getRoots()) {
       document.add(new Field(rootsField, root, Field.Store.YES, Field.Index.ANALYZED));
+      document.add(new Field(rootsLcField, root, Field.Store.YES, Field.Index.ANALYZED));
     }
     for (String form : entry.getForms()) {
       document.add(new Field(formsField, form, Field.Store.NO, Field.Index.ANALYZED));
