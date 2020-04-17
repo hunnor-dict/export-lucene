@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/hunnor-dict/export-lucene.svg?branch=master)](https://travis-ci.org/hunnor-dict/export-lucene)
+![Build](https://github.com/hunnor-dict/export-lucene/workflows/Build/badge.svg)
 
 Command line Java application for creating the Lucene index export of the dictionary.
 
