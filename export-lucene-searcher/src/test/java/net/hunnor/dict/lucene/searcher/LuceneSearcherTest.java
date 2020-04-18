@@ -28,9 +28,9 @@ public class LuceneSearcherTest {
   public void setUp() throws IOException {
     searcher = LuceneSearcher.getInstance();
     searcher.open(new File(
-        getClass().getResource("/lucene-index").getFile()));
+        getClass().getResource("/3_6_2/lucene-index").getFile()));
     searcher.openSpellChecker(new File(
-        getClass().getResource("/lucene-spellchecker-index").getFile()));
+        getClass().getResource("/3_6_2/lucene-spellchecker-index").getFile()));
   }
 
   @AfterEach
