@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import net.hunnor.dict.lucene.model.Entry;
 import org.junit.jupiter.api.Test;
 
 public class EntryTest {

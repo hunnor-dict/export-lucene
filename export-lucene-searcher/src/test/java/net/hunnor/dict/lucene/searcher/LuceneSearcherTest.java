@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.List;
 import net.hunnor.dict.lucene.model.Entry;
 import net.hunnor.dict.lucene.model.Language;
-import net.hunnor.dict.lucene.searcher.LuceneSearcher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

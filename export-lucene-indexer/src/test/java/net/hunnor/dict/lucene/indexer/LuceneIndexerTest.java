@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
-import net.hunnor.dict.lucene.indexer.LuceneIndexer;
 import net.hunnor.dict.lucene.model.Entry;
 import net.hunnor.dict.lucene.model.Language;
 import org.junit.jupiter.api.Test;
