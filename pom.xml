@@ -15,7 +15,7 @@
 		<checkstyle.version>3.1.1</checkstyle.version>
 		<jacoco.version>0.8.7</jacoco.version>
 		<junit5.version>5.7.2</junit5.version>
-		<lucene.version>6.6.6</lucene.version>
+		<lucene.version>7.7.2</lucene.version>
 		<maven.clean.plugin.version>3.1.0</maven.clean.plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>

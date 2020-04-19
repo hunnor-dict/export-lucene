@@ -4,7 +4,7 @@ import org.apache.lucene.util.Version;
 
 public class Lucene {
 
-  public static final Version VERSION = Version.LUCENE_6_6_6;
+  public static final Version VERSION = Version.LUCENE_7_7_2;
 
   public static final String LANG = "lang";
 

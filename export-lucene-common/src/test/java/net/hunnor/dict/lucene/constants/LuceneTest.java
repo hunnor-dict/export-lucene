@@ -9,7 +9,7 @@ class LuceneTest {
 
   @Test
   void versionTest() {
-    assertEquals(Version.LUCENE_6_6_6, Lucene.VERSION);
+    assertEquals(Version.LUCENE_7_7_2, Lucene.VERSION);
   }
 
 }
