@@ -63,30 +63,4 @@ public class Service {
 
   }
 
-  /**
-   * Create the spell checking index from the main index.
-   *
-   * @param indexDir the directory with the main index
-   * @param spellcheckDir the directory to create the spell checking index in
-   */
-  public void indexSuggestions(String indexDir, String spellcheckDir) {
-
-    try {
-
-      luceneIndexer.setIndexDir(indexDir);
-      luceneIndexer.openIndexReader();
-      luceneIndexer.setSpellingDir(spellcheckDir);
-      luceneIndexer.openSpellChecker();
-
-      luceneIndexer.createSuggestions();
-
-      luceneIndexer.closeSpellChecker();
-      luceneIndexer.closeIndexReader();
-
-    } catch (IOException ex) {
-      LOGGER.error(ex.getMessage(), ex);
-    }
-
-  }
-
 }

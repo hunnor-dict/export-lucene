@@ -20,8 +20,6 @@ class ServiceTest {
     assertTrue(file.isFile());
     File indexDir = new File(tempDir, "index");
     service.indexFile(file.getAbsolutePath(), Language.HU, indexDir.getAbsolutePath());
-    File spellingDir = new File(tempDir, "spelling");
-    service.indexSuggestions(indexDir.getAbsolutePath(), spellingDir.getAbsolutePath());
   }
 
   @Test
@@ -48,8 +46,6 @@ class ServiceTest {
     service.indexFile(file.getAbsolutePath(), Language.HU, indexDir.getAbsolutePath());
     File[] indexFiles = indexDir.listFiles();
     assertTrue(indexFiles.length > 0);
-    File spellingDir = new File(tempDir, "spelling");
-    service.indexSuggestions(indexDir.getAbsolutePath(), spellingDir.getAbsolutePath());
   }
 
 }

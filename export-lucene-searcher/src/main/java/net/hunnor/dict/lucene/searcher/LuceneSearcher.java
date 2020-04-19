@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import net.hunnor.dict.lucene.analyzer.PerFieldAnalyzer;
@@ -16,6 +16,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -29,7 +30,8 @@ import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.WildcardQuery;
-import org.apache.lucene.search.spell.SpellChecker;
+import org.apache.lucene.search.spell.DirectSpellChecker;
+import org.apache.lucene.search.spell.SuggestWord;
 import org.apache.lucene.store.NIOFSDirectory;
 
 public class LuceneSearcher {
@@ -38,9 +40,9 @@ public class LuceneSearcher {
 
   private IndexReader indexReader;
 
-  private SpellChecker spellChecker;
+  private DirectSpellChecker directSpellChecker;
 
-  private Analyzer analyzer = PerFieldAnalyzer.getInstance(Lucene.VERSION);
+  private Analyzer analyzer = PerFieldAnalyzer.getInstance();
 
   /**
    * Get the single instance of the class.
@@ -55,26 +57,17 @@ public class LuceneSearcher {
   }
 
   public boolean isSpellCheckerOpen() {
-    return spellChecker != null;
-  }
-
-  public void open(File indexDirectory) throws IOException {
-    indexReader = IndexReader.open(new NIOFSDirectory(indexDirectory));
+    return directSpellChecker != null;
   }
 
   /**
-   * Open a spell checker if the directory exists.
-   * @param spellingDirectory the spell checker directory
-   * @throws IOException if the directory cannot be opened
+   * Open index reader and spell checker on the directory.
+   * @param indexDirectory the directory of the index
+   * @throws IOException if there is a low-level IO error
    */
-  public void openSpellChecker(File spellingDirectory) throws IOException {
-    if (spellingDirectory.canRead()) {
-      // The searcher module should only use an existing spelling index
-      File[] files = spellingDirectory.listFiles();
-      if (files != null && files.length > 0) {
-        spellChecker = new SpellChecker(new NIOFSDirectory(spellingDirectory));
-      }
-    }
+  public void open(File indexDirectory) throws IOException {
+    indexReader = DirectoryReader.open(new NIOFSDirectory(indexDirectory));
+    directSpellChecker = new DirectSpellChecker();
   }
 
   /**
@@ -82,20 +75,10 @@ public class LuceneSearcher {
    * @throws IOException if there is a low-level IO error
    */
   public void close() throws IOException {
+    directSpellChecker = null;
     if (indexReader != null) {
       indexReader.close();
       indexReader = null;
-    }
-  }
-
-  /**
-   * Close the spell checker.
-   * @throws IOException if there is a low-level IO error
-   */
-  public void closeSpellChecker() throws IOException {
-    if (spellChecker != null) {
-      spellChecker.close();
-      spellChecker = null;
     }
   }
 
@@ -108,7 +91,7 @@ public class LuceneSearcher {
    */
   public List<String> suggestions(String userQuery, int max) throws IOException {
     Query query = createQueryFromFields(userQuery, new String[] {Lucene.SUGGESTION}, true);
-    SortField sortField = new SortField(Lucene.SUGGESTION, SortField.STRING);
+    SortField sortField = new SortField(Lucene.SUGGESTION, SortField.Type.STRING);
     Sort sort = new Sort(sortField);
     List<Document> documents = docsFromQuery(query, sort, max);
     List<String> suggestions = new ArrayList<>();
@@ -130,8 +113,19 @@ public class LuceneSearcher {
    */
   public List<String> spellingSuggestions(String userQuery, int max) throws IOException {
     List<String> results = new ArrayList<>();
-    String[] suggestions = executeSuggestion(userQuery, max);
-    results.addAll(Arrays.asList(suggestions));
+    String[] fields = new String[]{Lucene.HU_ROOTS_LC, Lucene.NO_ROOTS_LC};
+    for (String field : fields) {
+      SuggestWord[] suggestWords = executeSuggestion(new Term(field, userQuery), max);
+      for (SuggestWord suggestWord : suggestWords) {
+        if (!results.contains(suggestWord.string)) {
+          results.add(suggestWord.string);
+        }
+      }
+    }
+    results.sort(Comparator.naturalOrder());
+    if (results.size() > max) {
+      results = results.subList(0, max - 1);
+    }
     return results;
   }
 
@@ -144,7 +138,7 @@ public class LuceneSearcher {
    */
   public List<Entry> search(String userQuery, int max) throws IOException {
     Query query = createRootsQuery(userQuery);
-    SortField sortField = new SortField(Lucene.SORT, SortField.STRING);
+    SortField sortField = new SortField(Lucene.SORT, SortField.Type.STRING);
     Sort sort = new Sort(sortField);
     List<Document> documents = docsFromQuery(query, sort, max);
     if (documents.isEmpty()) {
@@ -173,7 +167,7 @@ public class LuceneSearcher {
    */
   public List<Entry> search(String userQuery, Language language, int max) throws IOException {
     Query query = createRootsQuery(userQuery, language);
-    SortField sortField = new SortField(Lucene.SORT, SortField.STRING);
+    SortField sortField = new SortField(Lucene.SORT, SortField.Type.STRING);
     Sort sort = new Sort(sortField);
     List<Document> documents = docsFromQuery(query, sort, max);
     if (documents.isEmpty()) {
@@ -264,10 +258,13 @@ public class LuceneSearcher {
     List<String> tokens = new ArrayList<>();
     Reader reader = new StringReader(query);
     TokenStream tokenStream = analyzer.tokenStream(field, reader);
+    tokenStream.reset();
     CharTermAttribute attribute = tokenStream.getAttribute(CharTermAttribute.class);
     while (tokenStream.incrementToken()) {
       tokens.add(attribute.toString());
     }
+    tokenStream.end();
+    tokenStream.close();
     return tokens;
   }
 
@@ -291,8 +288,8 @@ public class LuceneSearcher {
     return entry;
   }
 
-  private String[] executeSuggestion(String query, int maxSuggestions) throws IOException {
-    return spellChecker.suggestSimilar(query, maxSuggestions);
+  private SuggestWord[] executeSuggestion(Term term, int maxSuggestions) throws IOException {
+    return directSpellChecker.suggestSimilar(term, maxSuggestions, indexReader);
   }
 
   private TopDocs executeSearch(IndexSearcher indexSearcher, Query query,

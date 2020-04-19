@@ -13,7 +13,6 @@ import net.hunnor.dict.lucene.model.Language;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
 class LuceneSearcherTest {
 
@@ -28,15 +27,12 @@ class LuceneSearcherTest {
   void setUp() throws IOException {
     searcher = LuceneSearcher.getInstance();
     searcher.open(new File(
-        getClass().getResource("/3_6_2/lucene-index").getFile()));
-    searcher.openSpellChecker(new File(
-        getClass().getResource("/3_6_2/lucene-spellchecker-index").getFile()));
+        getClass().getResource("/4_10_4/lucene-index").getFile()));
   }
 
   @AfterEach
   void tearDown() throws IOException {
     searcher.close();
-    searcher.closeSpellChecker();
   }
 
   @Test
@@ -48,14 +44,6 @@ class LuceneSearcherTest {
   }
 
   @Test
-  void testCloseSpellChecker() throws IOException {
-    searcher.closeSpellChecker();
-    assertFalse(searcher.isSpellCheckerOpen());
-    searcher.closeSpellChecker();
-    assertFalse(searcher.isSpellCheckerOpen());
-  }
-
-  @Test
   void testOpen() throws IOException {
     assertTrue(searcher.isOpen());
   }
@@ -63,42 +51,6 @@ class LuceneSearcherTest {
   @Test
   void testOpenSpellChecker() throws IOException {
     assertTrue(searcher.isSpellCheckerOpen());
-  }
-
-  @Test
-  void testOpenSpellCheckerNewDirectory(@TempDir File tempDir) throws IOException {
-    searcher.closeSpellChecker();
-    File directory = new File(tempDir, "tempDir");
-    boolean createDirectory = directory.mkdir();
-    assertTrue(createDirectory);
-    assertTrue(directory.isDirectory());
-    File[] files = directory.listFiles();
-    assertEquals(0, files.length);
-    searcher.openSpellChecker(directory);
-    assertFalse(searcher.isSpellCheckerOpen());
-  }
-
-  @Test
-  void testOpenSpellCheckerFile(@TempDir File tempDir) throws IOException {
-    searcher.closeSpellChecker();
-    File file = new File(tempDir, "tempFile");
-    boolean createFile = file.createNewFile();
-    assertTrue(createFile);
-    assertTrue(file.isFile());
-    searcher.openSpellChecker(file);
-    assertFalse(searcher.isSpellCheckerOpen());
-  }
-
-  @Test
-  void testOpenSpellcheckerUnreadable(@TempDir File tempDir) throws IOException {
-    searcher.closeSpellChecker();
-    File file = new File(tempDir, "tempFile");
-    boolean createFile = file.createNewFile();
-    assertTrue(createFile);
-    assertTrue(file.isFile());
-    file.setReadable(false);
-    searcher.openSpellChecker(file);
-    assertFalse(searcher.isSpellCheckerOpen());
   }
 
   @Test

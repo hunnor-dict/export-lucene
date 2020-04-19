@@ -4,12 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import net.hunnor.dict.lucene.constants.Lucene;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.CharArraySet;
-import org.apache.lucene.analysis.KeywordAnalyzer;
-import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.hu.HungarianAnalyzer;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.no.NorwegianAnalyzer;
-import org.apache.lucene.util.Version;
+import org.apache.lucene.analysis.util.CharArraySet;
 
 public final class PerFieldAnalyzer {
 
@@ -18,15 +17,14 @@ public final class PerFieldAnalyzer {
 
   /**
    * Return an instance of the custom Lucene analyzer.
-   * @param version the Lucene version
    * @return a new instance of the analyzer
    */
-  public static Analyzer getInstance(Version version) {
+  public static Analyzer getInstance() {
 
     Map<String, Analyzer> mapping = new HashMap<>();
 
-    FoldingAnalyzer foldingAnalyzer = new FoldingAnalyzer(version);
-    LowercaseAnalyzer lowercaseAnalyzer = new LowercaseAnalyzer(version);
+    FoldingAnalyzer foldingAnalyzer = new FoldingAnalyzer();
+    LowercaseAnalyzer lowercaseAnalyzer = new LowercaseAnalyzer();
 
     mapping.put(Lucene.HU_ROOTS, foldingAnalyzer);
     mapping.put(Lucene.HU_ROOTS_LC, lowercaseAnalyzer);
@@ -38,13 +36,13 @@ public final class PerFieldAnalyzer {
     mapping.put(Lucene.SUGGESTION, foldingAnalyzer);
 
     HungarianAnalyzer hungarianAnalyzer =
-        new HungarianAnalyzer(version, CharArraySet.EMPTY_SET);
+        new HungarianAnalyzer(CharArraySet.EMPTY_SET);
     mapping.put(Lucene.NO_TRANS, hungarianAnalyzer);
     mapping.put(Lucene.HU_QUOTE, hungarianAnalyzer);
     mapping.put(Lucene.NO_QUOTETRANS, hungarianAnalyzer);
 
     NorwegianAnalyzer norwegianAnalyzer =
-        new NorwegianAnalyzer(version, CharArraySet.EMPTY_SET);
+        new NorwegianAnalyzer(CharArraySet.EMPTY_SET);
     mapping.put(Lucene.HU_TRANS, norwegianAnalyzer);
     mapping.put(Lucene.NO_QUOTE, norwegianAnalyzer);
     mapping.put(Lucene.HU_QUOTETRANS, norwegianAnalyzer);
