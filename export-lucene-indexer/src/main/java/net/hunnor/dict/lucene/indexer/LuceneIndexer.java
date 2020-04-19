@@ -10,6 +10,7 @@ import net.hunnor.dict.lucene.model.Language;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.SortedDocValuesField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
@@ -17,6 +18,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.NIOFSDirectory;
+import org.apache.lucene.util.BytesRef;
 
 public class LuceneIndexer {
 
@@ -41,7 +43,7 @@ public class LuceneIndexer {
    */
   public void openIndexReader() throws IOException {
     File file = new File(indexDir);
-    indexReader = DirectoryReader.open(new NIOFSDirectory(file));
+    indexReader = DirectoryReader.open(new NIOFSDirectory(file.toPath()));
   }
 
   /**
@@ -63,8 +65,8 @@ public class LuceneIndexer {
   public void openIndexWriter() throws IOException {
     File file = new File(indexDir);
     Analyzer analyzer = PerFieldAnalyzer.getInstance();
-    IndexWriterConfig indexWriterConfig = new IndexWriterConfig(Lucene.VERSION, analyzer);
-    indexWriter = new IndexWriter(new NIOFSDirectory(file), indexWriterConfig);
+    IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+    indexWriter = new IndexWriter(new NIOFSDirectory(file.toPath()), indexWriterConfig);
   }
 
   /**
@@ -90,6 +92,8 @@ public class LuceneIndexer {
       indexWriter.addDocument(luceneDocument);
       for (String root : indexObject.getRoots()) {
         Document suggestion = new Document();
+        suggestion.add(
+            new SortedDocValuesField(Lucene.SORT, new BytesRef(root)));
         suggestion.add(
             new TextField(Lucene.SUGGESTION, root, Field.Store.YES));
         indexWriter.addDocument(suggestion);
@@ -146,7 +150,7 @@ public class LuceneIndexer {
     }
 
     if (entry.getSort() != null) {
-      document.add(new TextField(Lucene.SORT, entry.getSort(), Field.Store.YES));
+      document.add(new SortedDocValuesField(Lucene.SORT, new BytesRef(entry.getSort())));
     }
 
     if (entry.getText() != null) {

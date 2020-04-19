@@ -22,6 +22,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.BooleanQuery.Builder;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -66,7 +67,7 @@ public class LuceneSearcher {
    * @throws IOException if there is a low-level IO error
    */
   public void open(File indexDirectory) throws IOException {
-    indexReader = DirectoryReader.open(new NIOFSDirectory(indexDirectory));
+    indexReader = DirectoryReader.open(new NIOFSDirectory(indexDirectory.toPath()));
     directSpellChecker = new DirectSpellChecker();
   }
 
@@ -91,7 +92,7 @@ public class LuceneSearcher {
    */
   public List<String> suggestions(String userQuery, int max) throws IOException {
     Query query = createQueryFromFields(userQuery, new String[] {Lucene.SUGGESTION}, true);
-    SortField sortField = new SortField(Lucene.SUGGESTION, SortField.Type.STRING);
+    SortField sortField = new SortField(Lucene.SORT, SortField.Type.STRING);
     Sort sort = new Sort(sortField);
     List<Document> documents = docsFromQuery(query, sort, max);
     List<String> suggestions = new ArrayList<>();
@@ -234,24 +235,24 @@ public class LuceneSearcher {
 
   private Query createQueryFromFields(String userQuery, String[] fields, boolean wildcards)
       throws IOException {
-    BooleanQuery luceneQuery = new BooleanQuery();
+    Builder builder = new BooleanQuery.Builder();
     for (String field : fields) {
-      BooleanQuery fieldQuery = new BooleanQuery();
+      Builder fieldBuilder = new BooleanQuery.Builder();
       List<String> tokens = extractTokens(userQuery, field);
       for (String token : tokens) {
         if (wildcards) {
           WildcardQuery wildcardQuery = new WildcardQuery(
               new Term(field, token + "*"));
-          fieldQuery.add(new BooleanClause(wildcardQuery, Occur.MUST));
+          fieldBuilder.add(new BooleanClause(wildcardQuery, Occur.MUST));
         } else {
           TermQuery termQuery = new TermQuery(
               new Term(field, token));
-          fieldQuery.add(new BooleanClause(termQuery, Occur.MUST));
+          fieldBuilder.add(new BooleanClause(termQuery, Occur.MUST));
         }
       }
-      luceneQuery.add(new BooleanClause(fieldQuery, Occur.SHOULD));
+      builder.add(new BooleanClause(fieldBuilder.build(), Occur.SHOULD));
     }
-    return luceneQuery;
+    return builder.build();
   }
 
   private List<String> extractTokens(String query, String field) throws IOException {
