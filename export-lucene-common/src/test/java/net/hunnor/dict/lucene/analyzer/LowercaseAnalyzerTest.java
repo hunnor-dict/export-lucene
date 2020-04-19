@@ -16,9 +16,11 @@ class LowercaseAnalyzerTest {
   @Test
   void analyzerTest() throws IOException {
 
-    Analyzer analyzer = new LowercaseAnalyzer(Lucene.VERSION);
+    Analyzer analyzer = new LowercaseAnalyzer();
     Reader reader = new StringReader("ÁRVÍZTŰRŐ TÜKÖRFÚRÓGÉP BLÅBÆRSYLTETØY");
     TokenStream stream = analyzer.tokenStream(Lucene.ID, reader);
+
+    stream.reset();
 
     stream.incrementToken();
     CharTermAttribute attribute = stream.getAttribute(CharTermAttribute.class);
@@ -31,6 +33,9 @@ class LowercaseAnalyzerTest {
     stream.incrementToken();
     attribute = stream.getAttribute(CharTermAttribute.class);
     assertEquals("blåbærsyltetøy", attribute.toString());
+
+    stream.end();
+    stream.close();
 
     analyzer.close();
 

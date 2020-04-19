@@ -12,8 +12,6 @@ public class AntTask extends Task {
 
   private String source;
 
-  private String spelling;
-
   public String getLanguage() {
     return language;
   }
@@ -38,14 +36,6 @@ public class AntTask extends Task {
     this.source = source;
   }
 
-  public String getSpelling() {
-    return spelling;
-  }
-
-  public void setSpelling(String spelling) {
-    this.spelling = spelling;
-  }
-
   /**
    * The method executed by Ant.
    */
@@ -55,7 +45,6 @@ public class AntTask extends Task {
     Service service = new Service();
 
     service.indexFile(source, Language.valueOf(language), main);
-    service.indexSuggestions(main, spelling);
 
   }
 

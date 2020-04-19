@@ -17,16 +17,12 @@ class LuceneIndexerTest {
 
   private static final String INDEX_DIR = "index";
 
-  private static final String SPELLING_DIR = "spelling";
-
   @Test
   void closeWhenAlreadyClosed() throws IOException {
     LuceneIndexer indexer = new LuceneIndexer();
     assertNull(indexer.getIndexDir());
     indexer.closeIndexReader();
     indexer.closeIndexWriter();
-    assertNull(indexer.getSpellingDir());
-    indexer.closeSpellChecker();
   }
 
   @Test
@@ -43,13 +39,10 @@ class LuceneIndexerTest {
     LuceneIndexer indexer = new LuceneIndexer();
 
     File indexDir = new File(tempDir, INDEX_DIR);
-    File spellingDir = new File(tempDir, SPELLING_DIR);
 
     indexer.setIndexDir(indexDir.getAbsolutePath());
-    indexer.setSpellingDir(spellingDir.getAbsolutePath());
 
     assertEquals(indexDir.getAbsolutePath(), indexer.getIndexDir());
-    assertEquals(spellingDir.getAbsolutePath(), indexer.getSpellingDir());
 
     Entry entry1 = new Entry();
     entry1.setLang(Language.HU);
@@ -76,15 +69,7 @@ class LuceneIndexerTest {
     indexer.write(entry2);
     indexer.closeIndexWriter();
 
-    indexer.openIndexReader();
-    indexer.createSuggestions();
-    indexer.openSpellChecker();
-    indexer.createSuggestions();
-    indexer.closeSpellChecker();
-    indexer.closeIndexReader();
-
     assertTrue(indexDir.list().length > 0);
-    assertTrue(spellingDir.list().length > 0);
 
   }
 

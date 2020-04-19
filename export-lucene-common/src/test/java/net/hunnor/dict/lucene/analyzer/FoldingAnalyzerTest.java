@@ -16,9 +16,11 @@ class FoldingAnalyzerTest {
   @Test
   void analyzerTest() throws IOException {
 
-    Analyzer analyzer = new FoldingAnalyzer(Lucene.VERSION);
+    Analyzer analyzer = new FoldingAnalyzer();
     Reader reader = new StringReader("åaøo; ÆaE");
     TokenStream stream = analyzer.tokenStream(Lucene.ID, reader);
+
+    stream.reset();
 
     stream.incrementToken();
     CharTermAttribute attribute = stream.getAttribute(CharTermAttribute.class);
@@ -27,6 +29,9 @@ class FoldingAnalyzerTest {
     stream.incrementToken();
     attribute = stream.getAttribute(CharTermAttribute.class);
     assertEquals("aeae", attribute.toString());
+
+    stream.end();
+    stream.close();
 
     analyzer.close();
 
