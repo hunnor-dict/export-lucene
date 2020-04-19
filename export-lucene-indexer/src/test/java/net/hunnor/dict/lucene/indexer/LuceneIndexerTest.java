@@ -48,6 +48,7 @@ class LuceneIndexerTest {
     entry1.setLang(Language.HU);
     entry1.setId("1");
     entry1.setRoots(new HashSet<String>(Arrays.asList(new String[] {"aaaaaa", "aaaaab"})));
+    entry1.setSort("aaaaab");
     entry1.setForms(new HashSet<String>(Arrays.asList(new String[] {"bbbbbb"})));
     entry1.setQuote(new HashSet<String>(Arrays.asList(new String[] {"cccccc"})));
     entry1.setTrans(new HashSet<String>(Arrays.asList(new String[] {"dddddd"})));
