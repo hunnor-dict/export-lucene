@@ -27,7 +27,7 @@ class LuceneSearcherTest {
   void setUp() throws IOException {
     searcher = LuceneSearcher.getInstance();
     searcher.open(new File(
-        getClass().getResource("/5_5_5/lucene-index").getFile()));
+        getClass().getResource("/6_6_6/lucene-index").getFile()));
   }
 
   @AfterEach

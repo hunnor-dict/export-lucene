@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import net.hunnor.dict.lucene.constants.Lucene;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.hu.HungarianAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.no.NorwegianAnalyzer;
-import org.apache.lucene.analysis.util.CharArraySet;
 
 public final class PerFieldAnalyzer {
 
