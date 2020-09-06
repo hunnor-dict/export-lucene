@@ -19,7 +19,7 @@
 		<maven.resources.plugin.version>3.2.0</maven.resources.plugin.version>
 		<maven.shade.plugin.version>3.2.4</maven.shade.plugin.version>
 		<maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
-		<mockito.version>3.4.6</mockito.version>
+		<mockito.version>3.5.10</mockito.version>
 	</properties>
 
 	<dependencies>
