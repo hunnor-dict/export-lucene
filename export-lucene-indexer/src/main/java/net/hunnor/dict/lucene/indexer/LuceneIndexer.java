@@ -18,11 +18,8 @@ import org.apache.lucene.search.spell.LuceneDictionary;
 import org.apache.lucene.search.spell.SpellChecker;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
-import org.apache.lucene.util.Version;
 
 public class LuceneIndexer {
-
-  private static final Version LUCENE_VERSION = Version.LUCENE_36;
 
   private String indexDir;
 
@@ -80,8 +77,8 @@ public class LuceneIndexer {
   public void openIndexWriter() throws IOException {
     File file = new File(indexDir);
     Directory directory = new NIOFSDirectory(file);
-    Analyzer analyzer = PerFieldAnalyzer.getInstance(LUCENE_VERSION);
-    IndexWriterConfig indexWriterConfig = new IndexWriterConfig(LUCENE_VERSION, analyzer);
+    Analyzer analyzer = PerFieldAnalyzer.getInstance(Lucene.VERSION);
+    IndexWriterConfig indexWriterConfig = new IndexWriterConfig(Lucene.VERSION, analyzer);
     indexWriter = new IndexWriter(directory, indexWriterConfig);
   }
 
@@ -127,9 +124,9 @@ public class LuceneIndexer {
     if (spellChecker != null) {
       Dictionary hungarianDictionary = new LuceneDictionary(indexReader, Lucene.HU_ROOTS_LC);
       Dictionary norwegianDictionary = new LuceneDictionary(indexReader, Lucene.NO_ROOTS_LC);
-      Analyzer analyzer = PerFieldAnalyzer.getInstance(LUCENE_VERSION);
-      IndexWriterConfig indexWriterConfig1 = new IndexWriterConfig(LUCENE_VERSION, analyzer);
-      IndexWriterConfig indexWriterConfig2 = new IndexWriterConfig(LUCENE_VERSION, analyzer);
+      Analyzer analyzer = PerFieldAnalyzer.getInstance(Lucene.VERSION);
+      IndexWriterConfig indexWriterConfig1 = new IndexWriterConfig(Lucene.VERSION, analyzer);
+      IndexWriterConfig indexWriterConfig2 = new IndexWriterConfig(Lucene.VERSION, analyzer);
       spellChecker.indexDictionary(hungarianDictionary, indexWriterConfig1, false);
       spellChecker.indexDictionary(norwegianDictionary, indexWriterConfig2, false);
     }
