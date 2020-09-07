@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.lucene.util.Version;
 import org.junit.jupiter.api.Test;
 
-public class LuceneTest {
+class LuceneTest {
 
   @Test
-  public void versionTest() {
+  void versionTest() {
     assertEquals(Version.LUCENE_36, Lucene.VERSION);
   }
 

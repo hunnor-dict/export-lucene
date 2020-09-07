@@ -7,24 +7,24 @@ import java.util.Arrays;
 import java.util.HashSet;
 import org.junit.jupiter.api.Test;
 
-public class EntryTest {
+class EntryTest {
 
   @Test
-  public void testLanguage() {
+  void testLanguage() {
     Entry entry = new Entry();
     entry.setLang(Language.HU);
     assertEquals(Language.HU, entry.getLang());
   }
 
   @Test
-  public void testId() {
+  void testId() {
     Entry entry = new Entry();
     entry.setId("1");
     assertEquals("1", entry.getId());
   }
 
   @Test
-  public void testRoots() {
+  void testRoots() {
     Entry entry = new Entry();
     entry.setRoots(new HashSet<String>(Arrays.asList(new String[] {"root"})));
     assertEquals(1, entry.getRoots().size());
@@ -32,7 +32,7 @@ public class EntryTest {
   }
 
   @Test
-  public void testForms() {
+  void testForms() {
     Entry entry = new Entry();
     entry.setForms(new HashSet<String>(Arrays.asList(new String[] {"form"})));
     assertEquals(1, entry.getForms().size());
@@ -40,7 +40,7 @@ public class EntryTest {
   }
 
   @Test
-  public void testTrans() {
+  void testTrans() {
     Entry entry = new Entry();
     entry.setTrans(new HashSet<String>(Arrays.asList(new String[] {"trans"})));
     assertEquals(1, entry.getTrans().size());
@@ -48,7 +48,7 @@ public class EntryTest {
   }
 
   @Test
-  public void testQuote() {
+  void testQuote() {
     Entry entry = new Entry();
     entry.setQuote(new HashSet<String>(Arrays.asList(new String[] {"quote"})));
     assertEquals(1, entry.getQuote().size());
@@ -56,7 +56,7 @@ public class EntryTest {
   }
 
   @Test
-  public void testQuoteTrans() {
+  void testQuoteTrans() {
     Entry entry = new Entry();
     entry.setQuoteTrans(new HashSet<String>(Arrays.asList(new String[] {"quoteTrans"})));
     assertEquals(1, entry.getQuoteTrans().size());
@@ -64,14 +64,14 @@ public class EntryTest {
   }
 
   @Test
-  public void testSort() {
+  void testSort() {
     Entry entry = new Entry();
     entry.setSort("sort");
     assertEquals("sort", entry.getSort());
   }
 
   @Test
-  public void testText() {
+  void testText() {
     Entry entry = new Entry();
     entry.setText("<html/>");
     assertEquals("<html/>", entry.getText());

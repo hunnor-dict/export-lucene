@@ -12,16 +12,16 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.junit.jupiter.api.Test;
 
-public class PerFieldAnalyzerTest {
+class PerFieldAnalyzerTest {
 
   @Test
-  public void testGetInstance() {
+  void testGetInstance() {
     Analyzer analyzer = PerFieldAnalyzer.getInstance(Lucene.VERSION);
     assertNotNull(analyzer);
   }
 
   @Test
-  public void testHungarianAnalyzer() throws IOException {
+  void testHungarianAnalyzer() throws IOException {
     Analyzer analyzer = PerFieldAnalyzer.getInstance(Lucene.VERSION);
     Reader reader = new StringReader("beszélünk");
     TokenStream stream = analyzer.tokenStream(Lucene.NO_TRANS, reader);
@@ -31,7 +31,7 @@ public class PerFieldAnalyzerTest {
   }
 
   @Test
-  public void testNorwegianAnalyzer() throws IOException {
+  void testNorwegianAnalyzer() throws IOException {
     Analyzer analyzer = PerFieldAnalyzer.getInstance(Lucene.VERSION);
     Reader reader = new StringReader("bilens");
     TokenStream stream = analyzer.tokenStream(Lucene.HU_TRANS, reader);

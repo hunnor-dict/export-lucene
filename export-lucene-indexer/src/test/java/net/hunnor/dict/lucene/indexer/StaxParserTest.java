@@ -20,10 +20,10 @@ import javax.xml.stream.XMLStreamReader;
 import net.hunnor.dict.lucene.model.Entry;
 import org.junit.jupiter.api.Test;
 
-public class StaxParserTest {
+class StaxParserTest {
 
   @Test
-  public void testFileNotFoundException() throws XMLStreamException {
+  void testFileNotFoundException() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     File file = new File("src/test/resources/xml/no-such-file.xml");
     assertFalse(file.exists());
@@ -31,7 +31,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testXmlStreamException() throws XMLStreamException {
+  void testXmlStreamException() throws XMLStreamException {
     assertThrows(XMLStreamException.class, () -> {
       StaxParser staxParser = new StaxParser();
       File file = new File("src/test/resources/xml/sample-text-file.txt");
@@ -42,7 +42,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testCloseFileStreamError() throws FileNotFoundException, XMLStreamException {
+  void testCloseFileStreamError() throws FileNotFoundException, XMLStreamException {
     FileInputStream stream = new FileInputStream("src/test/resources/xml/sample-entry-entry.xml");
     XMLInputFactory xmlInputFactory2 = (XMLInputFactory) XMLInputFactory.newInstance();
     xmlInputFactory2.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, false);
@@ -58,7 +58,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testCloseFileIoError() throws IOException {
+  void testCloseFileIoError() throws IOException {
     FileInputStream spyStream = spy(
         new FileInputStream("src/test/resources/xml/sample-entry-entry.xml"));
     doThrow(new IOException()).when(spyStream).close();
@@ -71,7 +71,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testEntryEntry() throws XMLStreamException {
+  void testEntryEntry() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     assertFalse(staxParser.hasNext());
     staxParser.openFile("src/test/resources/xml/sample-entry-entry.xml");
@@ -88,7 +88,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testFormForm() throws XMLStreamException {
+  void testFormForm() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     staxParser.openFile("src/test/resources/xml/sample-form-form.xml");
     Entry entry = staxParser.next();
@@ -109,7 +109,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testSenseSense() throws XMLStreamException {
+  void testSenseSense() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     staxParser.openFile("src/test/resources/xml/sample-sense-sense.xml");
     Entry entry = staxParser.next();
@@ -125,7 +125,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testLblLbl() throws XMLStreamException {
+  void testLblLbl() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     staxParser.openFile("src/test/resources/xml/sample-lbl-lbl.xml");
     Entry entry = staxParser.next();
@@ -137,7 +137,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testLblTrans() throws XMLStreamException {
+  void testLblTrans() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     staxParser.openFile("src/test/resources/xml/sample-lbl-trans.xml");
     Entry entry = staxParser.next();
@@ -149,7 +149,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testLblEg() throws XMLStreamException {
+  void testLblEg() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     staxParser.openFile("src/test/resources/xml/sample-lbl-eg.xml");
     Entry entry = staxParser.next();
@@ -161,7 +161,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testTrans() throws XMLStreamException {
+  void testTrans() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     staxParser.openFile("src/test/resources/xml/sample-trans.xml");
     Entry entry = staxParser.next();
@@ -173,7 +173,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testTransLbl() throws XMLStreamException {
+  void testTransLbl() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     staxParser.openFile("src/test/resources/xml/sample-trans-lbl.xml");
     Entry entry = staxParser.next();
@@ -185,7 +185,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testTransTrans() throws XMLStreamException {
+  void testTransTrans() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     staxParser.openFile("src/test/resources/xml/sample-trans-trans.xml");
     Entry entry = staxParser.next();
@@ -197,7 +197,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testTransEg() throws XMLStreamException {
+  void testTransEg() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     staxParser.openFile("src/test/resources/xml/sample-trans-eg.xml");
     Entry entry = staxParser.next();
@@ -209,7 +209,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testEgEg() throws XMLStreamException {
+  void testEgEg() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     staxParser.openFile("src/test/resources/xml/sample-eg-eg.xml");
     Entry entry = staxParser.next();
@@ -221,7 +221,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testQuoteQuote() throws XMLStreamException {
+  void testQuoteQuote() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     staxParser.openFile("src/test/resources/xml/sample-q-q.xml");
     Entry entry = staxParser.next();
@@ -233,7 +233,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testQuoteTransTrans() throws XMLStreamException {
+  void testQuoteTransTrans() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     staxParser.openFile("src/test/resources/xml/sample-q-trans-trans.xml");
     Entry entry = staxParser.next();
@@ -245,7 +245,7 @@ public class StaxParserTest {
   }
 
   @Test
-  public void testQuoteLblTrans() throws XMLStreamException {
+  void testQuoteLblTrans() throws XMLStreamException {
     StaxParser staxParser = new StaxParser();
     staxParser.openFile("src/test/resources/xml/sample-q-lbl-trans.xml");
     Entry entry = staxParser.next();

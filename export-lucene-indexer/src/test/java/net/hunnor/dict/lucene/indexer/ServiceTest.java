@@ -11,10 +11,10 @@ import net.hunnor.dict.lucene.model.Language;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-public class ServiceTest {
+class ServiceTest {
 
   @Test
-  public void test(@TempDir File tempDir) throws IOException {
+  void test(@TempDir File tempDir) throws IOException {
     Service service = new Service();
     File file = new File("src/test/resources/xml/sample-entry-entry.xml");
     assertTrue(file.isFile());
@@ -25,7 +25,7 @@ public class ServiceTest {
   }
 
   @Test
-  public void testParserError(@TempDir File tempDir) throws XMLStreamException, IOException {
+  void testParserError(@TempDir File tempDir) throws XMLStreamException, IOException {
     StaxParser spyParser = spy(new StaxParser());
     doThrow(new XMLStreamException()).when(spyParser).hasNext();
     Service service = new Service();
@@ -37,7 +37,7 @@ public class ServiceTest {
   }
 
   @Test
-  public void testSpellingError(@TempDir File tempDir) throws IOException {
+  void testSpellingError(@TempDir File tempDir) throws IOException {
     LuceneIndexer spyIndexer = spy(new LuceneIndexer());
     doThrow(new IOException()).when(spyIndexer).openIndexReader();
     Service service = new Service();

@@ -11,10 +11,10 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.junit.jupiter.api.Test;
 
-public class FoldingAnalyzerTest {
+class FoldingAnalyzerTest {
 
   @Test
-  public void analyzerTest() throws IOException {
+  void analyzerTest() throws IOException {
 
     Analyzer analyzer = new FoldingAnalyzer(Lucene.VERSION);
     Reader reader = new StringReader("åaøo; ÆaE");

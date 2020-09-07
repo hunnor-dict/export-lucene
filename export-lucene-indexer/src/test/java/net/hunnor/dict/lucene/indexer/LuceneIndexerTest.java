@@ -13,14 +13,14 @@ import net.hunnor.dict.lucene.model.Language;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-public class LuceneIndexerTest {
+class LuceneIndexerTest {
 
   private static final String INDEX_DIR = "index";
 
   private static final String SPELLING_DIR = "spelling";
 
   @Test
-  public void closeWhenAlreadyClosed() throws IOException {
+  void closeWhenAlreadyClosed() throws IOException {
     LuceneIndexer indexer = new LuceneIndexer();
     assertNull(indexer.getIndexDir());
     indexer.closeIndexReader();
@@ -30,7 +30,7 @@ public class LuceneIndexerTest {
   }
 
   @Test
-  public void writeEntryToClosedWriter() throws IOException {
+  void writeEntryToClosedWriter() throws IOException {
     LuceneIndexer indexer = new LuceneIndexer();
     assertNull(indexer.getIndexDir());
     Entry entry = new Entry();
@@ -38,7 +38,7 @@ public class LuceneIndexerTest {
   }
 
   @Test
-  public void testIndexing(@TempDir File tempDir) throws IOException {
+  void testIndexing(@TempDir File tempDir) throws IOException {
 
     LuceneIndexer indexer = new LuceneIndexer();
 

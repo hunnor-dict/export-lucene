@@ -11,10 +11,10 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.junit.jupiter.api.Test;
 
-public class LowercaseAnalyzerTest {
+class LowercaseAnalyzerTest {
 
   @Test
-  public void analyzerTest() throws IOException {
+  void analyzerTest() throws IOException {
 
     Analyzer analyzer = new LowercaseAnalyzer(Lucene.VERSION);
     Reader reader = new StringReader("ÁRVÍZTŰRŐ TÜKÖRFÚRÓGÉP BLÅBÆRSYLTETØY");

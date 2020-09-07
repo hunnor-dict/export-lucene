@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-public class LuceneSearcherTest {
+class LuceneSearcherTest {
 
   private LuceneSearcher searcher;
 
@@ -25,7 +25,7 @@ public class LuceneSearcherTest {
    * @throws IOException if there is a low-level IO error
    */
   @BeforeEach
-  public void setUp() throws IOException {
+  void setUp() throws IOException {
     searcher = LuceneSearcher.getInstance();
     searcher.open(new File(
         getClass().getResource("/3_6_2/lucene-index").getFile()));
@@ -34,13 +34,13 @@ public class LuceneSearcherTest {
   }
 
   @AfterEach
-  public void tearDown() throws IOException {
+  void tearDown() throws IOException {
     searcher.close();
     searcher.closeSpellChecker();
   }
 
   @Test
-  public void testClose() throws IOException {
+  void testClose() throws IOException {
     searcher.close();
     assertFalse(searcher.isOpen());
     searcher.close();
@@ -48,7 +48,7 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testCloseSpellChecker() throws IOException {
+  void testCloseSpellChecker() throws IOException {
     searcher.closeSpellChecker();
     assertFalse(searcher.isSpellCheckerOpen());
     searcher.closeSpellChecker();
@@ -56,17 +56,17 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testOpen() throws IOException {
+  void testOpen() throws IOException {
     assertTrue(searcher.isOpen());
   }
 
   @Test
-  public void testOpenSpellChecker() throws IOException {
+  void testOpenSpellChecker() throws IOException {
     assertTrue(searcher.isSpellCheckerOpen());
   }
 
   @Test
-  public void testOpenSpellCheckerNewDirectory(@TempDir File tempDir) throws IOException {
+  void testOpenSpellCheckerNewDirectory(@TempDir File tempDir) throws IOException {
     searcher.closeSpellChecker();
     File directory = new File(tempDir, "tempDir");
     boolean createDirectory = directory.mkdir();
@@ -79,7 +79,7 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testOpenSpellCheckerFile(@TempDir File tempDir) throws IOException {
+  void testOpenSpellCheckerFile(@TempDir File tempDir) throws IOException {
     searcher.closeSpellChecker();
     File file = new File(tempDir, "tempFile");
     boolean createFile = file.createNewFile();
@@ -90,7 +90,7 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testOpenSpellcheckerUnreadable(@TempDir File tempDir) throws IOException {
+  void testOpenSpellcheckerUnreadable(@TempDir File tempDir) throws IOException {
     searcher.closeSpellChecker();
     File file = new File(tempDir, "tempFile");
     boolean createFile = file.createNewFile();
@@ -102,7 +102,7 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testSuggestion() throws IOException {
+  void testSuggestion() throws IOException {
     List<String> suggestions = searcher.suggestions("aaa", 20);
     assertNotNull(suggestions);
     assertEquals(3, suggestions.size());
@@ -112,7 +112,7 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testSpellingSuggestions() throws IOException {
+  void testSpellingSuggestions() throws IOException {
     List<String> suggestions = searcher.spellingSuggestions("aabaaa", 5);
     assertNotNull(suggestions);
     assertEquals(3, suggestions.size());
@@ -120,25 +120,25 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testSearchForRoots() throws IOException {
+  void testSearchForRoots() throws IOException {
     List<Entry> results = searcher.search("aaaaaa", 100);
     assertEquals(1, results.size());
   }
 
   @Test
-  public void testSearchForForms() throws IOException {
+  void testSearchForForms() throws IOException {
     List<Entry> results = searcher.search("bbbbbb", 100);
     assertEquals(2, results.size());
   }
 
   @Test
-  public void testSearchForQuotes() throws IOException {
+  void testSearchForQuotes() throws IOException {
     List<Entry> results = searcher.search("cccccc", 100);
     assertEquals(2, results.size());
   }
 
   @Test
-  public void testSearchForRootsLang() throws IOException {
+  void testSearchForRootsLang() throws IOException {
     List<Entry> results = searcher.search("aaaaaa", Language.HU, 100);
     assertEquals(1, results.size());
     results = searcher.search("aaaaab", Language.NO, 100);
@@ -146,7 +146,7 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testSearchForFormsLang() throws IOException {
+  void testSearchForFormsLang() throws IOException {
     List<Entry> results = searcher.search("bbbbbb", Language.HU, 100);
     assertEquals(1, results.size());
     results = searcher.search("bbbbbb", Language.NO, 100);
@@ -154,7 +154,7 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testSearchForQuotesLang() throws IOException {
+  void testSearchForQuotesLang() throws IOException {
     List<Entry> results = searcher.search("cccccc", Language.HU, 100);
     assertEquals(1, results.size());
     results = searcher.search("cccccc", Language.NO, 100);
@@ -162,13 +162,13 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testNoResults() throws IOException {
+  void testNoResults() throws IOException {
     List<Entry> results = searcher.search("ffffff", Language.HU, 100);
     assertEquals(0, results.size());
   }
 
   @Test
-  public void testAsciiFolding() throws IOException {
+  void testAsciiFolding() throws IOException {
     List<Entry> results = searcher.search("tttto", Language.HU, 100);
     assertEquals(2, results.size());
     results = searcher.search("ttttó", Language.HU, 100);
@@ -182,7 +182,7 @@ public class LuceneSearcherTest {
   }
 
   @Test
-  public void testSpellingSuggestionsSpecials() throws IOException {
+  void testSpellingSuggestionsSpecials() throws IOException {
     List<String> suggestions = searcher.spellingSuggestions("ttttt", 5);
     assertNotNull(suggestions);
     assertEquals(4, suggestions.size());
