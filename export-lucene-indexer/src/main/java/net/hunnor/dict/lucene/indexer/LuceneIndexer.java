@@ -100,8 +100,7 @@ public class LuceneIndexer {
    */
   public void openSpellChecker() throws IOException {
     File file = new File(spellingDir);
-    Directory directory = new NIOFSDirectory(file);
-    spellChecker = new SpellChecker(directory);
+    spellChecker = new SpellChecker(new NIOFSDirectory(file));
   }
 
   /**
