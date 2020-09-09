@@ -59,8 +59,7 @@ public class LuceneSearcher {
   }
 
   public void open(File indexDirectory) throws IOException {
-    NIOFSDirectory directory = new NIOFSDirectory(indexDirectory);
-    indexReader = IndexReader.open(directory);
+    indexReader = IndexReader.open(new NIOFSDirectory(indexDirectory));
   }
 
   /**
@@ -73,8 +72,7 @@ public class LuceneSearcher {
       // The searcher module should only use an existing spelling index
       File[] files = spellingDirectory.listFiles();
       if (files != null && files.length > 0) {
-        NIOFSDirectory directory = new NIOFSDirectory(spellingDirectory);
-        spellChecker = new SpellChecker(directory);
+        spellChecker = new SpellChecker(new NIOFSDirectory(spellingDirectory));
       }
     }
   }

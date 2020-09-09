@@ -16,7 +16,6 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.spell.Dictionary;
 import org.apache.lucene.search.spell.LuceneDictionary;
 import org.apache.lucene.search.spell.SpellChecker;
-import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
 
 public class LuceneIndexer {
@@ -54,8 +53,7 @@ public class LuceneIndexer {
    */
   public void openIndexReader() throws IOException {
     File file = new File(indexDir);
-    Directory directory = new NIOFSDirectory(file);
-    indexReader = IndexReader.open(directory);
+    indexReader = IndexReader.open(new NIOFSDirectory(file));
   }
 
   /**
@@ -76,10 +74,9 @@ public class LuceneIndexer {
    */
   public void openIndexWriter() throws IOException {
     File file = new File(indexDir);
-    Directory directory = new NIOFSDirectory(file);
     Analyzer analyzer = PerFieldAnalyzer.getInstance(Lucene.VERSION);
     IndexWriterConfig indexWriterConfig = new IndexWriterConfig(Lucene.VERSION, analyzer);
-    indexWriter = new IndexWriter(directory, indexWriterConfig);
+    indexWriter = new IndexWriter(new NIOFSDirectory(file), indexWriterConfig);
   }
 
   /**
