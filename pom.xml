@@ -13,8 +13,8 @@
 
 	<properties>
 		<checkstyle.version>3.1.1</checkstyle.version>
-		<jacoco.version>0.8.5</jacoco.version>
-		<junit5.version>5.6.2</junit5.version>
+		<jacoco.version>0.8.6</jacoco.version>
+		<junit5.version>5.7.0</junit5.version>
 		<lucene.version>3.6.2</lucene.version>
 		<maven.clean.plugin.version>3.1.0</maven.clean.plugin.version>
 		<maven.compiler.source>13</maven.compiler.source>
