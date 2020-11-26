@@ -1,4 +1,4 @@
-FROM maven:3.6-jdk-13 as maven
+FROM maven:3.6-jdk-11 as maven
 COPY . /opt/hunnor-dict/export-lucene
 WORKDIR /opt/hunnor-dict/export-lucene
 RUN mvn verify
