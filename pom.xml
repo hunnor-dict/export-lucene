@@ -12,9 +12,28 @@
 	<description>Create a Lucene index from the XML exports</description>
 
 	<distributionManagement>
+		<!--
+			Configure credentials in Maven settings.
+			<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+				<servers>
+					<server>
+						<id>dict-linode</id>
+						<username>hunnor</username>
+						<privateKey>/home/user/.ssh/id_rsa</privateKey>
+					</server>
+				</servers>
+			</settings>
+
+			"Invalid privatekey" error:
+			Recent versions of OpenSSH (7.8 and newer) generate keys in new OpenSSH format by default, which starts with:
+			BEGIN OPENSSH PRIVATE KEY
+			JSch does not support this key format.
+			Use ssh-keygen to convert the key to the classic OpenSSH format:
+			ssh-keygen -p -m pem -f id_rsa
+		-->
 		<repository>
 			<id>dict-linode</id>
-			<url>scp://hunnor@dict-linode.hunnor.net:/var/www/html/maven</url>
+			<url>scp://dict-linode.hunnor.net:/var/www/html/maven</url>
 		</repository>
 	</distributionManagement>
 
